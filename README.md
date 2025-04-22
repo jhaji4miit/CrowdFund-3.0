@@ -12,6 +12,7 @@ To democratize fundraising and make it transparent, secure, and globally accessi
 - ✅ **Goal-Based Withdrawals**: Funds are released to the project owner only if the goal is met.
 - 🔁 **Automatic Refunds**: Contributors can reclaim funds if the goal isn’t met.
 - ⏱ **Real-Time Tracking**: Get remaining time and campaign status via public view functions.
+- 🔍 **Contributor Transparency**: Anyone can view how much a specific address has contributed.
 
 ## 🚧 Future Scope
 - 🧾 **Campaign Metadata**: Add title, description, and media support.
@@ -20,7 +21,9 @@ To democratize fundraising and make it transparent, secure, and globally accessi
 - 📱 **Multi-Currency Support**: Accept stablecoins and ERC-20 tokens.
 - 🔒 **Multi-Sig Withdrawals**: Require multiple owners to approve fund withdrawal.
 
----
+--
 
-## Contract I'D : 0x1044B14e9ecd735c38642cf3ED06f12681c38Aa3
-<img width="1467" alt="image" src="https://github.com/user-attachments/assets/474155da-06e0-4c6d-b990-223b08b67dff" />
+
+## Contract I'D : 0x88E8f8B0c13C4e841b2660A9f0a7fdE535713814
+<img width="1107" alt="image" src="https://github.com/user-attachments/assets/325da7aa-43b5-4427-8e8b-3fb5bc83514b" />
+
