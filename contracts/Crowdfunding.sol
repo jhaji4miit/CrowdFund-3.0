@@ -89,4 +89,9 @@ contract CrowdFund {
             return deadline - block.timestamp;
         }
     }
+
+    // ✅ Function 6: Get contributor details
+    function getContributorDetails(address _contributor) public view returns (uint) {
+        return contributions[_contributor];
+    }
 }
