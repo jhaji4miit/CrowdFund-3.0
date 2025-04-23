@@ -8,6 +8,7 @@ contract CrowdFund {
     uint public totalRaised;
     bool public goalReached;
     bool public fundsWithdrawn;
+    bool public deadlineExtended;
 
     mapping(address => uint) public contributions;
 
@@ -15,6 +16,7 @@ contract CrowdFund {
     event GoalReached(uint totalAmountRaised);
     event RefundIssued(address indexed contributor, uint amount);
     event FundsWithdrawn(address indexed owner, uint amount);
+    event DeadlineExtended(uint newDeadline);
 
     constructor(uint _goalAmount, uint _durationInDays) {
         owner = msg.sender;
@@ -22,6 +24,7 @@ contract CrowdFund {
         deadline = block.timestamp + (_durationInDays * 1 days);
         goalReached = false;
         fundsWithdrawn = false;
+        deadlineExtended = false;
     }
 
     modifier onlyOwner() {
@@ -90,8 +93,38 @@ contract CrowdFund {
         }
     }
 
-    // ✅ Function 6: Get contributor details
+    // Function 6: Get contributor details
     function getContributorDetails(address _contributor) public view returns (uint) {
         return contributions[_contributor];
+    }
+
+    // ✅ Function 7: Extend deadline (only once)
+    function extendDeadline(uint _extraDays) public onlyOwner {
+        require(!deadlineExtended, "Deadline can only be extended once");
+        require(_extraDays > 0, "Must add at least 1 day");
+
+        deadline += _extraDays * 1 days;
+        deadlineExtended = true;
+
+        emit DeadlineExtended(deadline);
+    }
+
+    // ✅ Function 8: Get campaign summary
+    function getCampaignSummary() public view returns (
+        address campaignOwner,
+        uint targetAmount,
+        uint totalContributions,
+        uint timeRemaining,
+        bool hasReachedGoal,
+        bool isWithdrawn,
+        bool wasExtended
+    ) {
+        campaignOwner = owner;
+        targetAmount = goalAmount;
+        totalContributions = totalRaised;
+        timeRemaining = getTimeRemaining();
+        hasReachedGoal = goalReached;
+        isWithdrawn = fundsWithdrawn;
+        wasExtended = deadlineExtended;
     }
 }
