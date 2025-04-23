@@ -24,6 +24,7 @@ To democratize fundraising and make it transparent, secure, and globally accessi
 --
 
 
-## Contract I'D : 0x88E8f8B0c13C4e841b2660A9f0a7fdE535713814
-<img width="1107" alt="image" src="https://github.com/user-attachments/assets/325da7aa-43b5-4427-8e8b-3fb5bc83514b" />
+## Contract Details : 0x89766CF3Fe436a9f01cC611dB3805aD5D95Cf103
+<img width="1470" alt="image" src="https://github.com/user-attachments/assets/366a5c44-cde7-4d59-b4d9-3d6783ac76ac" />
+
 
