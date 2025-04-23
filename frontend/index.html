@@ -3,23 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <title>CrowdFund DApp</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>CrowdFund Campaign</h1>
-  
-  <div id="summary"></div>
+  <div class="container">
+    <h1>CrowdFund Campaign</h1>
 
-  <h2>Contribute</h2>
-  <input type="number" id="amount" placeholder="Amount in ETH">
-  <button onclick="contribute()">Contribute</button>
+    <div class="card">
+      <h2>📊 Campaign Summary</h2>
+      <div id="summary"></div>
+    </div>
 
-  <h2>Owner Actions</h2>
-  <button onclick="withdraw()">Withdraw Funds</button>
-  <input type="number" id="extraDays" placeholder="Extra days">
-  <button onclick="extendDeadline()">Extend Deadline</button>
+    <div class="card">
+      <h2>💸 Contribute</h2>
+      <input type="number" id="amount" placeholder="Amount in ETH">
+      <button onclick="contribute()">Contribute</button>
+    </div>
 
-  <h2>Contributor Actions</h2>
-  <button onclick="refund()">Request Refund</button>
+    <div class="card">
+      <h2>🛠️ Owner Actions</h2>
+      <button onclick="withdraw()">Withdraw Funds</button>
+      <input type="number" id="extraDays" placeholder="Extra days">
+      <button onclick="extendDeadline()">Extend Deadline</button>
+    </div>
+
+    <div class="card">
+      <h2>🔁 Contributor Actions</h2>
+      <button onclick="refund()">Request Refund</button>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
   <script src="app.js"></script>
