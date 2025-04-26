@@ -1,6 +1,4 @@
 ## 📢 CrowdFund - A Unique Smart Contract for Crowdfunding Campaigns
-📝 Project Title
-CrowdFund Smart Contract
 
 ## 📖 Project Description
 CrowdFund is a decentralized and transparent crowdfunding smart contract built on the Ethereum blockchain. It allows users to contribute ETH to fund a project within a set deadline. If the funding goal is reached, the campaign owner can withdraw the funds. Otherwise, contributors can claim refunds.
