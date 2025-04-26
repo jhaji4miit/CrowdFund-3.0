@@ -8,14 +8,16 @@ contract CrowdFund {
     uint public totalRaised;
     bool public goalReached;
     bool public fundsWithdrawn;
+    bool public deadlineExtended; // ✅ Added: to prevent multiple extensions
 
     mapping(address => uint) public contributions;
-    address[] private contributorIndex; // Track unique contributors
+    address[] private contributorIndex; // ✅ Track unique contributors
 
     event ContributionReceived(address indexed contributor, uint amount);
     event GoalReached(uint totalAmountRaised);
     event RefundIssued(address indexed contributor, uint amount);
     event FundsWithdrawn(address indexed owner, uint amount);
+    event DeadlineExtended(uint newDeadline); // ✅ New event
 
     constructor(uint _goalAmount, uint _durationInDays) {
         owner = msg.sender;
@@ -23,6 +25,7 @@ contract CrowdFund {
         deadline = block.timestamp + (_durationInDays * 1 days);
         goalReached = false;
         fundsWithdrawn = false;
+        deadlineExtended = false;
     }
 
     modifier onlyOwner() {
@@ -45,7 +48,7 @@ contract CrowdFund {
         require(msg.value > 0, "Contribution must be greater than 0");
 
         if (contributions[msg.sender] == 0) {
-            contributorIndex.push(msg.sender); // Track first-time contributor
+            contributorIndex.push(msg.sender);
         }
 
         contributions[msg.sender] += msg.value;
@@ -101,8 +104,34 @@ contract CrowdFund {
         return contributions[_contributor];
     }
 
-    // ✅ Function 10: Get all unique contributor addresses
+    // Function 7: Get all unique contributor addresses
     function getAllContributors() public view returns (address[] memory) {
         return contributorIndex;
+    }
+
+    // ✅ Function 8: Extend deadline (only once)
+    function extendDeadline(uint _extraDays) public onlyOwner beforeDeadline {
+        require(!deadlineExtended, "Deadline already extended");
+        require(_extraDays > 0, "Extension must be greater than 0");
+
+        deadline += _extraDays * 1 days;
+        deadlineExtended = true;
+
+        emit DeadlineExtended(deadline);
+    }
+
+    // ✅ Function 9: Get campaign summary
+    function getCampaignSummary() public view returns (
+        uint goal,
+        uint raised,
+        uint timeLeft,
+        bool reached,
+        bool withdrawn
+    ) {
+        goal = goalAmount;
+        raised = totalRaised;
+        timeLeft = getTimeRemaining();
+        reached = goalReached;
+        withdrawn = fundsWithdrawn;
     }
 }
