@@ -1,39 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>CrowdFund DApp</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrowdFund DApp</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>CrowdFund Campaign</h1>
 
-    <div class="card">
-      <h2>📊 Campaign Summary</h2>
-      <div id="summary"></div>
+    <div class="container">
+        <h1>CrowdFund DApp</h1>
+
+        <div id="campaign-summary" class="card">
+            <h2>Campaign Summary</h2>
+            <p><strong>Goal:</strong> <span id="goalAmount"></span> ETH</p>
+            <p><strong>Raised:</strong> <span id="totalRaised"></span> ETH</p>
+            <p><strong>Time Remaining:</strong> <span id="timeRemaining"></span></p>
+            <p><strong>Goal Reached:</strong> <span id="goalReached"></span></p>
+            <p><strong>Funds Withdrawn:</strong> <span id="fundsWithdrawn"></span></p>
+            <button onclick="getSummary()">Refresh</button>
+        </div>
+
+        <div class="card">
+            <h2>Contribute ETH</h2>
+            <input type="number" id="contributionAmount" placeholder="Amount in ETH">
+            <button onclick="contribute()">Contribute</button>
+        </div>
+
+        <div class="card">
+            <h2>Withdraw / Refund</h2>
+            <button onclick="withdrawFunds()">Withdraw Funds (Owner)</button>
+            <button onclick="refund()">Refund My Contribution</button>
+        </div>
+
+        <div class="card">
+            <h2>Get My Contribution</h2>
+            <button onclick="getMyContribution()">Show My Contribution</button>
+            <p id="myContribution"></p>
+        </div>
+
+        <div class="card">
+            <h2>Contributors List</h2>
+            <button onclick="getContributors()">Load Contributors</button>
+            <ul id="contributorsList"></ul>
+        </div>
+
     </div>
 
-    <div class="card">
-      <h2>💸 Contribute</h2>
-      <input type="number" id="amount" placeholder="Amount in ETH">
-      <button onclick="contribute()">Contribute</button>
-    </div>
-
-    <div class="card">
-      <h2>🛠️ Owner Actions</h2>
-      <button onclick="withdraw()">Withdraw Funds</button>
-      <input type="number" id="extraDays" placeholder="Extra days">
-      <button onclick="extendDeadline()">Extend Deadline</button>
-    </div>
-
-    <div class="card">
-      <h2>🔁 Contributor Actions</h2>
-      <button onclick="refund()">Request Refund</button>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-  <script src="app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
