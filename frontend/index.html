@@ -1,108 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Crowdfund | Empowering Decentralized Dreams</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crowdfund | Empowering Decentralized Dreams</title>
 
-  <!-- Favicon -->
-  <link rel="icon" href="assets/logo.png" type="image/png">
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
 
-  <!-- Manifest -->
-  <link rel="manifest" href="manifest.json">
+    <!-- Favicon / Logo -->
+    <link rel="icon" href="./assets/logo.png" type="image/png">
 
-  <!-- Theme color for PWA -->
-  <meta name="theme-color" content="#ff6600">
+    <!-- Styling -->
+    <link rel="stylesheet" href="style.css">
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Ethers.js -->
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
 
-  <!-- Style -->
-  <link rel="stylesheet" href="style.css">
-
-  <!-- Ethers.js -->
-  <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
 </head>
-
 <body>
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="nav-brand">
-      <img src="assets/logo.png" alt="Crowdfund Logo" class="logo">
-      <span class="brand-name">Crowdfund</span>
-    </div>
-    <button id="connectWalletBtn" class="btn-connect">Connect Wallet</button>
-  </nav>
 
-  <!-- Hero Section -->
-  <header class="hero">
-    <h1>Empowering <span>Decentralized Dreams</span></h1>
-    <p>Support innovative ideas on CoreDAO blockchain with secure smart contracts.</p>
-    <button id="contributeNowBtn" class="btn-primary">Contribute Now 🚀</button>
-  </header>
+    <header class="header">
+        <img src="./assets/logo.png" alt="Crowdfund Logo" class="logo">
+        <h1>Crowdfund</h1>
+        <p>Empowering Decentralized Dreams 🚀</p>
+    </header>
 
-  <!-- Campaign Summary Section -->
-  <section class="campaign-summary">
-    <h2>Campaign Overview</h2>
-    <div class="stats">
-      <div class="stat-box">
-        <h3 id="goalAmount">--</h3>
-        <p>Goal Amount</p>
-      </div>
-      <div class="stat-box">
-        <h3 id="totalRaised">--</h3>
-        <p>Raised So Far</p>
-      </div>
-      <div class="stat-box">
-        <h3 id="timeRemaining">--</h3>
-        <p>Time Remaining</p>
-      </div>
-      <div class="stat-box">
-        <h3 id="contributorsCount">--</h3>
-        <p>Contributors</p>
-      </div>
-    </div>
-  </section>
+    <main class="container">
 
-  <!-- Leaderboard -->
-  <section class="leaderboard">
-    <h2>Top Contributors 🏆</h2>
-    <ul id="leaderboardList" class="leaderboard-list"></ul>
-  </section>
+        <!-- Connect Wallet -->
+        <div class="section">
+            <button id="connectWalletBtn" class="btn">🔗 Connect Wallet</button>
+        </div>
 
-  <!-- Admin Panel (hidden for normal users) -->
-  <section id="adminPanel" class="admin-panel hidden">
-    <h2>Admin Panel 🛠️</h2>
-    <div class="admin-actions">
-      <button id="withdrawBtn" class="btn-admin">Withdraw Funds</button>
-      <button id="extendDeadlineBtn" class="btn-admin">Extend Deadline</button>
-      <button id="summaryBtn" class="btn-admin">View Summary</button>
-    </div>
-  </section>
+        <!-- Campaign Summary -->
+        <div class="section">
+            <h2>🎯 Campaign Summary</h2>
+            <div class="card">
+                <p><strong>Goal:</strong> <span id="goalAmount">-</span></p>
+                <p><strong>Raised:</strong> <span id="raisedAmount">-</span></p>
+                <p><strong>Time Left:</strong> <span id="timeRemaining">-</span></p>
+                <p><strong>Goal Reached:</strong> <span id="goalReached">-</span></p>
+                <p><strong>Funds Withdrawn:</strong> <span id="fundsWithdrawn">-</span></p>
+            </div>
+        </div>
 
-  <!-- Toast Notifications -->
-  <div id="toast" class="toast"></div>
+        <!-- Contribute -->
+        <div class="section">
+            <h2>💸 Make a Contribution</h2>
+            <input type="number" id="contributeAmount" placeholder="Amount in CORE">
+            <button id="contributeBtn" class="btn">🚀 Contribute</button>
+        </div>
 
-  <!-- Footer -->
-  <footer>
-    <p>Built with ❤️ on CoreDAO by Chintan Vatsa Jha © 2025</p>
-  </footer>
+        <!-- Leaderboard -->
+        <div class="section">
+            <h2>🏆 Top Contributors</h2>
+            <ul id="leaderboardList" class="leaderboard"></ul>
+        </div>
 
-  <!-- Scripts -->
-  <script src="app.js"></script>
+        <!-- Admin Panel (Hidden until Owner Connects) -->
+        <div id="adminPanel" class="section hidden">
+            <h2>🧑‍💻 Admin Panel</h2>
+            <button id="withdrawBtn" class="btn admin">💸 Withdraw Funds</button>
+            <button id="refundBtn" class="btn admin">🔄 Refund Contributors</button>
+            <button id="extendBtn" class="btn admin">🕒 Extend Deadline</button>
+        </div>
 
-  <!-- Service Worker -->
-  <script>
+    </main>
+
+    <!-- Toast Message -->
+    <div id="toast" class="toast"></div>
+
+    <!-- App Script -->
+    <script type="module" src="app.js"></script>
+
+    <!-- Service Worker (PWA) -->
+    <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/service-worker.js')
-          .then(function(registration) {
-            console.log('✅ ServiceWorker registered:', registration.scope);
-          }, function(err) {
-            console.log('❌ ServiceWorker registration failed:', err);
-          });
-      });
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/service-worker.js')
+            .then(function(registration) {
+                console.log('✅ ServiceWorker registration successful:', registration.scope);
+            }, function(err) {
+                console.log('❌ ServiceWorker registration failed:', err);
+            });
+        });
     }
-  </script>
+    </script>
+
 </body>
 </html>
