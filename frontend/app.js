@@ -1,186 +1,248 @@
-import abi from './abi.json' assert { type: 'json' };
-
-const contractAddress = "0xb872722d611bE8f7F53090B9236D0Ba7Cb58e875"; // Your Core DAO contract address
-let contract;
-let signer;
-let userAddress;
-
-// Elements
-const connectWalletBtn = document.getElementById('connectWallet');
-const contributeBtn = document.getElementById('contributeBtn');
-const refundBtn = document.getElementById('refund');
-const withdrawFundsBtn = document.getElementById('withdrawFunds');
-const extendDeadlineBtn = document.getElementById('extendDeadline');
-const contributeAmountInput = document.getElementById('contributeAmount');
-const fundingInfo = document.getElementById('fundingInfo');
-const leaderboardList = document.getElementById('leaderboardList');
-const extendDaysInput = document.getElementById('extendDays');
-const adminPanel = document.getElementById('adminPanel');
-const loadingSpinner = document.getElementById('loadingSpinner');
-const progressFill = document.getElementById('progressFill');
-
-// Initialize ethers
-async function init() {
-    if (typeof window.ethereum !== 'undefined') {
-        const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
-        signer = provider.getSigner();
-        contract = new ethers.Contract(contractAddress, abi, signer);
-    } else {
-        alert("Please install MetaMask or Core Wallet Extension!");
-    }
+/* Reset default browser styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-// Connect Wallet
-connectWalletBtn.addEventListener('click', async () => {
-    try {
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
-        userAddress = await signer.getAddress();
-        alert('✅ Wallet Connected: ' + userAddress);
-        checkIfOwner();
-        fetchCampaignInfo();
-        fetchLeaderboard();
-    } catch (err) {
-        console.error(err);
-        alert('❌ Wallet connection failed.');
-    }
-});
-
-// Check if user is owner
-async function checkIfOwner() {
-    const owner = await contract.owner();
-    if (userAddress.toLowerCase() === owner.toLowerCase()) {
-        adminPanel.style.display = "block";
-    }
+/* Body */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to bottom right, #ff6600 10%, #ffffff 90%);
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-// Contribute
-contributeBtn.addEventListener('click', async () => {
-    try {
-        const amount = ethers.utils.parseEther(contributeAmountInput.value);
-        showLoader();
-        const tx = await contract.contribute({ value: amount });
-        await tx.wait();
-        alert('✅ Contribution successful!');
-        fetchCampaignInfo();
-        fetchLeaderboard();
-    } catch (err) {
-        console.error(err);
-        alert('❌ Contribution failed.');
-    }
-    hideLoader();
-});
-
-// Refund
-refundBtn.addEventListener('click', async () => {
-    try {
-        showLoader();
-        const tx = await contract.refund();
-        await tx.wait();
-        alert('✅ Refund successful!');
-        fetchCampaignInfo();
-        fetchLeaderboard();
-    } catch (err) {
-        console.error(err);
-        alert('❌ Refund failed.');
-    }
-    hideLoader();
-});
-
-// Withdraw Funds (Owner)
-withdrawFundsBtn.addEventListener('click', async () => {
-    try {
-        showLoader();
-        const tx = await contract.withdrawFunds();
-        await tx.wait();
-        alert('✅ Funds withdrawn!');
-        fetchCampaignInfo();
-    } catch (err) {
-        console.error(err);
-        alert('❌ Withdraw failed.');
-    }
-    hideLoader();
-});
-
-// Extend Deadline (Owner)
-extendDeadlineBtn.addEventListener('click', async () => {
-    try {
-        const days = extendDaysInput.value;
-        showLoader();
-        const tx = await contract.extendDeadline(days);
-        await tx.wait();
-        alert('✅ Deadline extended!');
-        fetchCampaignInfo();
-    } catch (err) {
-        console.error(err);
-        alert('❌ Deadline extension failed.');
-    }
-    hideLoader();
-});
-
-// Fetch Campaign Info
-async function fetchCampaignInfo() {
-    try {
-        const summary = await contract.getCampaignSummary();
-        const goal = ethers.utils.formatEther(summary.goal);
-        const raised = ethers.utils.formatEther(summary.raised);
-        const timeLeft = parseInt(summary.timeLeft);
-        const reached = summary.reached;
-        const withdrawn = summary.withdrawn;
-
-        fundingInfo.innerHTML = `
-            <h2>🎯 Campaign Summary</h2>
-            <p><b>Goal:</b> ${goal} CORE</p>
-            <p><b>Raised:</b> ${raised} CORE</p>
-            <p><b>Time Left:</b> ${timeLeft > 0 ? timeLeft + 's' : '⏳ Expired'}</p>
-            <p><b>Goal Reached:</b> ${reached ? '✅ Yes' : '❌ No'}</p>
-            <p><b>Funds Withdrawn:</b> ${withdrawn ? '✅ Yes' : '❌ No'}</p>
-        `;
-
-        const progress = (parseFloat(raised) / parseFloat(goal)) * 100;
-        progressFill.style.width = progress > 100 ? "100%" : progress + "%";
-
-    } catch (err) {
-        console.error('Error fetching campaign info', err);
-    }
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 1rem 2rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-// Fetch and Display Leaderboard
-async function fetchLeaderboard() {
-    try {
-        const contributors = await contract.getAllContributors();
-        let leaderboard = [];
-
-        for (let addr of contributors) {
-            const contribution = await contract.getContributorDetails(addr);
-            leaderboard.push({ address: addr, amount: ethers.utils.formatEther(contribution) });
-        }
-
-        leaderboard.sort((a, b) => parseFloat(b.amount) - parseFloat(a.amount));
-
-        leaderboardList.innerHTML = "";
-        leaderboard.slice(0, 10).forEach((entry, index) => {
-            leaderboardList.innerHTML += `<li><b>#${index + 1}</b> ${entry.address.substring(0,6)}... : ${entry.amount} CORE</li>`;
-        });
-    } catch (err) {
-        console.error('Error loading leaderboard', err);
-    }
+.nav-brand {
+  display: flex;
+  align-items: center;
 }
 
-// Show/Hide Loader
-function showLoader() {
-    loadingSpinner.style.display = 'block';
-}
-function hideLoader() {
-    loadingSpinner.style.display = 'none';
+.logo {
+  width: 40px;
+  margin-right: 10px;
 }
 
-// Auto Fetch Updates Every 20 Seconds
-setInterval(() => {
-    if (contract) {
-        fetchCampaignInfo();
-        fetchLeaderboard();
-    }
-}, 20000);
+.brand-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ff6600;
+}
 
-// Initialize
-init();
+.btn-connect {
+  background: #ff6600;
+  border: none;
+  padding: 0.6rem 1.4rem;
+  color: white;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-connect:hover {
+  background: #e65c00;
+}
+
+/* Hero Section */
+.hero {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: url('assets/background.jpg') no-repeat center/cover;
+  color: white;
+}
+
+.hero h1 {
+  font-size: 2.8rem;
+  margin-bottom: 1rem;
+}
+
+.hero span {
+  color: #ffcc00;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.btn-primary {
+  background: #ff6600;
+  border: none;
+  padding: 0.8rem 2rem;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: #e65c00;
+}
+
+/* Campaign Summary */
+.campaign-summary {
+  padding: 2rem;
+  background: #fff;
+  text-align: center;
+}
+
+.campaign-summary h2 {
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  color: #ff6600;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.stat-box {
+  background: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 12px;
+  width: 200px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.stat-box h3 {
+  color: #ff6600;
+  font-size: 1.6rem;
+}
+
+.stat-box p {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  color: #555;
+}
+
+/* Leaderboard */
+.leaderboard {
+  padding: 2rem;
+  background: #ffe5cc;
+  text-align: center;
+}
+
+.leaderboard h2 {
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  color: #ff6600;
+}
+
+.leaderboard-list {
+  list-style: none;
+}
+
+.leaderboard-list li {
+  background: #fff;
+  margin: 0.5rem auto;
+  padding: 0.8rem;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 8px;
+  font-weight: bold;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Admin Panel */
+.admin-panel {
+  padding: 2rem;
+  background: #ffffff;
+  text-align: center;
+}
+
+.admin-panel h2 {
+  margin-bottom: 1rem;
+  color: #ff6600;
+}
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.btn-admin {
+  background: #ff6600;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.6rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-admin:hover {
+  background: #e65c00;
+}
+
+/* Footer */
+footer {
+  margin-top: auto;
+  background: #fff;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: #777;
+}
+
+/* Hidden Class */
+.hidden {
+  display: none;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ff6600;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  display: none;
+  font-weight: bold;
+  z-index: 999;
+  animation: fadeInOut 4s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0%,100% { opacity: 0; }
+  10%,90% { opacity: 1; }
+}
+
+/* Responsive */
+@media(max-width: 768px) {
+  .stats {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .admin-actions {
+    flex-direction: column;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+}
