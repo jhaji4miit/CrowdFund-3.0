@@ -1,67 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CrowdFund DApp</title>
-  <link rel="stylesheet" href="style.css">
-  <script type="module" src="app.js" defer></script>
-  <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chintan's CrowdFund DApp 🚀</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
 </head>
-
 <body>
-  <header>
-    <h1>CrowdFund DApp</h1>
-    <button id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
-    <p id="walletAddress"></p>
-  </header>
 
-  <main>
-    <section id="contributeSection">
-      <h2>Contribute</h2>
-      <input type="number" id="contributeAmount" placeholder="Amount in CORE" />
-      <button onclick="contribute()">Contribute</button>
-    </section>
+    <!-- Landing Page -->
+    <div id="landingPage" class="landing">
+        <h1 id="typingText"></h1>
+        <button id="enterButton" onclick="enterApp()">Enter 🚀</button>
+    </div>
 
-    <section id="functionsSection">
-      <h2>Campaign Functions</h2>
-      <button onclick="getBalance()">Get Contract Balance</button>
-      <button onclick="getTimeRemaining()">Get Time Remaining</button>
-      <input type="text" id="contributorAddress" placeholder="Contributor Address" />
-      <button onclick="getContributorDetails()">Get Contribution Details</button>
-      <button onclick="refund()">Request Refund</button>
-      <button onclick="getCampaignSummary()">View Campaign Summary</button>
-      <button onclick="listContributors()">View Leaderboard</button>
-    </section>
+    <!-- Main App Hidden Initially -->
+    <div id="mainApp" style="display:none;">
+        <header>
+            <h1>Chintan's CrowdFund DApp</h1>
+            <button onclick="connectWallet()">Connect Wallet</button>
+            <p id="walletAddress"></p>
+        </header>
 
-    <section id="adminPanel" style="display: none;">
-      <h2>Admin Panel</h2>
-      <button onclick="withdrawFunds()">Withdraw Funds</button>
-      <button onclick="extendDeadline()">Extend Deadline</button>
-    </section>
+        <section class="actions">
+            <input type="text" id="contributeAmount" placeholder="Amount to Contribute (CORE)">
+            <button onclick="contribute()">Contribute</button>
 
-    <section id="outputSection">
-      <h2>Output</h2>
-      <pre id="output">Output will appear here...</pre>
-    </section>
+            <button onclick="getBalance()">Check Contract Balance</button>
+            <button onclick="getTimeRemaining()">Get Time Remaining</button>
 
-    <section id="leaderboardSection">
-      <h2>Contributor Leaderboard</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>Address</th>
-            <th>Amount (CORE)</th>
-          </tr>
-        </thead>
-        <tbody id="leaderboardBody"></tbody>
-      </table>
-    </section>
-  </main>
+            <input type="text" id="contributorAddress" placeholder="Contributor Address">
+            <button onclick="getContributorDetails()">Check Contribution</button>
 
-  <footer>
-    <p>Built by Chintan Vatsa Jha | Powered by Core DAO</p>
-  </footer>
+            <button onclick="getCampaignSummary()">Campaign Summary</button>
+            <button onclick="refund()">Request Refund</button>
+        </section>
+
+        <!-- Admin Panel -->
+        <div id="adminPanel" style="display:none;">
+            <h2>Admin Panel 👑</h2>
+            <button onclick="withdrawFunds()">Withdraw Funds</button>
+            <button onclick="extendDeadline()">Extend Deadline</button>
+        </div>
+
+        <!-- Leaderboard -->
+        <section class="leaderboard">
+            <h2>🏆 Top Contributors</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Address</th>
+                        <th>Amount (CORE)</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboardBody">
+                    <!-- Dynamic Content -->
+                </tbody>
+            </table>
+        </section>
+
+        <p id="output"></p>
+    </div>
+
+    <script type="module" src="app.js"></script>
+    <script>
+        // Typing effect
+        let i = 0;
+        let text = "Welcome to Chintan's CrowdFund DApp 🚀";
+        function typeWriter() {
+            if (i < text.length) {
+                document.getElementById("typingText").innerHTML += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            }
+        }
+        typeWriter();
+
+        function enterApp() {
+            document.getElementById('landingPage').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+        }
+    </script>
 </body>
 </html>
