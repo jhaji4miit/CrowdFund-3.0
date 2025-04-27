@@ -109,7 +109,7 @@ contract CrowdFund {
         return contributorIndex;
     }
 
-    // ✅ Function 8: Extend deadline (only once)
+    // Function 8: Extend deadline (only once)
     function extendDeadline(uint _extraDays) public onlyOwner beforeDeadline {
         require(!deadlineExtended, "Deadline already extended");
         require(_extraDays > 0, "Extension must be greater than 0");
@@ -120,7 +120,7 @@ contract CrowdFund {
         emit DeadlineExtended(deadline);
     }
 
-    // ✅ Function 9: Get campaign summary
+    // Function 9: Get campaign summary
     function getCampaignSummary() public view returns (
         uint goal,
         uint raised,
@@ -133,5 +133,10 @@ contract CrowdFund {
         timeLeft = getTimeRemaining();
         reached = goalReached;
         withdrawn = fundsWithdrawn;
+    }
+
+    // ✅ Function 10: Check if an address is a contributor
+    function isContributor(address _addr) public view returns (bool) {
+        return contributions[_addr] > 0;
     }
 }
