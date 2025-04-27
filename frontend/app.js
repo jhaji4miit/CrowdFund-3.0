@@ -1,91 +1,91 @@
+import abi from './abi.json' assert { type: 'json' };
+
+const contractAddress = "0xb872722d611bE8f7F53090B9236D0Ba7Cb58e875";
+
+let web3;
 let contract;
-let signer;
-const contractAddress = "0xb872722d611bE8f7F53090B9236D0Ba7Cb58e875"; // 
-const abi = [ /* Paste your ABI here */ ];
 
 async function connectWallet() {
-    if (window.ethereum) {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        await provider.send("eth_requestAccounts", []);
-        signer = provider.getSigner();
-        contract = new ethers.Contract(contractAddress, abi, signer);
-        loadCampaignInfo();
-    } else {
-        alert("Please install MetaMask");
-    }
-}
-
-async function loadCampaignInfo() {
-    const goal = await contract.goalAmount();
-    const raised = await contract.totalRaised();
-    const timeLeft = await contract.getTimeRemaining();
-    const goalReached = await contract.goalReached();
-
-    document.getElementById("goalAmount").innerText = ethers.utils.formatEther(goal);
-    document.getElementById("raisedAmount").innerText = ethers.utils.formatEther(raised);
-    document.getElementById("timeLeft").innerText = timeLeft;
-    document.getElementById("status").innerText = goalReached ? "Goal Reached 🎯" : "In Progress ⏳";
-
-    checkContributor();
-    loadContributors();
+  if (window.ethereum) {
+    web3 = new Web3(window.ethereum);
+    await window.ethereum.enable();
+    contract = new web3.eth.Contract(abi, contractAddress);
+    console.log("Connected to Smart Contract Successfully!");
+  } else {
+    alert("MetaMask not detected. Please install it.");
+  }
 }
 
 async function contribute() {
-    const amount = document.getElementById("amount").value;
-    if (!amount || amount <= 0) {
-        alert("Enter a valid amount");
-        return;
-    }
-    const tx = await contract.contribute({ value: ethers.utils.parseEther(amount) });
-    await tx.wait();
-    alert("Contribution successful!");
-    loadCampaignInfo();
+  const amount = document.getElementById('amount').value;
+  const accounts = await web3.eth.getAccounts();
+
+  await contract.methods.contribute().send({
+    from: accounts[0],
+    value: web3.utils.toWei(amount, "ether")
+  });
+
+  alert('Contribution Successful!');
 }
 
 async function withdrawFunds() {
-    try {
-        const tx = await contract.withdrawFunds();
-        await tx.wait();
-        alert("Funds withdrawn!");
-        loadCampaignInfo();
-    } catch (error) {
-        alert("Only owner can withdraw or goal not reached");
-    }
+  const accounts = await web3.eth.getAccounts();
+
+  await contract.methods.withdrawFunds().send({
+    from: accounts[0]
+  });
+
+  alert('Funds Withdrawn Successfully!');
 }
 
 async function refund() {
-    try {
-        const tx = await contract.refund();
-        await tx.wait();
-        alert("Refund claimed!");
-        loadCampaignInfo();
-    } catch (error) {
-        alert("Refund not possible");
-    }
+  const accounts = await web3.eth.getAccounts();
+
+  await contract.methods.refund().send({
+    from: accounts[0]
+  });
+
+  alert('Refund Processed!');
 }
 
-async function loadContributors() {
-    const contributors = await contract.getAllContributors();
-    const list = document.getElementById("contributorsList");
-    list.innerHTML = "";
-    contributors.forEach(addr => {
-        const li = document.createElement("li");
-        li.innerText = addr;
-        list.appendChild(li);
-    });
+async function getCampaignSummary() {
+  const summary = await contract.methods.getCampaignSummary().call();
+  console.log("Campaign Summary:", summary);
+
+  document.getElementById('summary').innerHTML = `
+    <b>Goal Amount:</b> ${web3.utils.fromWei(summary.goal, "ether")} ETH<br>
+    <b>Total Raised:</b> ${web3.utils.fromWei(summary.raised, "ether")} ETH<br>
+    <b>Time Remaining:</b> ${summary.timeLeft} seconds<br>
+    <b>Goal Reached:</b> ${summary.reached}<br>
+    <b>Funds Withdrawn:</b> ${summary.withdrawn}<br>
+  `;
 }
 
-async function checkContributor() {
-    const address = await signer.getAddress();
-    const isContributed = await contract.isContributor(address);
-    if (isContributed) {
-        document.getElementById("userContribution").style.display = "block";
-    } else {
-        document.getElementById("userContribution").style.display = "none";
-    }
+async function extendDeadline() {
+  const extraDays = document.getElementById('extraDays').value;
+  const accounts = await web3.eth.getAccounts();
+
+  await contract.methods.extendDeadline(extraDays).send({
+    from: accounts[0]
+  });
+
+  alert('Deadline Extended Successfully!');
 }
 
-document.getElementById("connectWallet").onclick = connectWallet;
-document.getElementById("contributeBtn").onclick = contribute;
-document.getElementById("withdrawBtn").onclick = withdrawFunds;
-document.getElementById("refundBtn").onclick = refund;
+async function getAllContributors() {
+  const contributors = await contract.methods.getAllContributors().call();
+  console.log("Contributors List:", contributors);
+
+  document.getElementById('contributorsList').innerHTML = contributors.join('<br>');
+}
+
+async function getMyContribution() {
+  const accounts = await web3.eth.getAccounts();
+  const myContribution = await contract.methods.getContributorDetails(accounts[0]).call();
+
+  alert(`You have contributed: ${web3.utils.fromWei(myContribution, "ether")} ETH`);
+}
+
+window.addEventListener('load', async () => {
+  await connectWallet();
+});
