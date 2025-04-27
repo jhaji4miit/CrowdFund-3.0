@@ -1,48 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>CrowdFund DApp - Chintan Vatsa Jha</title>
-    <link rel="stylesheet" href="./style.css">
-    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CrowdFund Dapp - Core DAO</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
-    <div class="container">
-        <h1>CrowdFund DApp</h1>
-        <p>Support the campaign and be a part of something big!</p>
+  <h1>CrowdFund Dapp (Core DAO Network)</h1>
 
-        <div class="section">
-            <input type="text" id="amount" placeholder="Amount in ETH">
-            <button onclick="contribute()">Contribute</button>
-        </div>
+  <button id="connectButton">Connect Wallet</button>
 
-        <div class="section">
-            <button onclick="withdrawFunds()">Withdraw Funds (Owner Only)</button>
-            <button onclick="refund()">Claim Refund (If Goal Not Met)</button>
-        </div>
+  <div id="campaign">
+    <h2>Campaign Summary</h2>
+    <p><strong>Goal:</strong> <span id="goalAmount"></span> CORE</p>
+    <p><strong>Total Raised:</strong> <span id="totalRaised"></span> CORE</p>
+    <p><strong>Time Left:</strong> <span id="timeRemaining"></span> seconds</p>
+    <p><strong>Goal Reached:</strong> <span id="goalReached"></span></p>
+    <p><strong>Funds Withdrawn:</strong> <span id="fundsWithdrawn"></span></p>
 
-        <div class="section">
-            <button onclick="getCampaignSummary()">Get Campaign Summary</button>
-            <div id="summary"></div>
-        </div>
+    <input type="number" id="contributionAmount" placeholder="Amount in CORE" />
+    <button id="contributeButton">Contribute</button>
+  </div>
 
-        <div class="section">
-            <input type="number" id="extraDays" placeholder="Extend Deadline (days)">
-            <button onclick="extendDeadline()">Extend Deadline (Owner Only)</button>
-        </div>
-
-        <div class="section">
-            <button onclick="getAllContributors()">Show All Contributors</button>
-            <div id="contributorsList"></div>
-        </div>
-
-        <div class="section">
-            <button onclick="getMyContribution()">Get My Contribution</button>
-        </div>
-
-    </div>
-
-    <script type="module" src="./app.js"></script>
+  <script type="module" src="./app.js"></script>
 </body>
 </html>
