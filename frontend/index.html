@@ -3,75 +3,67 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#ff7f00">
   <title>Crowdfund | Empowering Decentralized Dreams</title>
-
-  <link rel="manifest" href="./manifest.json">
-  <link rel="stylesheet" href="./style.css">
-  <link rel="icon" href="./assets/logo.png" type="image/png">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="assets/logo.png">
 
   <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-
 <body>
+
   <header>
-    <img src="./assets/logo.png" alt="Logo" class="logo">
+    <img src="assets/logo.png" alt="Logo" class="logo">
     <h1>Crowdfund</h1>
-    <p class="tagline">Empowering Decentralized Dreams</p>
-    <button id="connectWallet">Connect Wallet</button>
+    <p>Empowering Decentralized Dreams 🚀</p>
+    <button id="connectWallet">🔗 Connect Wallet</button>
   </header>
 
   <main>
-    <section id="stats">
-      <h2>Funding Progress</h2>
-      <div class="progress-bar">
-        <div id="progressFill"></div>
-      </div>
-      <p id="fundingInfo">Loading...</p>
-    </section>
+    <section class="campaign-info" id="fundingInfo"></section>
 
-    <section id="contributeSection">
-      <h2>Contribute Now</h2>
-      <input type="number" id="contributeAmount" placeholder="Amount in CORE">
-      <button id="contributeBtn">Contribute</button>
-    </section>
-
-    <section id="leaderboard">
-      <h2>Top Contributors</h2>
-      <ul id="leaderboardList">Loading...</ul>
+    <section class="contribution-section">
+      <input id="contributeAmount" type="number" placeholder="Amount (in CORE)">
+      <button id="contributeBtn">💸 Contribute</button>
     </section>
 
     <section id="adminPanel" style="display:none;">
-      <h2>Admin Panel</h2>
-      <button id="withdrawFunds">Withdraw Funds</button>
-      <button id="refund">Refund All</button>
-      <input type="number" id="extendDays" placeholder="Extend by Days">
+      <h2>🛠 Admin Panel</h2>
+      <button id="withdrawFunds">Withdraw Funds</button><br>
+      <input id="extendDays" type="number" placeholder="Extend by (Days)">
       <button id="extendDeadline">Extend Deadline</button>
     </section>
+
+    <section class="refund-section">
+      <button id="refund">↩️ Request Refund</button>
+    </section>
+
+    <section class="leaderboard">
+      <h2>🏆 Top Contributors</h2>
+      <ul id="leaderboardList"></ul>
+    </section>
+
+    <div id="loadingSpinner" style="display:none;">
+      <img src="assets/spinner.gif" alt="Loading...">
+    </div>
+
+    <div id="progressBar"><div id="progressFill"></div></div>
   </main>
 
   <footer>
-    <p>Powered by CoreDAO | Made by Chintan Vatsa Jha</p>
+    <p>Made with ❤️ by Chintan Vatsa Jha</p>
   </footer>
 
-  <div id="loadingSpinner" style="display:none;">
-    <img src="./assets/spinner.gif" alt="Loading...">
-  </div>
-
-  <script src="./app.js"></script>
-
+  <script type="module" src="app.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
+      window.addEventListener('load', () => {
         navigator.serviceWorker.register('/service-worker.js')
-        .then(function(registration) {
-          console.log('✅ ServiceWorker registered:', registration.scope);
-        }, function(err) {
-          console.log('❌ ServiceWorker registration failed:', err);
-        });
+          .then(registration => console.log('✅ ServiceWorker registered:', registration.scope))
+          .catch(err => console.log('❌ ServiceWorker failed:', err));
       });
     }
   </script>
+
 </body>
 </html>
