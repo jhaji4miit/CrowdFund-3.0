@@ -1,86 +1,47 @@
-/* style.css */
 body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-    color: white;
-    min-height: 100vh;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(to right, #6a11cb, #2575fc);
+  color: white;
+  margin: 0;
+  padding: 0;
 }
 
-header, .actions, .leaderboard, #adminPanel {
-    text-align: center;
-    margin: 20px;
+.container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
 }
 
-input, button {
-    padding: 10px;
-    margin: 10px;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
+section {
+  background: rgba(255, 255, 255, 0.1);
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 10px;
 }
 
 button {
-    background-color: #ff7b00;
-    color: white;
-    cursor: pointer;
-    transition: background 0.3s;
+  background: #ff6b81;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin-top: 10px;
+  color: white;
+  cursor: pointer;
 }
 
-button:hover {
-    background-color: #ffab40;
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: none;
+  border-radius: 5px;
 }
 
-table {
-    width: 90%;
-    margin: 20px auto;
-    background-color: white;
-    color: black;
-    border-radius: 10px;
-    overflow: hidden;
+h1, h2 {
+  text-align: center;
 }
 
-th, td {
-    padding: 12px;
-}
-
-#output {
-    text-align: center;
-    margin-top: 20px;
-}
-
-/* Landing page styling */
-.landing {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: #111;
-    color: #00ff99;
-    font-size: 2rem;
-}
-
-#enterButton {
-    margin-top: 20px;
-    background-color: #00ff99;
-    color: black;
-    font-size: 1.5rem;
-    padding: 10px 30px;
-    border-radius: 10px;
-}
-
-#enterButton:hover {
-    background-color: #00cc77;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-    h1 {
-        font-size: 1.8rem;
-    }
-    .actions, .leaderboard {
-        width: 90%;
-    }
+#leaderboard, #summary, #contributorDetails, #miscData {
+  white-space: pre-line;
+  margin-top: 10px;
 }
