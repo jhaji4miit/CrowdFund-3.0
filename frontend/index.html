@@ -2,52 +2,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CrowdFund DApp</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <div class="container">
         <h1>CrowdFund DApp</h1>
 
-        <div id="campaign-summary" class="card">
-            <h2>Campaign Summary</h2>
-            <p><strong>Goal:</strong> <span id="goalAmount"></span> ETH</p>
-            <p><strong>Raised:</strong> <span id="totalRaised"></span> ETH</p>
-            <p><strong>Time Remaining:</strong> <span id="timeRemaining"></span></p>
-            <p><strong>Goal Reached:</strong> <span id="goalReached"></span></p>
-            <p><strong>Funds Withdrawn:</strong> <span id="fundsWithdrawn"></span></p>
-            <button onclick="getSummary()">Refresh</button>
+        <button id="connectWallet">Connect Wallet</button>
+
+        <div id="campaignInfo">
+            <h3>Campaign Stats:</h3>
+            <p><strong>Goal:</strong> <span id="goalAmount">0</span> ETH</p>
+            <p><strong>Raised:</strong> <span id="raisedAmount">0</span> ETH</p>
+            <p><strong>Time Remaining:</strong> <span id="timeLeft">0</span> seconds</p>
+            <p><strong>Status:</strong> <span id="status">Loading...</span></p>
         </div>
 
-        <div class="card">
-            <h2>Contribute ETH</h2>
-            <input type="number" id="contributionAmount" placeholder="Amount in ETH">
-            <button onclick="contribute()">Contribute</button>
+        <div id="userContribution" style="display:none;">
+            <p>✅ You have contributed to this campaign!</p>
         </div>
 
-        <div class="card">
-            <h2>Withdraw / Refund</h2>
-            <button onclick="withdrawFunds()">Withdraw Funds (Owner)</button>
-            <button onclick="refund()">Refund My Contribution</button>
+        <div id="contribution">
+            <input type="number" id="amount" placeholder="Enter ETH Amount" />
+            <button id="contributeBtn">Contribute</button>
         </div>
 
-        <div class="card">
-            <h2>Get My Contribution</h2>
-            <button onclick="getMyContribution()">Show My Contribution</button>
-            <p id="myContribution"></p>
+        <div id="actions">
+            <button id="withdrawBtn">Withdraw Funds (Owner Only)</button>
+            <button id="refundBtn">Claim Refund</button>
         </div>
 
-        <div class="card">
-            <h2>Contributors List</h2>
-            <button onclick="getContributors()">Load Contributors</button>
-            <ul id="contributorsList"></ul>
-        </div>
-
+        <h3>Contributors List:</h3>
+        <ul id="contributorsList"></ul>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
