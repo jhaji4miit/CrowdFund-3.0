@@ -1,152 +1,173 @@
-import abi from './abi.json' assert { type: 'json' };
+import abi from "./abi.json" assert { type: "json" };
 
-// Contract Setup
-const contractAddress = "0xb872722d611bE8f7F53090B9236D0Ba7Cb58e875";
-let contract, signer, provider, currentAccount;
+const CONTRACT_ADDRESS = "0xb872722d611bE8f7F53090B9236D0Ba7Cb58e875"; // CoreDAO address
 
-document.addEventListener('DOMContentLoaded', async function() {
-  const welcomeScreen = document.getElementById('welcome-screen');
-  const mainApp = document.getElementById('main-app');
-  const enterAppBtn = document.getElementById('enterAppBtn');
+let provider, signer, contract, userAddress;
+const connectWalletBtn = document.getElementById('connectWallet');
+const contributeBtn = document.getElementById('contributeBtn');
+const withdrawFundsBtn = document.getElementById('withdrawFunds');
+const refundBtn = document.getElementById('refund');
+const extendDeadlineBtn = document.getElementById('extendDeadline');
+const leaderboardList = document.getElementById('leaderboardList');
+const fundingInfo = document.getElementById('fundingInfo');
+const progressFill = document.getElementById('progressFill');
+const loadingSpinner = document.getElementById('loadingSpinner');
+const adminPanel = document.getElementById('adminPanel');
 
-  enterAppBtn.addEventListener('click', async function() {
-    welcomeScreen.style.display = 'none';
-    mainApp.style.display = 'block';
-    await connectWallet();
-    await loadLeaderboard();
-    checkOwner();
-  });
-
-  document.getElementById('contributeBtn').addEventListener('click', contribute);
-  document.getElementById('withdrawBtn').addEventListener('click', withdrawFunds);
-  document.getElementById('refundBtn').addEventListener('click', refund);
-  document.getElementById('extendDeadlineBtn').addEventListener('click', extendDeadline);
-});
-
-// Wallet connection
 async function connectWallet() {
-  provider = new ethers.providers.Web3Provider(window.ethereum, "any");
-  await provider.send("eth_requestAccounts", []);
-  signer = provider.getSigner();
-  currentAccount = await signer.getAddress();
-  contract = new ethers.Contract(contractAddress, abi, signer);
-  console.log('✅ Wallet connected:', currentAccount);
+    try {
+        if (window.ethereum) {
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+            provider = new ethers.providers.Web3Provider(window.ethereum);
+            signer = provider.getSigner();
+            contract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
+            userAddress = await signer.getAddress();
+
+            connectWalletBtn.innerText = "Connected: " + userAddress.substring(0, 6) + "...";
+            Swal.fire('Connected!', 'Wallet connected successfully.', 'success');
+            checkIfOwner();
+            loadCampaign();
+        } else {
+            Swal.fire('Error', 'MetaMask not detected!', 'error');
+        }
+    } catch (error) {
+        console.error(error);
+        Swal.fire('Error', error.message, 'error');
+    }
 }
 
-// Contribute to campaign
+async function checkIfOwner() {
+    const owner = await contract.owner();
+    if (owner.toLowerCase() === userAddress.toLowerCase()) {
+        adminPanel.style.display = "block";
+    }
+}
+
 async function contribute() {
-  const amount = document.getElementById('contributeAmount').value;
-  if (!amount) return alert('Enter an amount!');
-  const tx = await contract.contribute({ value: ethers.utils.parseEther(amount) });
-  await tx.wait();
-  alert('🎉 Contribution successful!');
-  loadLeaderboard();
+    try {
+        const amount = document.getElementById('contributeAmount').value;
+        if (!amount || amount <= 0) {
+            Swal.fire('Error', 'Enter valid amount.', 'warning');
+            return;
+        }
+        showLoading(true);
+        const tx = await contract.contribute({ value: ethers.utils.parseEther(amount) });
+        await tx.wait();
+        Swal.fire('Success!', 'Contribution successful!', 'success');
+        document.getElementById('contributeAmount').value = "";
+        loadCampaign();
+    } catch (error) {
+        console.error(error);
+        Swal.fire('Error', error.message, 'error');
+    } finally {
+        showLoading(false);
+    }
 }
 
-// Load leaderboard
-async function loadLeaderboard() {
-  const leaderboard = document.getElementById('leaderboard');
-  leaderboard.innerHTML = 'Loading...';
-
-  const contributors = await contract.getAllContributors();
-  let entries = [];
-
-  for (let addr of contributors) {
-    const amount = await contract.getContributorDetails(addr);
-    entries.push({ address: addr, amount: ethers.utils.formatEther(amount) });
-  }
-
-  entries.sort((a, b) => b.amount - a.amount);
-
-  leaderboard.innerHTML = entries.map((entry, idx) => 
-    `<div class="leaderboard-entry">${idx + 1}. ${shorten(entry.address)} - ${entry.amount} CORE</div>`
-  ).join('');
-}
-
-function shorten(address) {
-  return address.slice(0,6) + "..." + address.slice(-4);
-}
-
-// Admin Only: Withdraw
 async function withdrawFunds() {
-  const tx = await contract.withdrawFunds();
-  await tx.wait();
-  alert('✅ Funds withdrawn!');
+    try {
+        showLoading(true);
+        const tx = await contract.withdrawFunds();
+        await tx.wait();
+        Swal.fire('Success!', 'Funds withdrawn!', 'success');
+        loadCampaign();
+    } catch (error) {
+        console.error(error);
+        Swal.fire('Error', error.message, 'error');
+    } finally {
+        showLoading(false);
+    }
 }
 
-// Admin Only: Refund
 async function refund() {
-  const tx = await contract.refund();
-  await tx.wait();
-  alert('✅ Refund processed!');
+    try {
+        showLoading(true);
+        const tx = await contract.refund();
+        await tx.wait();
+        Swal.fire('Refunded!', 'Your refund is complete.', 'success');
+        loadCampaign();
+    } catch (error) {
+        console.error(error);
+        Swal.fire('Error', error.message, 'error');
+    } finally {
+        showLoading(false);
+    }
 }
 
-// Admin Only: Extend Deadline
 async function extendDeadline() {
-  const extraDays = prompt('How many extra days?');
-  if (extraDays) {
-    const tx = await contract.extendDeadline(extraDays);
-    await tx.wait();
-    alert('✅ Deadline extended!');
-  }
+    try {
+        const days = document.getElementById('extendDays').value;
+        if (!days || days <= 0) {
+            Swal.fire('Error', 'Enter valid extension days.', 'warning');
+            return;
+        }
+        showLoading(true);
+        const tx = await contract.extendDeadline(days);
+        await tx.wait();
+        Swal.fire('Extended!', 'Deadline extended.', 'success');
+        document.getElementById('extendDays').value = "";
+        loadCampaign();
+    } catch (error) {
+        console.error(error);
+        Swal.fire('Error', error.message, 'error');
+    } finally {
+        showLoading(false);
+    }
 }
 
-// Check if current user is owner
-async function checkOwner() {
-  const owner = await contract.owner();
-  if (currentAccount.toLowerCase() === owner.toLowerCase()) {
-    document.getElementById('admin-section').style.display = 'block';
-  }
+async function loadCampaign() {
+    try {
+        const [goal, raised, timeLeft, reached, withdrawn] = await contract.getCampaignSummary();
+        const contributors = await contract.getAllContributors();
+
+        const goalEth = ethers.utils.formatEther(goal);
+        const raisedEth = ethers.utils.formatEther(raised);
+        const progressPercent = Math.min((raised / goal) * 100, 100);
+
+        fundingInfo.innerHTML = `
+            Goal: ${goalEth} CORE<br>
+            Raised: ${raisedEth} CORE<br>
+            Time Remaining: ${formatTime(timeLeft)}
+        `;
+        progressFill.style.width = `${progressPercent}%`;
+
+        leaderboardList.innerHTML = "";
+        for (const address of contributors) {
+            const amount = await contract.getContributorDetails(address);
+            const amountEth = ethers.utils.formatEther(amount);
+            const item = document.createElement('li');
+            item.textContent = `${address.substring(0, 6)}...: ${amountEth} CORE`;
+            leaderboardList.appendChild(item);
+        }
+    } catch (error) {
+        console.error(error);
+    }
 }
 
-// Install Prompt
-let deferredPrompt;
-const installBtn = document.getElementById('installBtn');
+function formatTime(seconds) {
+    if (seconds == 0) return "Expired";
+    const d = Math.floor(seconds / (3600*24));
+    const h = Math.floor(seconds % (3600*24) / 3600);
+    const m = Math.floor(seconds % 3600 / 60);
+    return `${d}d ${h}h ${m}m`;
+}
 
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  installBtn.style.display = 'block';
+function showLoading(show) {
+    loadingSpinner.style.display = show ? "flex" : "none";
+}
 
-  installBtn.addEventListener('click', () => {
-    installBtn.style.display = 'none';
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((choiceResult) => {
-      console.log(choiceResult.outcome === 'accepted' ? '✅ App Installed' : '❌ App Installation dismissed');
-      deferredPrompt = null;
-    });
-  });
+// Event Listeners
+connectWalletBtn.addEventListener('click', connectWallet);
+contributeBtn.addEventListener('click', contribute);
+withdrawFundsBtn.addEventListener('click', withdrawFunds);
+refundBtn.addEventListener('click', refund);
+extendDeadlineBtn.addEventListener('click', extendDeadline);
+
+// Auto Load Leaderboard every 30 seconds
+setInterval(() => {
+    if (contract) loadCampaign();
+}, 30000);
+
+window.addEventListener('load', () => {
+    if (window.ethereum) connectWallet();
 });
-
-// Typewriter Effect for Welcome
-const words = ["Decentralized.", "Transparent.", "Empowering Dreams."];
-let i = 0, timer;
-function typingEffect() {
-  let word = words[i].split("");
-  var loopTyping = function() {
-    if (word.length > 0) {
-      document.getElementById('typewriter').innerHTML += word.shift();
-    } else {
-      deletingEffect();
-      return;
-    };
-    timer = setTimeout(loopTyping, 150);
-  };
-  loopTyping();
-}
-function deletingEffect() {
-  let word = words[i].split("");
-  var loopDeleting = function() {
-    if (word.length > 0) {
-      word.pop();
-      document.getElementById('typewriter').innerHTML = word.join("");
-    } else {
-      i = (i + 1) % words.length;
-      typingEffect();
-      return;
-    };
-    timer = setTimeout(loopDeleting, 100);
-  };
-  setTimeout(loopDeleting, 1000);
-}
-typingEffect();
