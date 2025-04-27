@@ -1,179 +1,152 @@
 import abi from './abi.json' assert { type: 'json' };
 
-const CONTRACT_ADDRESS = '0xb872722d611bE8f7F53090B9236D0Ba7Cb58e875';
-let provider, signer, contract, userAddress;
+// Contract Setup
+const contractAddress = "0xb872722d611bE8f7F53090B9236D0Ba7Cb58e875";
+let contract, signer, provider, currentAccount;
 
-const connectWallet = async () => {
-  try {
-    if (!window.ethereum) throw new Error('Please install MetaMask!');
+document.addEventListener('DOMContentLoaded', async function() {
+  const welcomeScreen = document.getElementById('welcome-screen');
+  const mainApp = document.getElementById('main-app');
+  const enterAppBtn = document.getElementById('enterAppBtn');
 
-    provider = new ethers.providers.Web3Provider(window.ethereum);
-    await provider.send('eth_requestAccounts', []);
-    signer = provider.getSigner();
-    userAddress = await signer.getAddress();
+  enterAppBtn.addEventListener('click', async function() {
+    welcomeScreen.style.display = 'none';
+    mainApp.style.display = 'block';
+    await connectWallet();
+    await loadLeaderboard();
+    checkOwner();
+  });
 
-    contract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
+  document.getElementById('contributeBtn').addEventListener('click', contribute);
+  document.getElementById('withdrawBtn').addEventListener('click', withdrawFunds);
+  document.getElementById('refundBtn').addEventListener('click', refund);
+  document.getElementById('extendDeadlineBtn').addEventListener('click', extendDeadline);
+});
 
-    alert(`✅ Wallet connected: ${userAddress.slice(0,6)}...${userAddress.slice(-4)}`);
-    checkAdmin();
-    autoRefresh();
-  } catch (error) {
-    console.error(error);
-    alert('❌ Wallet connection failed.');
+// Wallet connection
+async function connectWallet() {
+  provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+  await provider.send("eth_requestAccounts", []);
+  signer = provider.getSigner();
+  currentAccount = await signer.getAddress();
+  contract = new ethers.Contract(contractAddress, abi, signer);
+  console.log('✅ Wallet connected:', currentAccount);
+}
+
+// Contribute to campaign
+async function contribute() {
+  const amount = document.getElementById('contributeAmount').value;
+  if (!amount) return alert('Enter an amount!');
+  const tx = await contract.contribute({ value: ethers.utils.parseEther(amount) });
+  await tx.wait();
+  alert('🎉 Contribution successful!');
+  loadLeaderboard();
+}
+
+// Load leaderboard
+async function loadLeaderboard() {
+  const leaderboard = document.getElementById('leaderboard');
+  leaderboard.innerHTML = 'Loading...';
+
+  const contributors = await contract.getAllContributors();
+  let entries = [];
+
+  for (let addr of contributors) {
+    const amount = await contract.getContributorDetails(addr);
+    entries.push({ address: addr, amount: ethers.utils.formatEther(amount) });
   }
-};
 
-const checkAdmin = async () => {
-  const owner = await contract.owner();
-  if (userAddress.toLowerCase() === owner.toLowerCase()) {
-    document.getElementById('admin-section').style.display = 'block';
-  } else {
-    document.getElementById('admin-section').style.display = 'none';
-  }
-};
+  entries.sort((a, b) => b.amount - a.amount);
 
-const contribute = async () => {
-  try {
-    const amount = document.getElementById('amount').value;
-    if (!amount || parseFloat(amount) <= 0) return alert('Enter valid amount.');
+  leaderboard.innerHTML = entries.map((entry, idx) => 
+    `<div class="leaderboard-entry">${idx + 1}. ${shorten(entry.address)} - ${entry.amount} CORE</div>`
+  ).join('');
+}
 
-    const tx = await contract.contribute({ value: ethers.utils.parseEther(amount) });
-    await tx.wait();
-    alert('🎯 Contribution successful!');
-    loadLeaderboard();
-    loadSummary();
-  } catch (error) {
-    console.error(error);
-    alert('❌ Contribution failed.');
-  }
-};
+function shorten(address) {
+  return address.slice(0,6) + "..." + address.slice(-4);
+}
 
-const loadSummary = async () => {
-  try {
-    const summary = await contract.getCampaignSummary();
-    document.getElementById('summary').innerText = `
-Goal: ${ethers.utils.formatEther(summary.goal)} CORE
-Raised: ${ethers.utils.formatEther(summary.raised)} CORE
-Time Left: ${formatTime(summary.timeLeft)}
-Goal Reached: ${summary.reached}
-Funds Withdrawn: ${summary.withdrawn}
-    `;
-  } catch (error) {
-    console.error(error);
-  }
-};
+// Admin Only: Withdraw
+async function withdrawFunds() {
+  const tx = await contract.withdrawFunds();
+  await tx.wait();
+  alert('✅ Funds withdrawn!');
+}
 
-const loadLeaderboard = async () => {
-  try {
-    const addresses = await contract.getAllContributors();
-    let leaderboard = '';
+// Admin Only: Refund
+async function refund() {
+  const tx = await contract.refund();
+  await tx.wait();
+  alert('✅ Refund processed!');
+}
 
-    for (let addr of addresses) {
-      const amount = await contract.getContributorDetails(addr);
-      leaderboard += `${shortAddress(addr)} - ${ethers.utils.formatEther(amount)} CORE\n`;
-    }
-
-    document.getElementById('leaderboard').innerText = leaderboard || 'No contributors yet!';
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const refund = async () => {
-  try {
-    const tx = await contract.refund();
-    await tx.wait();
-    alert('💸 Refund Successful!');
-  } catch (error) {
-    console.error(error);
-    alert('❌ Refund failed.');
-  }
-};
-
-const withdrawFunds = async () => {
-  try {
-    const tx = await contract.withdrawFunds();
-    await tx.wait();
-    alert('💰 Funds withdrawn!');
-    loadSummary();
-  } catch (error) {
-    console.error(error);
-    alert('❌ Withdraw failed.');
-  }
-};
-
-const extendDeadline = async () => {
-  try {
-    const extraDays = document.getElementById('extraDays').value;
-    if (!extraDays || parseInt(extraDays) <= 0) return alert('Enter valid extra days.');
-
+// Admin Only: Extend Deadline
+async function extendDeadline() {
+  const extraDays = prompt('How many extra days?');
+  if (extraDays) {
     const tx = await contract.extendDeadline(extraDays);
     await tx.wait();
-    alert('🗓️ Deadline extended!');
-    loadSummary();
-  } catch (error) {
-    console.error(error);
-    alert('❌ Extension failed.');
+    alert('✅ Deadline extended!');
   }
-};
+}
 
-const getContribution = async () => {
-  try {
-    const address = document.getElementById('contributorAddress').value;
-    if (!ethers.utils.isAddress(address)) return alert('Invalid address.');
-    
-    const amount = await contract.getContributorDetails(address);
-    document.getElementById('contributorDetails').innerText = `${ethers.utils.formatEther(amount)} CORE`;
-  } catch (error) {
-    console.error(error);
+// Check if current user is owner
+async function checkOwner() {
+  const owner = await contract.owner();
+  if (currentAccount.toLowerCase() === owner.toLowerCase()) {
+    document.getElementById('admin-section').style.display = 'block';
   }
-};
+}
 
-const getBalance = async () => {
-  try {
-    const balance = await contract.getBalance();
-    document.getElementById('miscData').innerText = `Balance: ${ethers.utils.formatEther(balance)} CORE`;
-  } catch (error) {
-    console.error(error);
-  }
-};
+// Install Prompt
+let deferredPrompt;
+const installBtn = document.getElementById('installBtn');
 
-const getTimeRemaining = async () => {
-  try {
-    const timeLeft = await contract.getTimeRemaining();
-    document.getElementById('miscData').innerText += `\nTime Left: ${formatTime(timeLeft)}`;
-  } catch (error) {
-    console.error(error);
-  }
-};
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.style.display = 'block';
 
-const formatTime = (seconds) => {
-  if (seconds <= 0) return 'Expired';
-  const d = Math.floor(seconds / (3600*24));
-  const h = Math.floor(seconds % (3600*24) / 3600);
-  const m = Math.floor(seconds % 3600 / 60);
-  const s = Math.floor(seconds % 60);
+  installBtn.addEventListener('click', () => {
+    installBtn.style.display = 'none';
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+      console.log(choiceResult.outcome === 'accepted' ? '✅ App Installed' : '❌ App Installation dismissed');
+      deferredPrompt = null;
+    });
+  });
+});
 
-  return `${d}d ${h}h ${m}m ${s}s`;
-};
-
-const shortAddress = (addr) => `${addr.slice(0,6)}...${addr.slice(-4)}`;
-
-const autoRefresh = () => {
-  setInterval(() => {
-    loadLeaderboard();
-    loadSummary();
-  }, 30000); // every 30 seconds
-};
-
-// ========== Event Listeners ==========
-document.getElementById('connectWallet').onclick = connectWallet;
-document.getElementById('contributeBtn').onclick = contribute;
-document.getElementById('summaryBtn').onclick = loadSummary;
-document.getElementById('leaderboardBtn').onclick = loadLeaderboard;
-document.getElementById('refundBtn').onclick = refund;
-document.getElementById('withdrawBtn').onclick = withdrawFunds;
-document.getElementById('extendBtn').onclick = extendDeadline;
-document.getElementById('getContributionBtn').onclick = getContribution;
-document.getElementById('getBalanceBtn').onclick = getBalance;
-document.getElementById('getTimeBtn').onclick = getTimeRemaining;
+// Typewriter Effect for Welcome
+const words = ["Decentralized.", "Transparent.", "Empowering Dreams."];
+let i = 0, timer;
+function typingEffect() {
+  let word = words[i].split("");
+  var loopTyping = function() {
+    if (word.length > 0) {
+      document.getElementById('typewriter').innerHTML += word.shift();
+    } else {
+      deletingEffect();
+      return;
+    };
+    timer = setTimeout(loopTyping, 150);
+  };
+  loopTyping();
+}
+function deletingEffect() {
+  let word = words[i].split("");
+  var loopDeleting = function() {
+    if (word.length > 0) {
+      word.pop();
+      document.getElementById('typewriter').innerHTML = word.join("");
+    } else {
+      i = (i + 1) % words.length;
+      typingEffect();
+      return;
+    };
+    timer = setTimeout(loopDeleting, 100);
+  };
+  setTimeout(loopDeleting, 1000);
+}
+typingEffect();
