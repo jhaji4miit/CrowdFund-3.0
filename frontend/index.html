@@ -2,76 +2,76 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>CrowdFund DApp - CoreDAO</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#4CAF50">
-  
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="CrowdFund DApp">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="apple-touch-icon" href="/assets/logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ff7f00">
+  <title>Crowdfund | Empowering Decentralized Dreams</title>
 
-  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="./style.css">
+  <link rel="icon" href="./assets/logo.png" type="image/png">
 
-  <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
+  <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
+  <header>
+    <img src="./assets/logo.png" alt="Logo" class="logo">
+    <h1>Crowdfund</h1>
+    <p class="tagline">Empowering Decentralized Dreams</p>
+    <button id="connectWallet">Connect Wallet</button>
+  </header>
 
-  <!-- Welcome Screen -->
-  <div id="welcome-screen">
-    <img src="/assets/logo.png" alt="CrowdFund Logo" id="logo">
-    <h1>Welcome to CrowdFund DApp 🚀</h1>
-    <p id="typewriter"></p>
-    <button id="enterAppBtn">Enter App</button>
-  </div>
+  <main>
+    <section id="stats">
+      <h2>Funding Progress</h2>
+      <div class="progress-bar">
+        <div id="progressFill"></div>
+      </div>
+      <p id="fundingInfo">Loading...</p>
+    </section>
 
-  <!-- Main App Section -->
-  <div id="main-app" style="display:none;">
-    <nav>
-      <h2>CrowdFund Dashboard 📊</h2>
-      <button id="installBtn" style="display:none;">Install App</button>
-    </nav>
-
-    <section id="contribute-section">
-      <h3>Make a Contribution</h3>
-      <input type="number" id="contributeAmount" placeholder="Enter amount in CORE">
+    <section id="contributeSection">
+      <h2>Contribute Now</h2>
+      <input type="number" id="contributeAmount" placeholder="Amount in CORE">
       <button id="contributeBtn">Contribute</button>
     </section>
 
-    <section id="leaderboard-section">
-      <h3>Top Contributors 💎</h3>
-      <div id="leaderboard"></div>
+    <section id="leaderboard">
+      <h2>Top Contributors</h2>
+      <ul id="leaderboardList">Loading...</ul>
     </section>
 
-    <section id="admin-section" style="display:none;">
-      <h3>Admin Panel 🔒</h3>
-      <button id="withdrawBtn">Withdraw Funds</button>
-      <button id="extendDeadlineBtn">Extend Deadline</button>
-      <button id="refundBtn">Refund Contributors</button>
+    <section id="adminPanel" style="display:none;">
+      <h2>Admin Panel</h2>
+      <button id="withdrawFunds">Withdraw Funds</button>
+      <button id="refund">Refund All</button>
+      <input type="number" id="extendDays" placeholder="Extend by Days">
+      <button id="extendDeadline">Extend Deadline</button>
     </section>
+  </main>
 
-    <footer>
-      <p>Built by Chintan Vatsa Jha | Powered by CoreDAO 🔥</p>
-    </footer>
+  <footer>
+    <p>Powered by CoreDAO | Made by Chintan Vatsa Jha</p>
+  </footer>
+
+  <div id="loadingSpinner" style="display:none;">
+    <img src="./assets/spinner.gif" alt="Loading...">
   </div>
 
-  <script src="app.js"></script>
+  <script src="./app.js"></script>
 
-  <!-- Service Worker Registration -->
   <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/service-worker.js')
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/service-worker.js')
         .then(function(registration) {
           console.log('✅ ServiceWorker registered:', registration.scope);
         }, function(err) {
           console.log('❌ ServiceWorker registration failed:', err);
         });
-    });
-  }
+      });
+    }
   </script>
 </body>
 </html>
