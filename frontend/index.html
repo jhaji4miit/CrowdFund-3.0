@@ -1,83 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chintan's CrowdFund DApp</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Core DAO CrowdFund DApp</title>
 
-    <!-- Favicon and PWA Manifest -->
-    <link rel="icon" href="favicon.ico">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#6a11cb">
+  <!-- Manifest and Icons -->
+  <link rel="icon" href="favicon.ico">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#6a11cb">
 
-    <!-- External Libraries -->
-    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
+  <!-- Ethers.js -->
+  <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
 
-    <!-- Custom Styles -->
-    <link rel="stylesheet" href="style.css">
+  <!-- Style -->
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div class="container">
-        <h1>🚀 CrowdFund DApp by Chintan Vatsa Jha</h1>
+  <div class="container">
+    <h1>🚀 CoreDAO CrowdFund</h1>
+    <button id="connectWallet">Connect Wallet</button>
 
-        <!-- Main UI -->
-        <div id="main-content">
-            <button id="connectWallet">🔗 Connect Wallet</button>
+    <section id="contribute-section">
+      <h2>Contribute</h2>
+      <input type="number" id="amount" placeholder="Amount in CORE">
+      <button id="contributeBtn">Contribute</button>
+    </section>
 
-            <h2>Contribute to Campaign</h2>
-            <input type="number" id="contributionAmount" placeholder="Amount in CORE">
-            <button id="contributeBtn">💸 Contribute</button>
+    <section id="summary-section">
+      <h2>Campaign Summary</h2>
+      <button id="summaryBtn">Load Summary</button>
+      <div id="summary"></div>
+    </section>
 
-            <h2>Campaign Summary</h2>
-            <button id="summaryBtn">📋 Get Campaign Summary</button>
-            <div id="campaignSummary"></div>
+    <section id="leaderboard-section">
+      <h2>Leaderboard 🏆</h2>
+      <button id="leaderboardBtn">Load Leaderboard</button>
+      <div id="leaderboard"></div>
+    </section>
 
-            <h2>Refund</h2>
-            <button id="refundBtn">🔄 Request Refund</button>
+    <section id="refund-section">
+      <h2>Refund</h2>
+      <button id="refundBtn">Request Refund</button>
+    </section>
 
-            <h2>Withdraw Funds (Owner Only)</h2>
-            <button id="withdrawBtn">🏦 Withdraw Funds</button>
+    <section id="admin-section">
+      <h2>Admin Panel 👨‍💻</h2>
+      <button id="withdrawBtn">Withdraw Funds</button>
+      <input type="number" id="extraDays" placeholder="Extend Deadline (days)">
+      <button id="extendBtn">Extend Deadline</button>
+    </section>
 
-            <h2>Extend Deadline (Owner Only)</h2>
-            <input type="number" id="extraDays" placeholder="Extra days to extend">
-            <button id="extendDeadlineBtn">⏳ Extend Deadline</button>
+    <section id="details-section">
+      <h2>Contributor Details</h2>
+      <input type="text" id="contributorAddress" placeholder="Contributor Address">
+      <button id="getContributionBtn">Get Contribution</button>
+      <div id="contributorDetails"></div>
+    </section>
 
-            <h2>Leaderboard 🏆</h2>
-            <button id="loadLeaderboardBtn">📈 Load Leaderboard</button>
-            <div id="leaderboard"></div>
+    <section id="misc-section">
+      <h2>More Info</h2>
+      <button id="getBalanceBtn">Get Contract Balance</button>
+      <button id="getTimeBtn">Get Time Remaining</button>
+      <div id="miscData"></div>
+    </section>
+  </div>
 
-            <h2>Contributor Details</h2>
-            <input type="text" id="contributorAddress" placeholder="Contributor Address">
-            <button id="getContributorBtn">🔍 Get Contribution</button>
-            <div id="contributorDetails"></div>
+  <!-- App -->
+  <script src="app.js"></script>
 
-            <h2>Contract Balance</h2>
-            <button id="balanceBtn">💰 Get Contract Balance</button>
-            <div id="contractBalance"></div>
-
-            <h2>Time Remaining</h2>
-            <button id="timeRemainingBtn">⏰ Get Time Remaining</button>
-            <div id="timeRemaining"></div>
-        </div>
-    </div>
-
-    <!-- App Scripts -->
-    <script src="app.js"></script>
-
-    <!-- Service Worker Registration -->
-    <script>
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-            navigator.serviceWorker.register('/service-worker.js')
-            .then(function(registration) {
-                console.log('✅ ServiceWorker registration successful:', registration.scope);
-            }, function(err) {
-                console.log('❌ ServiceWorker registration failed:', err);
-            });
-        });
-    }
-    </script>
+  <!-- Service Worker -->
+  <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+      .then(function(registration) {
+        console.log('✅ Service Worker registered:', registration.scope);
+      }, function(err) {
+        console.log('❌ Service Worker registration failed:', err);
+      });
+    });
+  }
+  </script>
 
 </body>
 </html>
