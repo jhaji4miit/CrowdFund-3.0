@@ -3,66 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CrowdFund Dapp - Core DAO</title>
-  <link rel="stylesheet" href="./style.css">
-</head>
-<body>
-
-  <h1>CrowdFund Dapp (Core DAO Network)</h1>
-
-  <button id="connectButton">Connect Wallet</button>
-
-  <div id="campaign">
-    <h2>Campaign Summary</h2>
-    <p><strong>Goal:</strong> <span id="goalAmount"></span> CORE</p>
-    <p><strong>Total Raised:</strong> <span id="totalRaised"></span> CORE</p>
-    <p><strong>Time Left:</strong> <span id="timeRemaining"></span> seconds</p>
-    <p><strong>Goal Reached:</strong> <span id="goalReached"></span></p>
-    <p><strong>Funds Withdrawn:</strong> <span id="fundsWithdrawn"></span></p>
-  </div>
-
-  <div id="actions">
-    <h2>Actions</h2>
-
-    <input type="number" id="contributionAmount" placeholder="Amount in CORE" />
-    <button id="contributeButton">Contribute</button>
-
-    <button id="withdrawButton">Withdraw Funds (Owner Only)</button>
-
-    <button id="refundButton">Request Refund</button>
-
-    <input type="number" id="extendDays" placeholder="Days to Extend" />
-    <button id="extendDeadlineButton">Extend Deadline (Owner Only)</button>
-
-    <input type="text" id="contributorAddress" placeholder="Contributor Address" />
-    <button id="checkContributionButton">Check Contribution</button>
-
-    <button id="listContributorsButton">List All Contributors</button>
-  </div>
-
-  <div id="output"></div>
-
-  <div id="leaderboardSection">
-  <h2>Top Contributors Leaderboard</h2>
-  <table id="leaderboardTable">
-    <thead>
-      <tr>
-        <th>Rank</th>
-        <th>Address</th>
-        <th>Amount (CORE)</th>
-      </tr>
-    </thead>
-    <tbody id="leaderboardBody">
-      <!-- dynamic rows will come here -->
-    </tbody>
-  </table>
-</div>
-
-  <!-- ✅ Load Ethers.js -->
+  <title>CrowdFund DApp</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js" defer></script>
   <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
+</head>
 
-  <!-- ✅ App script -->
-  <script type="module" src="./app.js"></script>
+<body>
+  <header>
+    <h1>CrowdFund DApp</h1>
+    <button id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+    <p id="walletAddress"></p>
+  </header>
 
+  <main>
+    <section id="contributeSection">
+      <h2>Contribute</h2>
+      <input type="number" id="contributeAmount" placeholder="Amount in CORE" />
+      <button onclick="contribute()">Contribute</button>
+    </section>
+
+    <section id="functionsSection">
+      <h2>Campaign Functions</h2>
+      <button onclick="getBalance()">Get Contract Balance</button>
+      <button onclick="getTimeRemaining()">Get Time Remaining</button>
+      <input type="text" id="contributorAddress" placeholder="Contributor Address" />
+      <button onclick="getContributorDetails()">Get Contribution Details</button>
+      <button onclick="refund()">Request Refund</button>
+      <button onclick="getCampaignSummary()">View Campaign Summary</button>
+      <button onclick="listContributors()">View Leaderboard</button>
+    </section>
+
+    <section id="adminPanel" style="display: none;">
+      <h2>Admin Panel</h2>
+      <button onclick="withdrawFunds()">Withdraw Funds</button>
+      <button onclick="extendDeadline()">Extend Deadline</button>
+    </section>
+
+    <section id="outputSection">
+      <h2>Output</h2>
+      <pre id="output">Output will appear here...</pre>
+    </section>
+
+    <section id="leaderboardSection">
+      <h2>Contributor Leaderboard</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Address</th>
+            <th>Amount (CORE)</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboardBody"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <p>Built by Chintan Vatsa Jha | Powered by Core DAO</p>
+  </footer>
 </body>
 </html>
