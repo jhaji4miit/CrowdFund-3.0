@@ -2,42 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CrowdFund DApp</title>
-    <link rel="stylesheet" href="style.css">
+    <title>CrowdFund DApp - Chintan Vatsa Jha</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
 </head>
 <body>
+
     <div class="container">
         <h1>CrowdFund DApp</h1>
+        <p>Support the campaign and be a part of something big!</p>
 
-        <button id="connectWallet">Connect Wallet</button>
-
-        <div id="campaignInfo">
-            <h3>Campaign Stats:</h3>
-            <p><strong>Goal:</strong> <span id="goalAmount">0</span> ETH</p>
-            <p><strong>Raised:</strong> <span id="raisedAmount">0</span> ETH</p>
-            <p><strong>Time Remaining:</strong> <span id="timeLeft">0</span> seconds</p>
-            <p><strong>Status:</strong> <span id="status">Loading...</span></p>
+        <div class="section">
+            <input type="text" id="amount" placeholder="Amount in ETH">
+            <button onclick="contribute()">Contribute</button>
         </div>
 
-        <div id="userContribution" style="display:none;">
-            <p>✅ You have contributed to this campaign!</p>
+        <div class="section">
+            <button onclick="withdrawFunds()">Withdraw Funds (Owner Only)</button>
+            <button onclick="refund()">Claim Refund (If Goal Not Met)</button>
         </div>
 
-        <div id="contribution">
-            <input type="number" id="amount" placeholder="Enter ETH Amount" />
-            <button id="contributeBtn">Contribute</button>
+        <div class="section">
+            <button onclick="getCampaignSummary()">Get Campaign Summary</button>
+            <div id="summary"></div>
         </div>
 
-        <div id="actions">
-            <button id="withdrawBtn">Withdraw Funds (Owner Only)</button>
-            <button id="refundBtn">Claim Refund</button>
+        <div class="section">
+            <input type="number" id="extraDays" placeholder="Extend Deadline (days)">
+            <button onclick="extendDeadline()">Extend Deadline (Owner Only)</button>
         </div>
 
-        <h3>Contributors List:</h3>
-        <ul id="contributorsList"></ul>
+        <div class="section">
+            <button onclick="getAllContributors()">Show All Contributors</button>
+            <div id="contributorsList"></div>
+        </div>
+
+        <div class="section">
+            <button onclick="getMyContribution()">Get My Contribution</button>
+        </div>
+
     </div>
 
-    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
-    <script src="app.js"></script>
+    <script type="module" src="./app.js"></script>
 </body>
 </html>
