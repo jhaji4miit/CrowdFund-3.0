@@ -1,6 +1,6 @@
 let contract;
 let signer;
-const contractAddress = "YOUR_CONTRACT_ADDRESS"; // ⬅️ replace after deploying
+const contractAddress = "0xb872722d611bE8f7F53090B9236D0Ba7Cb58e875"; // 
 const abi = [ /* Paste your ABI here */ ];
 
 async function connectWallet() {
