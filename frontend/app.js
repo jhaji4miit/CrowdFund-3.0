@@ -1,173 +1,186 @@
-import abi from "./abi.json" assert { type: "json" };
+import abi from './abi.json' assert { type: 'json' };
 
-const CONTRACT_ADDRESS = "0xb872722d611bE8f7F53090B9236D0Ba7Cb58e875"; // CoreDAO address
+const contractAddress = "0xb872722d611bE8f7F53090B9236D0Ba7Cb58e875"; // Your Core DAO contract address
+let contract;
+let signer;
+let userAddress;
 
-let provider, signer, contract, userAddress;
+// Elements
 const connectWalletBtn = document.getElementById('connectWallet');
 const contributeBtn = document.getElementById('contributeBtn');
-const withdrawFundsBtn = document.getElementById('withdrawFunds');
 const refundBtn = document.getElementById('refund');
+const withdrawFundsBtn = document.getElementById('withdrawFunds');
 const extendDeadlineBtn = document.getElementById('extendDeadline');
-const leaderboardList = document.getElementById('leaderboardList');
+const contributeAmountInput = document.getElementById('contributeAmount');
 const fundingInfo = document.getElementById('fundingInfo');
-const progressFill = document.getElementById('progressFill');
-const loadingSpinner = document.getElementById('loadingSpinner');
+const leaderboardList = document.getElementById('leaderboardList');
+const extendDaysInput = document.getElementById('extendDays');
 const adminPanel = document.getElementById('adminPanel');
+const loadingSpinner = document.getElementById('loadingSpinner');
+const progressFill = document.getElementById('progressFill');
 
-async function connectWallet() {
-    try {
-        if (window.ethereum) {
-            await window.ethereum.request({ method: 'eth_requestAccounts' });
-            provider = new ethers.providers.Web3Provider(window.ethereum);
-            signer = provider.getSigner();
-            contract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
-            userAddress = await signer.getAddress();
-
-            connectWalletBtn.innerText = "Connected: " + userAddress.substring(0, 6) + "...";
-            Swal.fire('Connected!', 'Wallet connected successfully.', 'success');
-            checkIfOwner();
-            loadCampaign();
-        } else {
-            Swal.fire('Error', 'MetaMask not detected!', 'error');
-        }
-    } catch (error) {
-        console.error(error);
-        Swal.fire('Error', error.message, 'error');
+// Initialize ethers
+async function init() {
+    if (typeof window.ethereum !== 'undefined') {
+        const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+        signer = provider.getSigner();
+        contract = new ethers.Contract(contractAddress, abi, signer);
+    } else {
+        alert("Please install MetaMask or Core Wallet Extension!");
     }
 }
 
+// Connect Wallet
+connectWalletBtn.addEventListener('click', async () => {
+    try {
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        userAddress = await signer.getAddress();
+        alert('✅ Wallet Connected: ' + userAddress);
+        checkIfOwner();
+        fetchCampaignInfo();
+        fetchLeaderboard();
+    } catch (err) {
+        console.error(err);
+        alert('❌ Wallet connection failed.');
+    }
+});
+
+// Check if user is owner
 async function checkIfOwner() {
     const owner = await contract.owner();
-    if (owner.toLowerCase() === userAddress.toLowerCase()) {
+    if (userAddress.toLowerCase() === owner.toLowerCase()) {
         adminPanel.style.display = "block";
     }
 }
 
-async function contribute() {
+// Contribute
+contributeBtn.addEventListener('click', async () => {
     try {
-        const amount = document.getElementById('contributeAmount').value;
-        if (!amount || amount <= 0) {
-            Swal.fire('Error', 'Enter valid amount.', 'warning');
-            return;
-        }
-        showLoading(true);
-        const tx = await contract.contribute({ value: ethers.utils.parseEther(amount) });
+        const amount = ethers.utils.parseEther(contributeAmountInput.value);
+        showLoader();
+        const tx = await contract.contribute({ value: amount });
         await tx.wait();
-        Swal.fire('Success!', 'Contribution successful!', 'success');
-        document.getElementById('contributeAmount').value = "";
-        loadCampaign();
-    } catch (error) {
-        console.error(error);
-        Swal.fire('Error', error.message, 'error');
-    } finally {
-        showLoading(false);
+        alert('✅ Contribution successful!');
+        fetchCampaignInfo();
+        fetchLeaderboard();
+    } catch (err) {
+        console.error(err);
+        alert('❌ Contribution failed.');
     }
-}
+    hideLoader();
+});
 
-async function withdrawFunds() {
+// Refund
+refundBtn.addEventListener('click', async () => {
     try {
-        showLoading(true);
-        const tx = await contract.withdrawFunds();
-        await tx.wait();
-        Swal.fire('Success!', 'Funds withdrawn!', 'success');
-        loadCampaign();
-    } catch (error) {
-        console.error(error);
-        Swal.fire('Error', error.message, 'error');
-    } finally {
-        showLoading(false);
-    }
-}
-
-async function refund() {
-    try {
-        showLoading(true);
+        showLoader();
         const tx = await contract.refund();
         await tx.wait();
-        Swal.fire('Refunded!', 'Your refund is complete.', 'success');
-        loadCampaign();
-    } catch (error) {
-        console.error(error);
-        Swal.fire('Error', error.message, 'error');
-    } finally {
-        showLoading(false);
+        alert('✅ Refund successful!');
+        fetchCampaignInfo();
+        fetchLeaderboard();
+    } catch (err) {
+        console.error(err);
+        alert('❌ Refund failed.');
     }
-}
+    hideLoader();
+});
 
-async function extendDeadline() {
+// Withdraw Funds (Owner)
+withdrawFundsBtn.addEventListener('click', async () => {
     try {
-        const days = document.getElementById('extendDays').value;
-        if (!days || days <= 0) {
-            Swal.fire('Error', 'Enter valid extension days.', 'warning');
-            return;
-        }
-        showLoading(true);
+        showLoader();
+        const tx = await contract.withdrawFunds();
+        await tx.wait();
+        alert('✅ Funds withdrawn!');
+        fetchCampaignInfo();
+    } catch (err) {
+        console.error(err);
+        alert('❌ Withdraw failed.');
+    }
+    hideLoader();
+});
+
+// Extend Deadline (Owner)
+extendDeadlineBtn.addEventListener('click', async () => {
+    try {
+        const days = extendDaysInput.value;
+        showLoader();
         const tx = await contract.extendDeadline(days);
         await tx.wait();
-        Swal.fire('Extended!', 'Deadline extended.', 'success');
-        document.getElementById('extendDays').value = "";
-        loadCampaign();
-    } catch (error) {
-        console.error(error);
-        Swal.fire('Error', error.message, 'error');
-    } finally {
-        showLoading(false);
+        alert('✅ Deadline extended!');
+        fetchCampaignInfo();
+    } catch (err) {
+        console.error(err);
+        alert('❌ Deadline extension failed.');
     }
-}
+    hideLoader();
+});
 
-async function loadCampaign() {
+// Fetch Campaign Info
+async function fetchCampaignInfo() {
     try {
-        const [goal, raised, timeLeft, reached, withdrawn] = await contract.getCampaignSummary();
-        const contributors = await contract.getAllContributors();
-
-        const goalEth = ethers.utils.formatEther(goal);
-        const raisedEth = ethers.utils.formatEther(raised);
-        const progressPercent = Math.min((raised / goal) * 100, 100);
+        const summary = await contract.getCampaignSummary();
+        const goal = ethers.utils.formatEther(summary.goal);
+        const raised = ethers.utils.formatEther(summary.raised);
+        const timeLeft = parseInt(summary.timeLeft);
+        const reached = summary.reached;
+        const withdrawn = summary.withdrawn;
 
         fundingInfo.innerHTML = `
-            Goal: ${goalEth} CORE<br>
-            Raised: ${raisedEth} CORE<br>
-            Time Remaining: ${formatTime(timeLeft)}
+            <h2>🎯 Campaign Summary</h2>
+            <p><b>Goal:</b> ${goal} CORE</p>
+            <p><b>Raised:</b> ${raised} CORE</p>
+            <p><b>Time Left:</b> ${timeLeft > 0 ? timeLeft + 's' : '⏳ Expired'}</p>
+            <p><b>Goal Reached:</b> ${reached ? '✅ Yes' : '❌ No'}</p>
+            <p><b>Funds Withdrawn:</b> ${withdrawn ? '✅ Yes' : '❌ No'}</p>
         `;
-        progressFill.style.width = `${progressPercent}%`;
 
-        leaderboardList.innerHTML = "";
-        for (const address of contributors) {
-            const amount = await contract.getContributorDetails(address);
-            const amountEth = ethers.utils.formatEther(amount);
-            const item = document.createElement('li');
-            item.textContent = `${address.substring(0, 6)}...: ${amountEth} CORE`;
-            leaderboardList.appendChild(item);
-        }
-    } catch (error) {
-        console.error(error);
+        const progress = (parseFloat(raised) / parseFloat(goal)) * 100;
+        progressFill.style.width = progress > 100 ? "100%" : progress + "%";
+
+    } catch (err) {
+        console.error('Error fetching campaign info', err);
     }
 }
 
-function formatTime(seconds) {
-    if (seconds == 0) return "Expired";
-    const d = Math.floor(seconds / (3600*24));
-    const h = Math.floor(seconds % (3600*24) / 3600);
-    const m = Math.floor(seconds % 3600 / 60);
-    return `${d}d ${h}h ${m}m`;
+// Fetch and Display Leaderboard
+async function fetchLeaderboard() {
+    try {
+        const contributors = await contract.getAllContributors();
+        let leaderboard = [];
+
+        for (let addr of contributors) {
+            const contribution = await contract.getContributorDetails(addr);
+            leaderboard.push({ address: addr, amount: ethers.utils.formatEther(contribution) });
+        }
+
+        leaderboard.sort((a, b) => parseFloat(b.amount) - parseFloat(a.amount));
+
+        leaderboardList.innerHTML = "";
+        leaderboard.slice(0, 10).forEach((entry, index) => {
+            leaderboardList.innerHTML += `<li><b>#${index + 1}</b> ${entry.address.substring(0,6)}... : ${entry.amount} CORE</li>`;
+        });
+    } catch (err) {
+        console.error('Error loading leaderboard', err);
+    }
 }
 
-function showLoading(show) {
-    loadingSpinner.style.display = show ? "flex" : "none";
+// Show/Hide Loader
+function showLoader() {
+    loadingSpinner.style.display = 'block';
+}
+function hideLoader() {
+    loadingSpinner.style.display = 'none';
 }
 
-// Event Listeners
-connectWalletBtn.addEventListener('click', connectWallet);
-contributeBtn.addEventListener('click', contribute);
-withdrawFundsBtn.addEventListener('click', withdrawFunds);
-refundBtn.addEventListener('click', refund);
-extendDeadlineBtn.addEventListener('click', extendDeadline);
-
-// Auto Load Leaderboard every 30 seconds
+// Auto Fetch Updates Every 20 Seconds
 setInterval(() => {
-    if (contract) loadCampaign();
-}, 30000);
+    if (contract) {
+        fetchCampaignInfo();
+        fetchLeaderboard();
+    }
+}, 20000);
 
-window.addEventListener('load', () => {
-    if (window.ethereum) connectWallet();
-});
+// Initialize
+init();
