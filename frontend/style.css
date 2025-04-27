@@ -1,145 +1,86 @@
 /* style.css */
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
-  background-color: #121212;
-  color: #e0e0e0;
-  font-family: 'Poppins', sans-serif;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    color: white;
+    min-height: 100vh;
 }
 
-header {
-  background: #1f1f1f;
-  padding: 20px;
-  text-align: center;
-}
-
-header h1 {
-  font-size: 2rem;
-  margin-bottom: 10px;
-}
-
-#connectBtn {
-  background-color: #03dac5;
-  color: #000;
-  border: none;
-  padding: 10px 20px;
-  font-weight: bold;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-#connectBtn:hover {
-  background-color: #00c4b4;
-}
-
-#walletAddress {
-  margin-top: 10px;
-  font-size: 0.9rem;
-  word-break: break-all;
-}
-
-main {
-  flex: 1;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-section {
-  background: #1e1e1e;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(3, 218, 197, 0.3);
-}
-
-section h2 {
-  margin-bottom: 15px;
-  color: #03dac5;
+header, .actions, .leaderboard, #adminPanel {
+    text-align: center;
+    margin: 20px;
 }
 
 input, button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-}
-
-input {
-  background: #2c2c2c;
-  color: #fff;
+    padding: 10px;
+    margin: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
 }
 
 button {
-  background: #03dac5;
-  color: #000;
-  cursor: pointer;
-  transition: background 0.3s;
+    background-color: #ff7b00;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
 }
 
 button:hover {
-  background: #00c4b4;
-}
-
-#output {
-  background: #2a2a2a;
-  padding: 15px;
-  border-radius: 10px;
-  height: 150px;
-  overflow-y: auto;
+    background-color: #ffab40;
 }
 
 table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
+    width: 90%;
+    margin: 20px auto;
+    background-color: white;
+    color: black;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
-thead {
-  background: #03dac5;
-  color: #000;
+th, td {
+    padding: 12px;
 }
 
-td, th {
-  padding: 12px;
-  text-align: center;
-  border-bottom: 1px solid #333;
+#output {
+    text-align: center;
+    margin-top: 20px;
 }
 
-footer {
-  background: #1f1f1f;
-  text-align: center;
-  padding: 15px;
-  font-size: 0.9rem;
-  color: #666;
+/* Landing page styling */
+.landing {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #111;
+    color: #00ff99;
+    font-size: 2rem;
 }
 
-@media (max-width: 768px) {
-  header h1 {
+#enterButton {
+    margin-top: 20px;
+    background-color: #00ff99;
+    color: black;
     font-size: 1.5rem;
-  }
+    padding: 10px 30px;
+    border-radius: 10px;
+}
 
-  section {
-    padding: 15px;
-  }
+#enterButton:hover {
+    background-color: #00cc77;
+}
 
-  input, button {
-    padding: 10px;
-    font-size: 0.9rem;
-  }
-
-  #output {
-    height: 120px;
-  }
+/* Responsive design */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+    .actions, .leaderboard {
+        width: 90%;
+    }
 }
