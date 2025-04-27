@@ -1,45 +1,35 @@
 const CACHE_NAME = 'crowdfund-cache-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/style.css',
-  '/app.js',
-  '/abi.json',
-  '/manifest.json',
-  'https://cdn.ethers.io/lib/ethers-5.2.umd.min.js'
+    '/',
+    '/index.html',
+    '/style.css',
+    '/app.js',
+    '/manifest.json',
+    '/assets/logo.png'
 ];
 
-self.addEventListener('install', function(event) {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(function(cache) {
-        console.log('✅ Service Worker: Caching files');
-        return cache.addAll(urlsToCache);
-      })
-  );
+// Install Service Worker
+self.addEventListener('install', event => {
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then(cache => {
+                console.log('✅ Opened cache');
+                return cache.addAll(urlsToCache);
+            })
+    );
 });
 
-self.addEventListener('activate', function(event) {
-  console.log('✅ Service Worker: Activated');
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(function(thisCacheName) {
-          if (thisCacheName !== CACHE_NAME) {
-            console.log('✅ Service Worker: Removing old cache');
-            return caches.delete(thisCacheName);
-          }
-        })
-      );
-    })
-  );
+// Fetch Assets
+self.addEventListener('fetch', event => {
+    event.respondWith(
+        caches.match(event.request)
+            .then(response => {
+                return response || fetch(event.request);
+            })
+    );
 });
 
-self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    caches.match(event.request)
-      .then(function(response) {
-        return response || fetch(event.request);
-      })
-  );
+// Activate Service Worker
+self.addEventListener('activate', event => {
+    console.log('Service Worker activated');
 });
