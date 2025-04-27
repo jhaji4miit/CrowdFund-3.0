@@ -4,66 +4,105 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Crowdfund | Empowering Decentralized Dreams</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="assets/logo.png" type="image/png">
+
+  <!-- Manifest -->
   <link rel="manifest" href="manifest.json">
+
+  <!-- Theme color for PWA -->
+  <meta name="theme-color" content="#ff6600">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Style -->
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" type="image/png" href="assets/logo.png">
 
-  <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+  <!-- Ethers.js -->
+  <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
 </head>
-<body>
 
-  <header>
-    <img src="assets/logo.png" alt="Logo" class="logo">
-    <h1>Crowdfund</h1>
-    <p>Empowering Decentralized Dreams 🚀</p>
-    <button id="connectWallet">🔗 Connect Wallet</button>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <img src="assets/logo.png" alt="Crowdfund Logo" class="logo">
+      <span class="brand-name">Crowdfund</span>
+    </div>
+    <button id="connectWalletBtn" class="btn-connect">Connect Wallet</button>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <h1>Empowering <span>Decentralized Dreams</span></h1>
+    <p>Support innovative ideas on CoreDAO blockchain with secure smart contracts.</p>
+    <button id="contributeNowBtn" class="btn-primary">Contribute Now 🚀</button>
   </header>
 
-  <main>
-    <section class="campaign-info" id="fundingInfo"></section>
-
-    <section class="contribution-section">
-      <input id="contributeAmount" type="number" placeholder="Amount (in CORE)">
-      <button id="contributeBtn">💸 Contribute</button>
-    </section>
-
-    <section id="adminPanel" style="display:none;">
-      <h2>🛠 Admin Panel</h2>
-      <button id="withdrawFunds">Withdraw Funds</button><br>
-      <input id="extendDays" type="number" placeholder="Extend by (Days)">
-      <button id="extendDeadline">Extend Deadline</button>
-    </section>
-
-    <section class="refund-section">
-      <button id="refund">↩️ Request Refund</button>
-    </section>
-
-    <section class="leaderboard">
-      <h2>🏆 Top Contributors</h2>
-      <ul id="leaderboardList"></ul>
-    </section>
-
-    <div id="loadingSpinner" style="display:none;">
-      <img src="assets/spinner.gif" alt="Loading...">
+  <!-- Campaign Summary Section -->
+  <section class="campaign-summary">
+    <h2>Campaign Overview</h2>
+    <div class="stats">
+      <div class="stat-box">
+        <h3 id="goalAmount">--</h3>
+        <p>Goal Amount</p>
+      </div>
+      <div class="stat-box">
+        <h3 id="totalRaised">--</h3>
+        <p>Raised So Far</p>
+      </div>
+      <div class="stat-box">
+        <h3 id="timeRemaining">--</h3>
+        <p>Time Remaining</p>
+      </div>
+      <div class="stat-box">
+        <h3 id="contributorsCount">--</h3>
+        <p>Contributors</p>
+      </div>
     </div>
+  </section>
 
-    <div id="progressBar"><div id="progressFill"></div></div>
-  </main>
+  <!-- Leaderboard -->
+  <section class="leaderboard">
+    <h2>Top Contributors 🏆</h2>
+    <ul id="leaderboardList" class="leaderboard-list"></ul>
+  </section>
 
+  <!-- Admin Panel (hidden for normal users) -->
+  <section id="adminPanel" class="admin-panel hidden">
+    <h2>Admin Panel 🛠️</h2>
+    <div class="admin-actions">
+      <button id="withdrawBtn" class="btn-admin">Withdraw Funds</button>
+      <button id="extendDeadlineBtn" class="btn-admin">Extend Deadline</button>
+      <button id="summaryBtn" class="btn-admin">View Summary</button>
+    </div>
+  </section>
+
+  <!-- Toast Notifications -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Footer -->
   <footer>
-    <p>Made with ❤️ by Chintan Vatsa Jha</p>
+    <p>Built with ❤️ on CoreDAO by Chintan Vatsa Jha © 2025</p>
   </footer>
 
-  <script type="module" src="app.js"></script>
+  <!-- Scripts -->
+  <script src="app.js"></script>
+
+  <!-- Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
+      window.addEventListener('load', function() {
         navigator.serviceWorker.register('/service-worker.js')
-          .then(registration => console.log('✅ ServiceWorker registered:', registration.scope))
-          .catch(err => console.log('❌ ServiceWorker failed:', err));
+          .then(function(registration) {
+            console.log('✅ ServiceWorker registered:', registration.scope);
+          }, function(err) {
+            console.log('❌ ServiceWorker registration failed:', err);
+          });
       });
     }
   </script>
-
 </body>
 </html>
