@@ -1,16 +1,20 @@
 ## 📢 Project Title
+
 Crowdfund3.0 | Empowering Decentralized Dreams
 
 ## 📜 Project Description
+
 Crowdfund is a decentralized crowdfunding platform built on the Core DAO blockchain.
 It provides a transparent, secure, and efficient way for project creators to raise funds and for supporters to invest in ideas they believe in — with no middlemen involved.
 Using smart contracts, Crowdfund ensures automatic handling of contributions, refunds, and fund withdrawals, all while keeping every transaction open and verifiable on-chain.
 
 ##🎯 Project Vision
+
 "To democratize fundraising globally by enabling anyone, anywhere, to easily support and launch creative, impactful, and innovative projects through decentralized technology."
 We aim to create a global, borderless platform where opportunities are no longer restricted by geography, politics, or centralized platforms — empowering people and ideas worldwide.
 
 ##✨ Key Features
+
 Decentralized Campaign Management: Run fully transparent campaigns using smart contracts.
 Secure Contributions: Backers contribute directly to the campaign’s contract address.
 Auto-Refund System: Funds are automatically refunded if the project doesn't meet its funding goal.
@@ -23,6 +27,7 @@ MetaMask/Core DAO Wallet Connect: Easy integration for secure transactions.
 Beautiful, Interactive Frontend: Modern, animated user experience with smooth wallet connections.
 
 ##🚀 Future Scope
+
 Multi-Campaign System: Launch and manage multiple campaigns from a single dashboard.
 NFT Rewards: Issue NFTs as rewards for top contributors.
 Multi-Chain Support: Expand to support Ethereum, BNB Chain, and Polygon networks.
@@ -33,6 +38,7 @@ Analytics Dashboard: Advanced stats for owners like daily contributors, funding 
 Email Notifications: Inform users about milestones (funded 50%, nearing deadline, etc.)
 
 ##🛠 Built With
+
 Solidity (Smart Contract)
 Core DAO Chain
 HTML5 + CSS3 + Vanilla JavaScript (Frontend)
