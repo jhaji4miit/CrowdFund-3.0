@@ -1,92 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crowdfund | Empowering Decentralized Dreams</title>
-
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
-
-    <!-- Favicon / Logo -->
-    <link rel="icon" href="./assets/logo.png" type="image/png">
-
-    <!-- Styling -->
-    <link rel="stylesheet" href="style.css">
-
-    <!-- Ethers.js -->
-    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crowdfund - Empowering Decentralized Dreams</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/logo.png">
+  <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
 </head>
 <body>
 
-    <header class="header">
-        <img src="./assets/logo.png" alt="Crowdfund Logo" class="logo">
-        <h1>Crowdfund</h1>
-        <p>Empowering Decentralized Dreams 🚀</p>
-    </header>
+  <header>
+    <img src="assets/logo.png" alt="Crowdfund Logo" class="logo">
+    <h1>Crowdfund</h1>
+    <p>Empowering Decentralized Dreams</p>
+    <button id="connectWallet">🔗 Connect Wallet</button>
+  </header>
 
-    <main class="container">
+  <main>
+    <section id="campaignList">
+      <h2>🌟 Explore Campaigns</h2>
+      <div id="campaignsContainer"></div>
+    </section>
 
-        <!-- Connect Wallet -->
-        <div class="section">
-            <button id="connectWalletBtn" class="btn">🔗 Connect Wallet</button>
-        </div>
+    <section id="leaderboard">
+      <h2>🏆 Top Contributors</h2>
+      <div id="leaderboardContainer"></div>
+    </section>
 
-        <!-- Campaign Summary -->
-        <div class="section">
-            <h2>🎯 Campaign Summary</h2>
-            <div class="card">
-                <p><strong>Goal:</strong> <span id="goalAmount">-</span></p>
-                <p><strong>Raised:</strong> <span id="raisedAmount">-</span></p>
-                <p><strong>Time Left:</strong> <span id="timeRemaining">-</span></p>
-                <p><strong>Goal Reached:</strong> <span id="goalReached">-</span></p>
-                <p><strong>Funds Withdrawn:</strong> <span id="fundsWithdrawn">-</span></p>
-            </div>
-        </div>
+    <div class="floating-button">
+      <a href="create.html">➕ Create Campaign</a>
+    </div>
+  </main>
 
-        <!-- Contribute -->
-        <div class="section">
-            <h2>💸 Make a Contribution</h2>
-            <input type="number" id="contributeAmount" placeholder="Amount in CORE">
-            <button id="contributeBtn" class="btn">🚀 Contribute</button>
-        </div>
+  <script src="app.js" type="module"></script>
 
-        <!-- Leaderboard -->
-        <div class="section">
-            <h2>🏆 Top Contributors</h2>
-            <ul id="leaderboardList" class="leaderboard"></ul>
-        </div>
-
-        <!-- Admin Panel (Hidden until Owner Connects) -->
-        <div id="adminPanel" class="section hidden">
-            <h2>🧑‍💻 Admin Panel</h2>
-            <button id="withdrawBtn" class="btn admin">💸 Withdraw Funds</button>
-            <button id="refundBtn" class="btn admin">🔄 Refund Contributors</button>
-            <button id="extendBtn" class="btn admin">🕒 Extend Deadline</button>
-        </div>
-
-    </main>
-
-    <!-- Toast Message -->
-    <div id="toast" class="toast"></div>
-
-    <!-- App Script -->
-    <script type="module" src="app.js"></script>
-
-    <!-- Service Worker (PWA) -->
-    <script>
+  <script>
     if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-            navigator.serviceWorker.register('/service-worker.js')
-            .then(function(registration) {
-                console.log('✅ ServiceWorker registration successful:', registration.scope);
-            }, function(err) {
-                console.log('❌ ServiceWorker registration failed:', err);
-            });
-        });
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(reg => console.log('✅ Service Worker registered', reg.scope))
+          .catch(err => console.error('❌ Service Worker failed', err));
+      });
     }
-    </script>
+  </script>
 
 </body>
 </html>
