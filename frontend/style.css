@@ -1,61 +1,187 @@
+/* Reset basic styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body */
 body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Poppins', sans-serif;
-  background: linear-gradient(to right, #ff8008, #ffc837);
-  color: #333;
-  text-align: center;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #FF8008, #FFC837);
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-header {
-  padding: 20px;
+/* Navbar */
+nav {
+    background-color: white;
+    padding: 1rem 2rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.logo {
-  width: 60px;
+nav img {
+    height: 40px;
 }
 
-button {
-  background: #ff5722;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  margin-top: 10px;
-  cursor: pointer;
-  border-radius: 10px;
+nav button {
+    padding: 8px 16px;
+    background: #FF8008;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
 }
 
-button:hover {
-  background: #e64a19;
+nav button:hover {
+    background: #e46b00;
 }
 
-main {
-  margin-top: 20px;
+/* Hero Section */
+.hero {
+    padding: 4rem 2rem;
+    text-align: center;
+    color: white;
 }
 
-section {
-  margin: 20px;
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
 }
 
-.campaign, .leaderboard-entry {
-  background: white;
-  margin: 10px;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+.hero p {
+    font-size: 1.2rem;
 }
 
-.floating-button {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
+/* Campaigns Section */
+#campaigns {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 2rem;
+    gap: 1.5rem;
 }
 
-.floating-button a {
-  background: #ff5722;
-  padding: 15px 20px;
-  border-radius: 50%;
-  color: white;
-  text-decoration: none;
-  font-size: 24px;
+.campaign-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    padding: 2rem;
+    width: 300px;
+    transition: transform 0.3s;
+}
+
+.campaign-card:hover {
+    transform: translateY(-10px);
+}
+
+.campaign-card h2 {
+    font-size: 1.5rem;
+    color: #FF8008;
+    margin-bottom: 10px;
+}
+
+.campaign-card p {
+    margin: 5px 0;
+}
+
+.campaign-card button {
+    margin-top: 1rem;
+    width: 100%;
+    padding: 10px;
+    background: #FF8008;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.campaign-card button:hover {
+    background: #e46b00;
+}
+
+/* Leaderboard Section */
+#leaderboard {
+    margin: 3rem 2rem;
+}
+
+#leaderboard h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: white;
+}
+
+#leaderboardTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin: auto;
+    max-width: 800px;
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+#leaderboardTable th, #leaderboardTable td {
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+#leaderboardTable th {
+    background: #FF8008;
+    color: white;
+}
+
+#leaderboardTable tr:hover {
+    background: #f9f9f9;
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+    padding: 1rem;
+    text-align: center;
+    background-color: white;
+    font-size: 0.9rem;
+}
+
+/* Theme: Dark mode */
+.dark body {
+    background: #121212;
+    color: white;
+}
+
+.dark nav {
+    background: #1f1f1f;
+}
+
+.dark .campaign-card {
+    background: #242424;
+    color: white;
+}
+
+.dark #leaderboardTable {
+    background: #1f1f1f;
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #campaigns {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+    }
 }
