@@ -1,50 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="auto">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Crowdfund - Empowering Decentralized Dreams</title>
-  <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="assets/logo.png">
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
 </head>
-<body>
 
+<body>
   <header>
-    <img src="assets/logo.png" alt="Crowdfund Logo" class="logo">
-    <h1>Crowdfund</h1>
-    <p>Empowering Decentralized Dreams</p>
-    <button id="connectWallet">🔗 Connect Wallet</button>
+    <img src="assets/logo.png" alt="Logo" id="logo">
+    <button id="themeToggle">🌓</button>
+    <button id="connectWallet">Connect Wallet</button>
   </header>
 
   <main>
-    <section id="campaignList">
-      <h2>🌟 Explore Campaigns</h2>
-      <div id="campaignsContainer"></div>
+    <section class="hero">
+      <h1>Crowdfund</h1>
+      <p>Empowering Decentralized Dreams 🚀</p>
+      <a href="create.html" class="primary-button">Start a Campaign</a>
     </section>
+
+    <section id="campaigns"></section>
 
     <section id="leaderboard">
-      <h2>🏆 Top Contributors</h2>
-      <div id="leaderboardContainer"></div>
+      <h2>Top Contributors 🏆</h2>
+      <table id="leaderboardTable"></table>
     </section>
-
-    <div class="floating-button">
-      <a href="create.html">➕ Create Campaign</a>
-    </div>
   </main>
 
-  <script src="app.js" type="module"></script>
+  <footer>
+    <button id="installApp">📲 Install App</button>
+    <p>Built with ❤️ by Chintan Vatsa Jha</p>
+  </footer>
 
+  <script src="app.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
+      window.addEventListener('load', function() {
         navigator.serviceWorker.register('/service-worker.js')
-          .then(reg => console.log('✅ Service Worker registered', reg.scope))
-          .catch(err => console.error('❌ Service Worker failed', err));
+        .then(function(registration) {
+          console.log('✅ ServiceWorker registered:', registration.scope);
+        }, function(err) {
+          console.log('❌ ServiceWorker failed:', err);
+        });
       });
     }
   </script>
-
 </body>
 </html>
