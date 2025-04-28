@@ -1,52 +1,79 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="auto">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Crowdfund - Empowering Decentralized Dreams</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crowdfund | Empowering Decentralized Dreams</title>
+
+  <!-- Poppins Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Manifest for PWA -->
+  <link rel="manifest" href="/manifest.json" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Ethers.js -->
+  <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
 </head>
-
 <body>
-  <header>
-    <img src="assets/logo.png" alt="Logo" id="logo">
-    <button id="themeToggle">🌓</button>
-    <button id="connectWallet">Connect Wallet</button>
-  </header>
 
-  <main>
-    <section class="hero">
-      <h1>Crowdfund</h1>
-      <p>Empowering Decentralized Dreams 🚀</p>
-      <a href="create.html" class="primary-button">Start a Campaign</a>
-    </section>
+  <!-- Navbar -->
+  <nav>
+    <img src="assets/logo.png" alt="Crowdfund Logo" />
+    <button id="connectWalletBtn">Connect Wallet</button>
+  </nav>
 
-    <section id="campaigns"></section>
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Empowering Decentralized Dreams 🚀</h1>
+    <p>Fund your vision. Support ideas. Shape the future.</p>
+  </section>
 
-    <section id="leaderboard">
-      <h2>Top Contributors 🏆</h2>
-      <table id="leaderboardTable"></table>
-    </section>
-  </main>
+  <!-- Campaign Section -->
+  <section id="campaigns">
+    <!-- Campaign cards will be dynamically generated here -->
+  </section>
 
+  <!-- Leaderboard Section -->
+  <section id="leaderboard">
+    <h2>Top Contributors 🌟</h2>
+    <table id="leaderboardTable">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Address</th>
+          <th>Amount (CORE)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Leaderboard entries will be dynamically generated -->
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Footer -->
   <footer>
-    <button id="installApp">📲 Install App</button>
-    <p>Built with ❤️ by Chintan Vatsa Jha</p>
+    © 2024 Crowdfund by Chintan Vatsa Jha. All Rights Reserved.
   </footer>
 
+  <!-- Scripts -->
+  <script src="abi.js"></script>
   <script src="app.js"></script>
+
+  <!-- PWA Service Worker Registration -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('/service-worker.js')
         .then(function(registration) {
-          console.log('✅ ServiceWorker registered:', registration.scope);
+          console.log('✅ ServiceWorker registration successful:', registration.scope);
         }, function(err) {
-          console.log('❌ ServiceWorker failed:', err);
+          console.log('❌ ServiceWorker registration failed:', err);
         });
       });
     }
