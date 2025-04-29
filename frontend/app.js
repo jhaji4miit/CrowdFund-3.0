@@ -1,138 +1,134 @@
-// app.js
+// Import ABI and connect to Smart Contract
+import abi from './abi.json';
 
 let provider;
 let signer;
 let contract;
 
+// Contract address
 const contractAddress = "0x55aC56EC0102438c97c5789a5fFDea314342c0e8";
 
-// Fetch ABI from abi.json
-async function loadContract() {
-    const response = await fetch('/abi.json');
-    const abi = await response.json();
-
-    provider = new ethers.providers.Web3Provider(window.ethereum);
-    signer = provider.getSigner();
-    contract = new ethers.Contract(contractAddress, abi, signer);
-}
-
+// Connect to wallet and initialize
 async function connectWallet() {
-    try {
-        await window.ethereum.request({ method: "eth_requestAccounts" });
-        await loadContract();
-        alert("✅ Wallet Connected Successfully!");
-    } catch (error) {
-        console.error(error);
-        alert("❌ Wallet Connection Failed!");
+    if (window.ethereum) {
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        signer = provider.getSigner();
+        contract = new ethers.Contract(contractAddress, abi, signer);
+
+        document.getElementById('walletAddress').innerText = await signer.getAddress();
+        loadCampaignSummary();
+        loadLeaderboard();
+        setInterval(loadLeaderboard, 30000); // Auto refresh every 30 seconds
+    } else {
+        alert("Please install MetaMask to use this app!");
     }
 }
 
-async function contribute() {
-    const amount = document.getElementById("contributionAmount").value;
-    if (!amount || isNaN(amount)) {
-        alert("Please enter a valid contribution amount.");
-        return;
+// Load basic campaign summary
+async function loadCampaignSummary() {
+    try {
+        const summary = await contract.getCampaignSummary();
+        document.getElementById('goalAmount').innerText = ethers.utils.formatEther(summary.goal) + " CORE";
+        document.getElementById('totalRaised').innerText = ethers.utils.formatEther(summary.raised) + " CORE";
+        document.getElementById('timeRemaining').innerText = summary.timeLeft > 0 ? `${(summary.timeLeft / 3600).toFixed(2)} hrs` : "Expired";
+        document.getElementById('goalReached').innerText = summary.reached ? "✅ Yes" : "❌ No";
+        document.getElementById('fundsWithdrawn').innerText = summary.withdrawn ? "✅ Yes" : "❌ No";
+    } catch (error) {
+        console.error("Error loading summary:", error);
     }
+}
+
+// Contribute function
+async function contribute() {
+    const amount = document.getElementById('contributionAmount').value;
+    if (!amount) return alert("Enter an amount to contribute!");
 
     try {
         const tx = await contract.contribute({ value: ethers.utils.parseEther(amount) });
         await tx.wait();
-        alert("✅ Contribution successful!");
-        fetchSummary(); // Refresh dashboard
+        alert("Thanks for contributing!");
+        document.getElementById('contributionAmount').value = "";
+        loadCampaignSummary();
+        loadLeaderboard();
     } catch (error) {
-        console.error(error);
-        alert("❌ Contribution failed!");
+        console.error("Contribution failed:", error);
+        alert("Transaction Failed!");
     }
 }
 
-async function getBalance() {
+// Leaderboard function
+async function loadLeaderboard() {
+    const leaderboardTable = document.getElementById("leaderboardTableBody");
+    leaderboardTable.innerHTML = "<tr><td colspan='3'>Loading...</td></tr>";
+
     try {
-        const balance = await contract.getBalance();
-        document.getElementById("balance").innerText = `Contract Balance: ${ethers.utils.formatEther(balance)} ETH`;
+        const addresses = await contract.getAllContributors();
+
+        const contributors = await Promise.all(
+            addresses.map(async (addr) => {
+                const amount = await contract.getContributorDetails(addr);
+                return { address: addr, amount: parseFloat(ethers.utils.formatEther(amount)) };
+            })
+        );
+
+        contributors.sort((a, b) => b.amount - a.amount);
+
+        leaderboardTable.innerHTML = "";
+
+        contributors.forEach((contributor, index) => {
+            const row = document.createElement("tr");
+            let badge = "";
+            if (index === 0) badge = "🥇";
+            else if (index === 1) badge = "🥈";
+            else if (index === 2) badge = "🥉";
+
+            row.innerHTML = `
+                <td>${badge} #${index + 1}</td>
+                <td>${contributor.address.slice(0, 6)}...${contributor.address.slice(-4)}</td>
+                <td>${contributor.amount.toFixed(4)} CORE</td>
+            `;
+            row.classList.add('fade-in');
+            leaderboardTable.appendChild(row);
+        });
+
+        if (contributors.length === 0) {
+            leaderboardTable.innerHTML = "<tr><td colspan='3'>No contributors yet.</td></tr>";
+        }
     } catch (error) {
-        console.error(error);
+        console.error("Failed to load leaderboard:", error);
+        leaderboardTable.innerHTML = "<tr><td colspan='3'>Error loading leaderboard.</td></tr>";
     }
 }
 
-async function fetchSummary() {
-    try {
-        const summary = await contract.getCampaignSummary();
-        document.getElementById("goalAmount").innerText = `${ethers.utils.formatEther(summary.goal)} ETH`;
-        document.getElementById("raisedAmount").innerText = `${ethers.utils.formatEther(summary.raised)} ETH`;
-        document.getElementById("timeLeft").innerText = `${summary.timeLeft} seconds`;
-        document.getElementById("goalStatus").innerText = summary.reached ? "Goal Reached 🎯" : "Goal Not Reached ❌";
-    } catch (error) {
-        console.error(error);
-    }
-}
-
+// Withdraw funds (Owner only)
 async function withdrawFunds() {
     try {
         const tx = await contract.withdrawFunds();
         await tx.wait();
-        alert("✅ Funds withdrawn successfully!");
-        fetchSummary();
+        alert("Funds withdrawn successfully!");
+        loadCampaignSummary();
     } catch (error) {
-        console.error(error);
-        alert("❌ Withdrawal failed!");
+        console.error("Withdraw failed:", error);
+        alert("Withdraw Failed!");
     }
 }
 
-async function refund() {
+// Refund if campaign failed
+async function requestRefund() {
     try {
         const tx = await contract.refund();
         await tx.wait();
-        alert("✅ Refund successful!");
-        fetchSummary();
+        alert("Refund successful!");
+        loadCampaignSummary();
     } catch (error) {
-        console.error(error);
-        alert("❌ Refund failed!");
+        console.error("Refund failed:", error);
+        alert("Refund Failed or Not eligible!");
     }
 }
 
-async function getAllContributors() {
-    try {
-        const contributors = await contract.getAllContributors();
-        const leaderboard = document.getElementById("leaderboard");
-        leaderboard.innerHTML = "";
-        
-        for (let address of contributors) {
-            const amount = await contract.getContributorDetails(address);
-            const item = document.createElement("li");
-            item.textContent = `${address} - ${ethers.utils.formatEther(amount)} ETH`;
-            leaderboard.appendChild(item);
-        }
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-async function extendDeadline() {
-    const extraDays = prompt("Enter number of extra days:");
-    if (!extraDays || isNaN(extraDays)) {
-        alert("Invalid number of days.");
-        return;
-    }
-
-    try {
-        const tx = await contract.extendDeadline(extraDays);
-        await tx.wait();
-        alert("✅ Deadline extended successfully!");
-        fetchSummary();
-    } catch (error) {
-        console.error(error);
-        alert("❌ Deadline extension failed!");
-    }
-}
-
-// Auto-fetch data on load
-window.onload = async () => {
-    if (window.ethereum) {
-        await connectWallet();
-        await fetchSummary();
-        await getBalance();
-        await getAllContributors();
-    } else {
-        alert("🦊 Please install MetaMask or a compatible wallet extension!");
-    }
+// On page load, connect wallet
+window.onload = function() {
+    connectWallet();
 };
+
