@@ -1,191 +1,89 @@
-/* Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
-  font-family: 'Arial', sans-serif;
-  background-color: #fafafa;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-  overflow: hidden;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
 }
 
-/* Welcome Screen */
 #welcome-screen {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  transition: all 1s ease-in-out;
-  opacity: 1;
-  position: absolute;
-  height: 100%;
-  width: 100%;
+    background-color: #FF8C00;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    color: white;
 }
 
-#welcome-screen.hidden {
-  opacity: 0;
-  pointer-events: none;
+#enter-btn {
+    padding: 10px 20px;
+    font-size: 20px;
+    background-color: #fff;
+    color: #FF8C00;
+    border: none;
+    cursor: pointer;
 }
 
-.welcome-content {
-  animation: fadeIn 2s ease-out;
-}
-
-.welcome-content .logo {
-  width: 150px;
-  margin-bottom: 20px;
-}
-
-.welcome-content h1 {
-  font-size: 2.5rem;
-  color: #ff7043;
-}
-
-.welcome-content p {
-  font-size: 1.2rem;
-  color: #333;
-  margin-bottom: 20px;
-}
-
-button {
-  padding: 12px 25px;
-  background-color: #ff7043;
-  color: #fff;
-  font-size: 1rem;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  border-radius: 10px;
-}
-
-button:hover {
-  background-color: #ff5722;
-}
-
-/* Main App */
-#main-app {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-  max-width: 1200px;
-  margin: 20px;
-}
-
-#main-app.hidden {
-  display: none;
+#main-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 20px;
-  background-color: #ff7043;
-  color: white;
-  border-radius: 10px;
-}
-
-header .header-logo {
-  width: 50px;
-}
-
-#dashboard {
-  width: 100%;
-  margin-top: 20px;
-}
-
-.card {
-  background-color: white;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-}
-
-#leaderboard {
-  width: 100%;
-  margin-top: 20px;
-}
-
-#contributor-list {
-  list-style-type: none;
-  padding: 0;
-}
-
-#contributor-list li {
-  padding: 12px;
-  background-color: #fff;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-footer {
-  margin-top: 40px;
-  padding: 10px;
-  font-size: 0.9rem;
-  color: #777;
-  text-align: center;
-}
-
-/* Admin Panel */
-#admin-panel {
-  margin-top: 40px;
-  width: 100%;
-}
-
-#admin-panel button {
-  background-color: #00796b;
-}
-
-#admin-panel button:hover {
-  background-color: #004d40;
-}
-
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
-  body {
-    padding: 0 20px;
-  }
-
-  header {
-    flex-direction: column;
     text-align: center;
-  }
-
-  header .header-logo {
-    width: 80px;
-    margin-bottom: 10px;
-  }
-
-  button {
-    width: 100%;
-    padding: 15px;
-  }
-
-  .card {
-    width: 100%;
-  }
+    margin-bottom: 20px;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+button {
+    padding: 10px 20px;
+    background-color: #FF8C00;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+button:hover {
+    background-color: #e67e00;
+}
+
+.campaign {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 90%;
+    max-width: 600px;
+}
+
+.campaign h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.leaderboard {
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+#metamask-prompt {
+    background-color: #ffcccc;
+    color: #ff0000;
+    text-align: center;
+    padding: 10px;
 }
