@@ -1,126 +1,28 @@
 [
     {
-        "constant": true,
         "inputs": [],
-        "name": "getAllCampaigns",
+        "name": "getBalance",
         "outputs": [
             {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getAllContributors",
+        "outputs": [
+            {
+                "internalType": "address[]",
                 "name": "",
                 "type": "address[]"
             }
         ],
-        "payable": false,
         "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_campaignAddress",
-                "type": "address"
-            }
-        ],
-        "name": "getCampaignDetails",
-        "outputs": [
-            {
-                "name": "goal",
-                "type": "uint256"
-            },
-            {
-                "name": "raisedAmount",
-                "type": "uint256"
-            },
-            {
-                "name": "contributors",
-                "type": "address[]"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_address",
-                "type": "address"
-            }
-        ],
-        "name": "getContributorDetails",
-        "outputs": [
-            {
-                "name": "amountContributed",
-                "type": "uint256"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "_goal",
-                "type": "uint256"
-            }
-        ],
-        "name": "createCampaign",
-        "outputs": [
-            {
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "payable": true,
-        "stateMutability": "payable",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [],
-        "name": "getTotalCampaigns",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_address",
-                "type": "address"
-            }
-        ],
-        "name": "isContributor",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "_campaignAddress",
-                "type": "address"
-            }
-        ],
-        "name": "contributeToCampaign",
-        "outputs": [],
-        "payable": true,
-        "stateMutability": "payable",
         "type": "function"
     }
 ]
