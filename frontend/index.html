@@ -3,188 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#ff6600">
-    <meta name="description" content="A decentralized crowdfunding platform built on Core DAO.">
-    <meta name="author" content="Chintan Vatsa Jha">
-    <title>Crowdfund - Decentralized Campaigns</title>
-
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#FF8C00">
+    <title>Crowdfunding Platform</title>
     
-    <!-- Link to PWA icons -->
-    <link rel="icon" href="/assets/logo.png" type="image/png">
-
-    <!-- Add CSS for styling -->
+    <!-- PWA Metadata -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="assets/logo.png" type="image/png">
+    
+    <!-- MetaMask Integration and Web3.js -->
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+    
+    <!-- Style Link -->
     <link rel="stylesheet" href="style.css">
-
-    <!-- Metamask and Web3 connection -->
-    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
-
-    <!-- Service Worker Registration -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/service-worker.js')
-                .then(function(registration) {
-                    console.log('Service Worker registration successful:', registration.scope);
-                }, function(err) {
-                    console.log('Service Worker registration failed:', err);
-                });
-            });
-        }
-    </script>
 </head>
 <body>
-    <!-- Welcome Page -->
+
+    <!-- Welcome Page (Splash Screen) -->
     <div id="welcome-screen">
         <h1>Welcome to Crowdfund</h1>
         <p>Empowering Decentralized Dreams</p>
-        <button id="start-button">Start Campaign</button>
+        <button id="enter-btn">Enter Website</button>
     </div>
 
-    <!-- Main Website -->
-    <div id="main-site" style="display: none;">
-        <!-- Connect Wallet Section -->
-        <div id="wallet-connection">
-            <button id="connect-wallet">Connect with MetaMask</button>
+    <!-- Main Content -->
+    <div id="main-content" style="display:none;">
+        <header>
+            <h1>Crowdfund Your Ideas</h1>
+            <button id="connect-btn">Connect Wallet</button>
+            <div id="wallet-info" style="display:none;">
+                <p>Connected Account: <span id="account"></span></p>
+            </div>
+        </header>
+
+        <!-- Campaigns Section -->
+        <div id="campaigns">
+            <!-- Campaigns will be dynamically injected here -->
         </div>
 
-        <!-- Campaign Section -->
-        <div id="campaign-details">
-            <h2>Your Campaign</h2>
-            <p><strong>Goal Amount:</strong> <span id="goal-amount"></span> CORE</p>
-            <p><strong>Total Raised:</strong> <span id="total-raised"></span> CORE</p>
-            <p><strong>Time Remaining:</strong> <span id="time-remaining"></span></p>
-            <button id="contribute-button">Contribute</button>
-        </div>
-
-        <!-- Leaderboard Section -->
-        <div id="leaderboard">
-            <h3>Top Contributors</h3>
-            <ul id="contributors-list"></ul>
-        </div>
+        <!-- Other campaign sections can go here -->
     </div>
 
-    <!-- Loading Spinner -->
-    <div id="loading-spinner" style="display: none;">
-        <p>Loading...</p>
+    <!-- MetaMask Prompt -->
+    <div id="metamask-prompt" style="display:none;">
+        <p>Please install MetaMask to connect your wallet.</p>
     </div>
 
-    <!-- Add the ABI and Smart Contract Address -->
-    <script type="text/javascript">
-        const contractAddress = "0x55aC56EC0102438c97c5789a5fFDea314342c0e8"; // Your contract address
+    <!-- App Script -->
+    <script src="app.js"></script>
 
-        // ABI for the smart contract (replace this with your ABI JSON)
-        const abi = [
-            {
-                "inputs": [],
-                "name": "getBalance",
-                "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "inputs": [],
-                "name": "getCampaignSummary",
-                "outputs": [
-                    { "internalType": "uint256", "name": "", "type": "uint256" },
-                    { "internalType": "uint256", "name": "", "type": "uint256" },
-                    { "internalType": "uint256", "name": "", "type": "uint256" },
-                    { "internalType": "bool", "name": "", "type": "bool" },
-                    { "internalType": "bool", "name": "", "type": "bool" }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            },
-            // Add the remaining functions based on your contract ABI
-        ];
-
-        let provider;
-        let signer;
-        let contract;
-        let userAddress;
-
-        // Check if MetaMask is installed
-        if (typeof window.ethereum !== 'undefined') {
-            provider = new ethers.providers.Web3Provider(window.ethereum);
-            signer = provider.getSigner();
-            contract = new ethers.Contract(contractAddress, abi, signer);
-        } else {
-            alert("MetaMask not found! Please install MetaMask to continue.");
-        }
-
-        // Event listeners for Metamask connection
-        document.getElementById('connect-wallet').addEventListener('click', async () => {
-            try {
-                await window.ethereum.request({ method: 'eth_requestAccounts' });
-                userAddress = await signer.getAddress();
-                alert("Connected with " + userAddress);
-                fetchCampaignDetails();
-            } catch (error) {
-                console.error(error);
-                alert("Error connecting to wallet.");
-            }
-        });
-
-        // Start Button Click - Transition to Main Website
-        document.getElementById('start-button').addEventListener('click', () => {
-            document.getElementById('welcome-screen').style.display = 'none';
-            document.getElementById('main-site').style.display = 'block';
-        });
-
-        // Fetch campaign details from the smart contract
-        async function fetchCampaignDetails() {
-            try {
-                const campaignSummary = await contract.getCampaignSummary();
-                document.getElementById('goal-amount').textContent = ethers.utils.formatUnits(campaignSummary[0], 18);
-                document.getElementById('total-raised').textContent = ethers.utils.formatUnits(campaignSummary[1], 18);
-                document.getElementById('time-remaining').textContent = campaignSummary[2] + " seconds";
-                fetchLeaderboard();
-            } catch (error) {
-                console.error("Error fetching campaign details", error);
-            }
-        }
-
-        // Fetch leaderboard from the smart contract
-        async function fetchLeaderboard() {
-            try {
-                const contributors = await contract.getAllContributors();
-                const contributorsList = document.getElementById('contributors-list');
-                contributorsList.innerHTML = ''; // Clear existing leaderboard
-
-                contributors.forEach((contributor) => {
-                    const listItem = document.createElement('li');
-                    listItem.textContent = contributor;
-                    contributorsList.appendChild(listItem);
-                });
-            } catch (error) {
-                console.error("Error fetching leaderboard", error);
-            }
-        }
-
-        // Contribute to the campaign
-        document.getElementById('contribute-button').addEventListener('click', async () => {
-            const contributionAmount = prompt("Enter amount to contribute:");
-            if (contributionAmount && !isNaN(contributionAmount)) {
-                try {
-                    await contract.contribute({ value: ethers.utils.parseUnits(contributionAmount, 18) });
-                    alert("Contribution successful!");
-                    fetchCampaignDetails(); // Refresh the campaign details after contribution
-                } catch (error) {
-                    console.error("Error contributing", error);
-                    alert("Contribution failed.");
-                }
-            } else {
-                alert("Invalid contribution amount.");
-            }
-        });
-
-        // Initialize the app when the page is loaded
-        window.onload = async () => {
-            if (typeof window.ethereum === 'undefined') {
-                alert("Please install MetaMask to continue.");
-            }
-        };
-    </script>
 </body>
 </html>
