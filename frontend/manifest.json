@@ -1,21 +1,16 @@
 {
-  "short_name": "Crowdfund",
-  "name": "Crowdfund - Decentralized Campaigns",
-  "description": "A decentralized crowdfunding platform built on Core DAO.",
-  "start_url": "/index.html",
-  "display": "standalone",
-  "background_color": "#fff",
-  "theme_color": "#ff6600",
-  "icons": [
-    {
-      "src": "/assets/logo.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/assets/logo.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+    "name": "Crowdfunding Platform",
+    "short_name": "CrowdFund",
+    "description": "A decentralized crowdfunding platform for supporting campaigns.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ff6f61",
+    "icons": [
+        {
+            "src": "assets/logo.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        }
+    ]
 }
