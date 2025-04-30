@@ -3,65 +3,63 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Crowdfund | Core DAO</title>
+  <title>Crowdfund - Empowering Decentralized Dreams</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="logo.png" />
   <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
 </head>
 <body>
   <!-- Welcome Screen -->
-  <section id="welcomeScreen">
-    <img src="assets/logo.png" alt="Logo" class="logo" />
-    <h1>Empowering Decentralized Dreams</h1>
-    <button id="enterSite">Enter Crowdfund</button>
-  </section>
+  <div id="welcome-screen" class="screen active">
+    <div class="welcome-content">
+      <img src="logo.png" alt="Crowdfund Logo" class="logo" />
+      <h1>Crowdfund</h1>
+      <p>Empowering Decentralized Dreams</p>
+      <button onclick="startApp()">Enter</button>
+    </div>
+  </div>
 
   <!-- Main App -->
-  <main id="app" style="display: none;">
+  <div id="main-app" class="screen hidden">
     <header>
-      <h1>Core DAO Crowdfund</h1>
-      <button id="connectWalletBtn">Connect Wallet</button>
+      <img src="logo.png" class="header-logo" />
+      <h1>Crowdfund</h1>
+      <button id="connectButton">Connect Wallet</button>
     </header>
 
-    <section id="campaignSummary">
-      <h2>Campaign Summary</h2>
-      <ul>
-        <li><strong>Goal:</strong> <span id="goalAmount"></span> CORE</li>
-        <li><strong>Raised:</strong> <span id="totalRaised"></span> CORE</li>
-        <li><strong>Time Remaining:</strong> <span id="timeRemaining"></span></li>
-      </ul>
-    </section>
-
-    <section id="contribution">
-      <h2>Contribute</h2>
-      <input type="number" id="contributionAmount" placeholder="Amount in CORE" />
-      <button id="contributeBtn">Contribute</button>
+    <section id="dashboard">
+      <h2>Campaign Dashboard</h2>
+      <div id="campaign-summary" class="card"></div>
     </section>
 
     <section id="leaderboard">
       <h2>Top Contributors</h2>
-      <ol id="leaderboardList"></ol>
+      <ul id="contributor-list"></ul>
     </section>
 
-    <section id="adminPanel" style="display: none;">
+    <section id="admin-panel" class="hidden">
       <h2>Admin Panel</h2>
-      <button id="withdrawBtn">Withdraw Funds</button>
-      <button id="extendDeadlineBtn">Extend Deadline</button>
+      <button onclick="withdrawFunds()">Withdraw Funds</button>
+      <button onclick="extendDeadline()">Extend Deadline</button>
     </section>
-  </main>
 
+    <footer>
+      <p>&copy; 2025 Crowdfund. Built for Core DAO.</p>
+    </footer>
+  </div>
+
+  <!-- PWA Support -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
-        navigator.serviceWorker.register('/service-worker.js')
-          .then(function (registration) {
-            console.log('✅ ServiceWorker registered:', registration.scope);
-          }, function (err) {
-            console.log('❌ ServiceWorker registration failed:', err);
-          });
+        navigator.serviceWorker.register('service-worker.js')
+          .then(reg => console.log('✅ ServiceWorker registered:', reg.scope))
+          .catch(err => console.log('❌ ServiceWorker registration failed:', err));
       });
     }
   </script>
+
   <script src="app.js"></script>
 </body>
 </html>
