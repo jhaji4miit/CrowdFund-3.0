@@ -1,11 +1,3 @@
 [build]
-  publish = "frontend"
-  command = "npm run build" 
-
-[dev]
-  publish = "frontend"
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+  publish = "frontend/dist"
+  command = "npm run build"
