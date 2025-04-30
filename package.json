@@ -1,26 +1,16 @@
 {
-  "name": "crowdfund-app",
+  "name": "crowdfund-frontend",
   "version": "1.0.0",
-  "description": "A decentralized crowdfunding platform with multiple campaigns and Metamask integration.",
-  "main": "index.html",
+  "description": "Decentralized crowdfunding platform integrated with Core DAO",
   "scripts": {
     "start": "live-server",
-    "build": "echo 'No build process defined'",
-    "deploy": "npm run build && netlify deploy"
+    "deploy": "netlify deploy"
   },
   "dependencies": {
     "ethers": "^5.4.6",
-    "web3": "^1.5.2",
     "live-server": "^1.2.1"
   },
   "devDependencies": {},
   "author": "Your Name",
-  "license": "MIT",
-  "keywords": [
-    "crowdfunding",
-    "decentralized",
-    "ethereum",
-    "web3"
-  ],
-  "homepage": "https://github.com/your-username/crowdfund-app"
+  "license": "MIT"
 }
