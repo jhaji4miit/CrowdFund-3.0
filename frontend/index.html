@@ -1,37 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crowdfunding - Decentralized Campaigns</title>
-    <link rel="icon" href="assets/logo.png" type="image/x-icon">
-    <link rel="manifest" href="manifest.json">
-    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="logo.png" />
+  <title>Crowdfund | Empowering Decentralized Dreams</title>
 </head>
-
 <body>
-    <!-- Welcome Screen -->
-    <div id="welcome-screen" class="welcome-screen">
-        <h1>Welcome to Crowdfunding</h1>
-        <p>Empowering Decentralized Dreams</p>
-        <button id="connect-wallet-btn" onclick="connectWallet()">Connect with MetaMask</button>
+  <!-- Welcome Screen -->
+  <section id="welcome-screen">
+    <div class="welcome-container">
+      <img src="logo.png" alt="Crowdfund Logo" class="logo"/>
+      <h1>Crowdfund</h1>
+      <p>Empowering Decentralized Dreams</p>
+      <button onclick="enterApp()">Enter App</button>
     </div>
+  </section>
 
-    <!-- Main Content -->
-    <div id="main-content" style="display: none;">
-        <header>
-            <h1>Crowdfunding Campaigns</h1>
-            <p>Explore and contribute to campaigns</p>
-        </header>
+  <!-- Main App -->
+  <main id="app" style="display:none;">
+    <header>
+      <h2>Crowdfund Dashboard</h2>
+      <button id="connectWallet">🔗 Connect Wallet</button>
+    </header>
 
-        <div id="campaigns">
-            <!-- Dynamic Campaigns and Leaderboard Will Appear Here -->
-        </div>
-    </div>
+    <section id="campaignSummary">
+      <h3>📊 Campaign Summary</h3>
+      <div id="summaryData"></div>
+    </section>
 
-    <script src="app.js"></script>
+    <section id="contributeSection">
+      <h3>💸 Contribute</h3>
+      <input type="number" id="contributionAmount" placeholder="Amount in CORE" />
+      <button onclick="contribute()">Contribute</button>
+    </section>
+
+    <section id="leaderboard">
+      <h3>🏆 Leaderboard</h3>
+      <ul id="leaderboardList"></ul>
+    </section>
+
+    <section id="adminPanel" style="display:none;">
+      <h3>🛠 Admin Panel</h3>
+      <button onclick="withdrawFunds()">Withdraw Funds</button>
+      <input type="number" id="extendDays" placeholder="Extra Days" />
+      <button onclick="extendDeadline()">Extend Deadline</button>
+    </section>
+  </main>
+
+  <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(reg => console.log('✅ Service Worker Registered'))
+        .catch(err => console.log('❌ Service Worker Error', err));
+    }
+  </script>
 </body>
-
 </html>
