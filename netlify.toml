@@ -1,6 +1,9 @@
 [build]
   publish = "frontend"
-  command = "npm run build" 
+  command = "" # Leave blank for static sites, or use "npm run build" for frameworks
+
+[dev]
+  publish = "frontend"
 
 [[redirects]]
   from = "/*"
