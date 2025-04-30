@@ -1,93 +1,85 @@
-const contractAddress = "0x55aC56EC0102438c97c5789a5fFDea314342c0e8";
-let contract;
-let signer;
+const CONTRACT_ADDRESS = "0x55aC56EC0102438c97c5789a5fFDea314342c0e8";
+let provider, signer, contract, userAddress;
 
-async function init() {
-    if (window.ethereum) {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        await provider.send("eth_requestAccounts", []);
-        signer = provider.getSigner();
-        const response = await fetch("abi.json");
-        const abi = await response.json();
-        contract = new ethers.Contract(contractAddress, abi, signer);
-        loadSummary();
-        loadLeaderboard();
-    } else {
-        alert("Please install MetaMask to use this app.");
-    }
-}
+document.getElementById("enterSite").addEventListener("click", () => {
+  document.getElementById("welcomeScreen").style.display = "none";
+  document.getElementById("app").style.display = "block";
+});
 
-async function contribute() {
-    const amount = document.getElementById("contributionAmount").value;
-    if (!amount || isNaN(amount)) return alert("Enter a valid amount.");
-    const tx = await contract.contribute({ value: ethers.utils.parseEther(amount) });
-    await tx.wait();
-    alert("Thanks for contributing!");
-    loadSummary();
-    loadLeaderboard();
-}
-
-async function getBalance() {
-    const balance = await contract.getBalance();
-    alert("Contract balance: " + ethers.utils.formatEther(balance) + " ETH");
-}
-
-async function withdrawFunds() {
+document.getElementById('connectWalletBtn').addEventListener('click', async () => {
+  if (typeof window.ethereum !== 'undefined') {
     try {
-        const tx = await contract.withdrawFunds();
-        await tx.wait();
-        alert("Funds withdrawn successfully.");
+      provider = new ethers.providers.Web3Provider(window.ethereum);
+      await provider.send("eth_requestAccounts", []);
+      signer = provider.getSigner();
+      userAddress = await signer.getAddress();
+      document.getElementById('connectWalletBtn').innerText = `Connected: ${userAddress.slice(0, 6)}...`;
+
+      const abi = await fetch("abi.json").then(res => res.json());
+      contract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
+
+      await loadCampaignSummary();
+      await loadLeaderboard();
+      await checkAdmin();
     } catch (err) {
-        alert("Withdraw failed: " + err.message);
+      console.error(err);
     }
+  } else {
+    window.open("https://metamask.io/download", "_blank");
+  }
+});
+
+async function loadCampaignSummary() {
+  const summary = await contract.getCampaignSummary();
+  document.getElementById("goalAmount").innerText = ethers.utils.formatEther(summary.goal);
+  document.getElementById("totalRaised").innerText = ethers.utils.formatEther(summary.raised);
+  document.getElementById("timeRemaining").innerText = `${summary.timeLeft} sec`;
 }
 
-async function refund() {
-    try {
-        const tx = await contract.refund();
-        await tx.wait();
-        alert("Refund successful.");
-    } catch (err) {
-        alert("Refund failed: " + err.message);
-    }
-}
-
-async function extendDeadline() {
-    const extraDays = prompt("Enter number of extra days to extend:");
-    if (!extraDays || isNaN(extraDays)) return;
-    try {
-        const tx = await contract.extendDeadline(parseInt(extraDays));
-        await tx.wait();
-        alert("Deadline extended.");
-    } catch (err) {
-        alert("Extension failed: " + err.message);
-    }
-}
-
-async function loadSummary() {
-    const [goal, raised, timeLeft, reached, withdrawn] = await contract.getCampaignSummary();
-    document.getElementById("summary-data").innerHTML = `
-        <p><strong>Goal:</strong> ${ethers.utils.formatEther(goal)} ETH</p>
-        <p><strong>Raised:</strong> ${ethers.utils.formatEther(raised)} ETH</p>
-        <p><strong>Time Left:</strong> ${timeLeft} seconds</p>
-        <p><strong>Goal Reached:</strong> ${reached}</p>
-        <p><strong>Funds Withdrawn:</strong> ${withdrawn}</p>
-    `;
-}
+document.getElementById("contributeBtn").addEventListener("click", async () => {
+  const amount = document.getElementById("contributionAmount").value;
+  const tx = await contract.contribute({ value: ethers.utils.parseEther(amount) });
+  await tx.wait();
+  alert("🎉 Contribution successful!");
+  loadCampaignSummary();
+  loadLeaderboard();
+});
 
 async function loadLeaderboard() {
-    const leaderboard = document.getElementById("leaderboard");
-    leaderboard.innerHTML = "<li>Loading...</li>";
-    try {
-        const contributors = await contract.getAllContributors();
-        leaderboard.innerHTML = "";
-        for (const addr of contributors) {
-            const amount = await contract.getContributorDetails(addr);
-            leaderboard.innerHTML += `<li><strong>${addr}</strong>: ${ethers.utils.formatEther(amount)} ETH</li>`;
-        }
-    } catch (err) {
-        leaderboard.innerHTML = "<li>Error loading leaderboard</li>";
-    }
+  const addresses = await contract.getAllContributors();
+  const leaderboard = [];
+
+  for (let addr of addresses) {
+    const amt = await contract.getContributorDetails(addr);
+    leaderboard.push({ addr, amt: parseFloat(ethers.utils.formatEther(amt)) });
+  }
+
+  leaderboard.sort((a, b) => b.amt - a.amt);
+
+  const list = document.getElementById("leaderboardList");
+  list.innerHTML = "";
+  leaderboard.forEach(user => {
+    const item = document.createElement("li");
+    item.textContent = `${user.addr.slice(0, 6)}... - ${user.amt.toFixed(3)} CORE`;
+    list.appendChild(item);
+  });
 }
 
-window.onload = init;
+async function checkAdmin() {
+  const owner = await contract.owner();
+  if (owner.toLowerCase() === userAddress.toLowerCase()) {
+    document.getElementById("adminPanel").style.display = "block";
+
+    document.getElementById("withdrawBtn").addEventListener("click", async () => {
+      const tx = await contract.withdrawFunds();
+      await tx.wait();
+      alert("✅ Funds withdrawn.");
+    });
+
+    document.getElementById("extendDeadlineBtn").addEventListener("click", async () => {
+      const tx = await contract.extendDeadline(2); // extend by 2 days
+      await tx.wait();
+      alert("⏳ Deadline extended.");
+    });
+  }
+}
