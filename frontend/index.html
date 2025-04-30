@@ -1,97 +1,72 @@
-/* style.css */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Crowdfund | Empowering Decentralized Dreams</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="assets/logo.png">
+  <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+</head>
+<body>
+  <!-- Welcome Screen -->
+  <div id="welcome-screen">
+    <img src="assets/logo.png" alt="Crowdfund Logo" class="logo" />
+    <h1>Welcome to Crowdfund</h1>
+    <p>Empowering Decentralized Dreams</p>
+  </div>
 
-body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #ff6a00, #ffcc70);
-  color: #fff;
-  text-align: center;
-  overflow-x: hidden;
-}
+  <!-- Main App -->
+  <div id="main-app" style="display: none;">
+    <header>
+      <img src="assets/logo.png" alt="Crowdfund Logo" class="logo-sm">
+      <h2>Crowdfund DApp</h2>
+    </header>
 
-#welcome-screen {
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  background-color: #fff3e0;
-  color: #ff6a00;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  animation: fadeIn 1.5s ease-in-out;
-}
+    <main>
+      <section id="campaign-summary">
+        <h3>Campaign Summary</h3>
+        <div id="summary-data"></div>
+      </section>
 
-#welcome-screen .logo {
-  width: 120px;
-  height: auto;
-  margin-bottom: 20px;
-}
+      <section id="contribute-section">
+        <h3>Contribute Now</h3>
+        <input type="number" id="contributionAmount" placeholder="Enter amount in ETH" />
+        <button onclick="contribute()">Contribute</button>
+      </section>
 
-#app-container {
-  padding: 20px;
-  animation: fadeIn 1.5s ease-in-out;
-}
+      <section id="actions">
+        <button onclick="getBalance()">Get Balance</button>
+        <button onclick="withdrawFunds()">Withdraw</button>
+        <button onclick="refund()">Refund</button>
+        <button onclick="extendDeadline()">Extend Deadline</button>
+      </section>
 
-header {
-  background-color: #ff6a00;
-  padding: 15px;
-  border-bottom: 3px solid #ffffff99;
-  color: white;
-  font-size: 24px;
-  font-weight: bold;
-}
+      <section id="leaderboard-section">
+        <h3>Top Contributors</h3>
+        <ul id="leaderboard"></ul>
+      </section>
+    </main>
+  </div>
 
-#wallet-address {
-  font-size: 14px;
-  margin-top: 10px;
-  color: #fffdd0;
-}
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(reg => console.log('✅ Service Worker registered:', reg.scope))
+          .catch(err => console.log('❌ SW registration failed:', err));
+      });
+    }
 
-main {
-  margin-top: 20px;
-}
-
-button {
-  background-color: white;
-  color: #ff6a00;
-  border: none;
-  padding: 12px 20px;
-  margin: 10px;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-button:hover {
-  background-color: #ffcc70;
-  color: #fff;
-}
-
-input, select {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  margin: 10px;
-  width: 250px;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@media (max-width: 768px) {
-  #app-container {
-    padding: 10px;
-  }
-
-  header {
-    font-size: 20px;
-  }
-
-  button, input, select {
-    width: 90%;
-  }
-}
+    // Auto transition from welcome to main UI
+    window.onload = () => {
+      setTimeout(() => {
+        document.getElementById('welcome-screen').style.display = 'none';
+        document.getElementById('main-app').style.display = 'block';
+      }, 3000); // 3 seconds
+    };
+  </script>
+</body>
+</html>
