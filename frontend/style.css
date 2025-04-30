@@ -1,74 +1,106 @@
 body {
-  font-family: 'Segoe UI', sans-serif;
   margin: 0;
-  background: #fff;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to bottom right, #fff6e6, #ff6600);
   color: #333;
+  overflow-x: hidden;
 }
 
-#welcome-screen {
-  height: 100vh;
-  background: linear-gradient(135deg, #ff6b00, #ffd500);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  animation: fadeIn 1.2s ease-in-out;
-}
-
-.welcome-container {
+header, footer {
   text-align: center;
-  color: #fff;
-}
-
-.logo {
-  width: 100px;
-  height: 100px;
-}
-
-#welcome-screen button {
-  background: #fff;
-  border: none;
+  background: white;
   padding: 10px 20px;
-  color: #ff6b00;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 20px;
-  border-radius: 8px;
+  border-bottom: 2px solid #ff6600;
+}
+
+header .logo-small {
+  height: 30px;
+  vertical-align: middle;
+}
+
+h1, h2 {
+  color: #ff6600;
 }
 
 main {
-  padding: 2rem;
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
 }
 
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+input, button {
+  padding: 10px;
+  margin: 10px 0;
+  font-size: 16px;
 }
 
 button {
-  padding: 10px 16px;
-  background: orange;
+  background: #ff6600;
   color: white;
   border: none;
-  margin: 5px 0;
-  border-radius: 5px;
   cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.3s ease;
 }
 
-input {
-  padding: 10px;
-  margin: 8px 0;
-  width: 200px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+button:hover {
+  background: #e65c00;
+}
+
+.card {
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  margin: 10px 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 ul {
   list-style: none;
-  padding-left: 0;
+  padding: 0;
+}
+
+li {
+  padding: 6px;
+  border-bottom: 1px solid #eee;
+}
+
+.centered {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: #fff8f0;
+}
+
+.welcome-card {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  animation: fadeIn 1.5s ease;
+}
+
+.animate-pop {
+  animation: popUp 0.5s ease forwards;
+}
+
+.hidden {
+  display: none;
+}
+
+.logo {
+  height: 80px;
+  margin-bottom: 20px;
+}
+
+@keyframes popUp {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 @keyframes fadeIn {
-  from {opacity: 0;}
-  to {opacity: 1;}
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
