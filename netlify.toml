@@ -1,6 +1,6 @@
 [build]
   publish = "frontend"
-  command = "" # Leave blank for static sites, or use "npm run build" for frameworks
+  command = "npm run build" # 
 
 [dev]
   publish = "frontend"
