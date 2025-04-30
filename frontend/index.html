@@ -1,55 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#FF8C00">
-    <title>Crowdfunding Platform</title>
-    
-    <!-- PWA Metadata -->
+    <title>Crowdfunding - Decentralized Campaigns</title>
+    <link rel="icon" href="assets/logo.png" type="image/x-icon">
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="assets/logo.png" type="image/png">
-    
-    <!-- MetaMask Integration and Web3.js -->
     <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
-    
-    <!-- Style Link -->
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
 
-    <!-- Welcome Page (Splash Screen) -->
-    <div id="welcome-screen">
-        <h1>Welcome to Crowdfund</h1>
+<body>
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="welcome-screen">
+        <h1>Welcome to Crowdfunding</h1>
         <p>Empowering Decentralized Dreams</p>
-        <button id="enter-btn">Enter Website</button>
+        <button id="connect-wallet-btn" onclick="connectWallet()">Connect with MetaMask</button>
     </div>
 
     <!-- Main Content -->
-    <div id="main-content" style="display:none;">
+    <div id="main-content" style="display: none;">
         <header>
-            <h1>Crowdfund Your Ideas</h1>
-            <button id="connect-btn">Connect Wallet</button>
-            <div id="wallet-info" style="display:none;">
-                <p>Connected Account: <span id="account"></span></p>
-            </div>
+            <h1>Crowdfunding Campaigns</h1>
+            <p>Explore and contribute to campaigns</p>
         </header>
 
-        <!-- Campaigns Section -->
         <div id="campaigns">
-            <!-- Campaigns will be dynamically injected here -->
+            <!-- Dynamic Campaigns and Leaderboard Will Appear Here -->
         </div>
-
-        <!-- Other campaign sections can go here -->
     </div>
 
-    <!-- MetaMask Prompt -->
-    <div id="metamask-prompt" style="display:none;">
-        <p>Please install MetaMask to connect your wallet.</p>
-    </div>
-
-    <!-- App Script -->
     <script src="app.js"></script>
-
 </body>
+
 </html>
