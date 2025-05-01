@@ -80,5 +80,6 @@ By leveraging Core DAO, we ensure fast, low-cost, and eco-friendly transactions,
 
 The dApp interacts with the deployed smart contract at:  
 `0x55aC56EC0102438c97c5789a5fFDea314342c0e8`
+![image](https://github.com/user-attachments/assets/b17caa86-2f05-4e7a-9321-4cb824de1bc9)
 
----
+
