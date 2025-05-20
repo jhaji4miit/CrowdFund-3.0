@@ -1,132 +1,116 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.0;
 
-contract CrowdfundV3 {
+contract CrowdFund {
     address public owner;
-    uint public campaignCounter;
-    uint public platformFee = 2; // Platform takes 2% fee
+    uint public goalAmount;
+    uint public deadline;
+    uint public totalRaised;
+    bool public goalReached;
+    bool public fundsWithdrawn;
+    bool public deadlineExtended;
 
-    struct Campaign {
-        address creator;
-        string title;
-        string description;
-        uint goalAmount;
-        uint deadline;
-        uint totalRaised;
-        bool withdrawn;
-        bool active;
+    mapping(address => uint) public contributions;
+    address[] private contributorIndex;
+
+    event ContributionReceived(address indexed contributor, uint amount);
+    event GoalReached(uint totalAmountRaised);
+    event RefundIssued(address indexed contributor, uint amount);
+    event FundsWithdrawn(address indexed owner, uint amount);
+    event DeadlineExtended(uint newDeadline);
+
+    constructor(uint _goalAmount, uint _durationInDays) {
+        owner = msg.sender;
+        goalAmount = _goalAmount;
+        deadline = block.timestamp + (_durationInDays * 1 days);
     }
-
-    mapping(uint => Campaign) public campaigns;
-    mapping(uint => mapping(address => uint)) public contributions;
-    mapping(uint => address[]) public contributors;
-
-    event CampaignCreated(uint campaignId, address creator, string title, uint goalAmount, uint deadline);
-    event ContributionMade(uint campaignId, address contributor, uint amount);
-    event FundsWithdrawn(uint campaignId, uint amount);
-    event RefundClaimed(uint campaignId, address contributor, uint amount);
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Only owner");
         _;
     }
 
-    constructor() {
-        owner = msg.sender;
-        campaignCounter = 0;
+    modifier beforeDeadline() {
+        require(block.timestamp < deadline, "Deadline passed");
+        _;
     }
 
-    function createCampaign(string memory _title, string memory _description, uint _goalAmount, uint _durationInDays) public {
-        require(_goalAmount > 0, "Goal must be > 0");
-        require(_durationInDays > 0, "Duration must be > 0");
-
-        campaignCounter++;
-        campaigns[campaignCounter] = Campaign({
-            creator: msg.sender,
-            title: _title,
-            description: _description,
-            goalAmount: _goalAmount,
-            deadline: block.timestamp + (_durationInDays * 1 days),
-            totalRaised: 0,
-            withdrawn: false,
-            active: true
-        });
-
-        emit CampaignCreated(campaignCounter, msg.sender, _title, _goalAmount, block.timestamp + (_durationInDays * 1 days));
+    modifier afterDeadline() {
+        require(block.timestamp >= deadline, "Deadline not reached");
+        _;
     }
 
-    function contribute(uint _campaignId) public payable {
-        Campaign storage c = campaigns[_campaignId];
-        require(c.active, "Campaign inactive");
-        require(block.timestamp <= c.deadline, "Deadline passed");
-        require(msg.value > 0, "Contribution must be > 0");
+    function contribute() public payable beforeDeadline {
+        require(msg.value > 0, "No ETH sent");
 
-        if (contributions[_campaignId][msg.sender] == 0) {
-            contributors[_campaignId].push(msg.sender);
+        if (contributions[msg.sender] == 0) {
+            contributorIndex.push(msg.sender);
         }
 
-        contributions[_campaignId][msg.sender] += msg.value;
-        c.totalRaised += msg.value;
+        contributions[msg.sender] += msg.value;
+        totalRaised += msg.value;
 
-        emit ContributionMade(_campaignId, msg.sender, msg.value);
+        emit ContributionReceived(msg.sender, msg.value);
+
+        if (totalRaised >= goalAmount && !goalReached) {
+            goalReached = true;
+            emit GoalReached(totalRaised);
+        }
     }
 
-    function withdrawFunds(uint _campaignId) public {
-        Campaign storage c = campaigns[_campaignId];
-        require(msg.sender == c.creator, "Not creator");
-        require(block.timestamp > c.deadline, "Campaign still active");
-        require(c.totalRaised >= c.goalAmount, "Goal not reached");
-        require(!c.withdrawn, "Already withdrawn");
-
-        uint fee = (c.totalRaised * platformFee) / 100;
-        uint amount = c.totalRaised - fee;
-
-        c.withdrawn = true;
-        c.active = false;
-
-        payable(owner).transfer(fee);
-        payable(c.creator).transfer(amount);
-
-        emit FundsWithdrawn(_campaignId, amount);
+    function getBalance() public view returns (uint) {
+        return address(this).balance;
     }
 
-    function claimRefund(uint _campaignId) public {
-        Campaign storage c = campaigns[_campaignId];
-        require(block.timestamp > c.deadline, "Campaign not ended");
-        require(c.totalRaised < c.goalAmount, "Goal met - no refund");
-        uint contributed = contributions[_campaignId][msg.sender];
-        require(contributed > 0, "No contributions");
-
-        contributions[_campaignId][msg.sender] = 0;
-        payable(msg.sender).transfer(contributed);
-
-        emit RefundClaimed(_campaignId, msg.sender, contributed);
+    function withdrawFunds() public onlyOwner afterDeadline {
+        require(goalReached && !fundsWithdrawn, "Cannot withdraw");
+        fundsWithdrawn = true;
+        payable(owner).transfer(address(this).balance);
+        emit FundsWithdrawn(owner, address(this).balance);
     }
 
-    function getCampaignContributors(uint _campaignId) public view returns (address[] memory) {
-        return contributors[_campaignId];
+    function refund() public afterDeadline {
+        require(!goalReached, "Goal reached");
+        uint amount = contributions[msg.sender];
+        require(amount > 0, "No contributions");
+
+        contributions[msg.sender] = 0;
+        payable(msg.sender).transfer(amount);
+        emit RefundIssued(msg.sender, amount);
     }
 
-    function getCampaignDetails(uint _campaignId) public view returns (
-        string memory, string memory, uint, uint, uint, bool, bool
+    function extendDeadline(uint _extraDays) public onlyOwner beforeDeadline {
+        require(!deadlineExtended, "Already extended");
+        deadline += _extraDays * 1 days;
+        deadlineExtended = true;
+        emit DeadlineExtended(deadline);
+    }
+
+    function getTimeRemaining() public view returns (uint) {
+        return block.timestamp >= deadline ? 0 : deadline - block.timestamp;
+    }
+
+    function getContributorDetails(address user) public view returns (uint) {
+        return contributions[user];
+    }
+
+    function getAllContributors() public view returns (address[] memory) {
+        return contributorIndex;
+    }
+
+    function getCampaignSummary() public view returns (
+        uint goal,
+        uint raised,
+        uint timeLeft,
+        bool reached,
+        bool withdrawn
     ) {
-        Campaign storage c = campaigns[_campaignId];
         return (
-            c.title,
-            c.description,
-            c.goalAmount,
-            c.deadline,
-            c.totalRaised,
-            c.withdrawn,
-            c.active
+            goalAmount,
+            totalRaised,
+            getTimeRemaining(),
+            goalReached,
+            fundsWithdrawn
         );
-    }
-
-    function getAllCampaigns() public view returns (uint[] memory) {
-        uint[] memory ids = new uint[](campaignCounter);
-        for (uint i = 1; i <= campaignCounter; i++) {
-            ids[i-1] = i;
-        }
-        return ids;
     }
 }
