@@ -1,16 +1,15 @@
 {
-  "name": "crowdfund-frontend",
+  "name": "Crowdfund",
   "version": "1.0.0",
-  "description": "Decentralized crowdfunding platform integrated with Core DAO",
+  "description": "A decentralized crowdfunding dApp",
   "scripts": {
-    "start": "live-server",
-    "deploy": "netlify deploy"
+    "compile": "npx hardhat compile",
+    "deploy": "npx hardhat run scripts/deploy.js --network coretestnet"
   },
-  "dependencies": {
-    "ethers": "^5.4.6",
-    "live-server": "^1.2.1"
-  },
-  "devDependencies": {},
-  "author": "Your Name",
-  "license": "MIT"
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.6",
+    "dotenv": "^16.3.1",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.17.0"
+  }
 }
