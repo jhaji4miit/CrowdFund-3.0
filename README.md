@@ -106,11 +106,6 @@ By leveraging **Core DAO**, we ensure **fast**, **low-cost**, and **eco-friendly
 2. Open `index.html` in any browser OR deploy to Netlify.
 3. For contract redeployment:
 
-```bash
-npm install
-npx hardhat compile
-npx hardhat run scripts/deploy.js --network coretestnet
-
 
 ## 🧠 Smart Contract
 
@@ -120,4 +115,7 @@ The dApp interacts with the deployed smart contract at:
 <img width="1110" alt="image" src="https://github.com/user-attachments/assets/94cf4ce7-827e-4688-8ee0-1aaab75ce759" />
 
 
-
+```bash
+npm install
+npx hardhat compile
+npx hardhat run scripts/deploy.js --network coretestnet
