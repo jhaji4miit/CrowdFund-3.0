@@ -18,6 +18,8 @@ contract CrowdFund {
     event RefundIssued(address indexed contributor, uint amount);
     event FundsWithdrawn(address indexed owner, uint amount);
     event DeadlineExtended(uint newDeadline);
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+    event CampaignReset(uint newGoal, uint newDeadline);
 
     constructor(uint _goalAmount, uint _durationInDays) {
         owner = msg.sender;
@@ -112,5 +114,39 @@ contract CrowdFund {
             goalReached,
             fundsWithdrawn
         );
+    }
+
+    function transferOwnership(address newOwner) public onlyOwner {
+        require(newOwner != address(0), "Zero address");
+        emit OwnershipTransferred(owner, newOwner);
+        owner = newOwner;
+    }
+
+    function resetCampaign(uint _newGoal, uint _newDurationInDays) public onlyOwner {
+        require(fundsWithdrawn || !goalReached, "Campaign still active");
+
+        for (uint i = 0; i < contributorIndex.length; i++) {
+            address contributor = contributorIndex[i];
+            contributions[contributor] = 0;
+        }
+
+        delete contributorIndex;
+
+        goalAmount = _newGoal;
+        deadline = block.timestamp + (_newDurationInDays * 1 days);
+        totalRaised = 0;
+        goalReached = false;
+        fundsWithdrawn = false;
+        deadlineExtended = false;
+
+        emit CampaignReset(_newGoal, deadline);
+    }
+
+    function isContributor(address user) public view returns (bool) {
+        return contributions[user] > 0;
+    }
+
+    function getNumContributors() public view returns (uint) {
+        return contributorIndex.length;
     }
 }
