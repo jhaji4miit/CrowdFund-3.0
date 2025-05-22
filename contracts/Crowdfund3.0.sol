@@ -117,36 +117,50 @@ contract CrowdFund {
     }
 
     function transferOwnership(address newOwner) public onlyOwner {
-        require(newOwner != address(0), "Zero address");
+        require(newOwner != address(0), "Invalid address");
         emit OwnershipTransferred(owner, newOwner);
         owner = newOwner;
     }
 
-    function resetCampaign(uint _newGoal, uint _newDurationInDays) public onlyOwner {
-        require(fundsWithdrawn || !goalReached, "Campaign still active");
-
-        for (uint i = 0; i < contributorIndex.length; i++) {
-            address contributor = contributorIndex[i];
-            contributions[contributor] = 0;
-        }
-
-        delete contributorIndex;
-
-        goalAmount = _newGoal;
+    function resetCampaign(uint _newGoalAmount, uint _newDurationInDays) public onlyOwner {
+        require(block.timestamp >= deadline, "Current campaign active");
+        goalAmount = _newGoalAmount;
         deadline = block.timestamp + (_newDurationInDays * 1 days);
         totalRaised = 0;
         goalReached = false;
         fundsWithdrawn = false;
         deadlineExtended = false;
 
-        emit CampaignReset(_newGoal, deadline);
+        for (uint i = 0; i < contributorIndex.length; i++) {
+            contributions[contributorIndex[i]] = 0;
+        }
+
+        delete contributorIndex;
+
+        emit CampaignReset(goalAmount, deadline);
     }
 
-    function isContributor(address user) public view returns (bool) {
+    function getContributorCount() public view returns (uint) {
+        return contributorIndex.length;
+    }
+
+    function hasContributed(address user) public view returns (bool) {
         return contributions[user] > 0;
     }
 
-    function getNumContributors() public view returns (uint) {
-        return contributorIndex.length;
+    // ✅ New function: returns the address of the top contributor and their amount
+    function getTopContributor() public view returns (address topContributor, uint topAmount) {
+        uint maxAmount = 0;
+        address topAddress;
+
+        for (uint i = 0; i < contributorIndex.length; i++) {
+            uint amount = contributions[contributorIndex[i]];
+            if (amount > maxAmount) {
+                maxAmount = amount;
+                topAddress = contributorIndex[i];
+            }
+        }
+
+        return (topAddress, maxAmount);
     }
 }
