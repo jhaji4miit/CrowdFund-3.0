@@ -148,7 +148,6 @@ contract CrowdFund {
         return contributions[user] > 0;
     }
 
-    // ✅ New function: returns the address of the top contributor and their amount
     function getTopContributor() public view returns (address topContributor, uint topAmount) {
         uint maxAmount = 0;
         address topAddress;
@@ -162,5 +161,12 @@ contract CrowdFund {
         }
 
         return (topAddress, maxAmount);
+    }
+
+    // ✅ New robust function: Get average contribution amount
+    function getAverageContribution() public view returns (uint) {
+        uint totalContributors = contributorIndex.length;
+        if (totalContributors == 0) return 0;
+        return totalRaised / totalContributors;
     }
 }
