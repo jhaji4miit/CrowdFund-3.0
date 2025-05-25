@@ -163,10 +163,37 @@ contract CrowdFund {
         return (topAddress, maxAmount);
     }
 
-    // ✅ New robust function: Get average contribution amount
     function getAverageContribution() public view returns (uint) {
         uint totalContributors = contributorIndex.length;
         if (totalContributors == 0) return 0;
         return totalRaised / totalContributors;
+    }
+
+    // ✅ NEW FUNCTION: Check if campaign is still active
+    function isCampaignActive() public view returns (bool) {
+        return block.timestamp < deadline && !goalReached;
+    }
+
+    // ✅ NEW FUNCTION: Get contribution percentage for a given address
+    function getContributionPercentage(address user) public view returns (uint) {
+        if (totalRaised == 0) return 0;
+        return (contributions[user] * 100) / totalRaised;
+    }
+
+    // ✅ NEW FUNCTION: Check if the caller is the owner
+    function isOwner() public view returns (bool) {
+        return msg.sender == owner;
+    }
+
+    // ✅ NEW FUNCTION: Get all contributions mapped with amounts
+    function getAllContributionAmounts() public view returns (address[] memory, uint[] memory) {
+        uint len = contributorIndex.length;
+        uint[] memory amounts = new uint[](len);
+
+        for (uint i = 0; i < len; i++) {
+            amounts[i] = contributions[contributorIndex[i]];
+        }
+
+        return (contributorIndex, amounts);
     }
 }
