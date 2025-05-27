@@ -67,7 +67,7 @@ Add support for multi-phase fund releases upon milestone verifications.
 
 ---
 
-👥 Contribution Logic
+## 👥 Contribution Logic
 Function	Description
 contribute()	Allows users to send ETH before deadline
 getBalance()	Returns the contract’s current ETH balance
@@ -76,7 +76,7 @@ getContributorDetails(address)	Returns how much a specific address contributed
 getAllContributors()	Returns all contributor addresses
 getAllContributionAmounts()	Returns all contributors and their contribution values
 
-📊 Campaign Summary
+## 📊 Campaign Summary
 Function	Description
 getCampaignSummary()	Returns goal, raised amount, time left, goal status, withdrawal status
 getTimeRemaining()	Returns seconds remaining until the deadline
@@ -88,7 +88,7 @@ getContributionPercentage(address)	Returns user’s contribution as a % of total
 getTopContributor()	Returns address and amount of the largest single contributor
 isCampaignActive()	Checks if campaign is still ongoing and goal not reached
 
-⚙️ Admin Controls
+## ⚙️ Admin Controls
 Function	Description
 withdrawFunds()	Owner can withdraw ETH if campaign is successful
 transferOwnership(address)	Transfer control to another address
@@ -96,7 +96,7 @@ extendDeadline(uint)	Extend the deadline by given number of days (once only)
 resetCampaign(uint, uint)	Restart campaign after deadline with new goal & time
 isOwner()	Returns true if msg.sender is owner
 
-📦 Events
+## 📦 Events
 ContributionReceived(address, uint)
 
 GoalReached(uint)
@@ -111,7 +111,7 @@ OwnershipTransferred(address, address)
 
 CampaignReset(uint, uint)
 
-🛠 Tech Stack
+## 🛠 Tech Stack
 Layer	Technology
 Blockchain	Core DAO Testnet
 Smart Contract	Solidity
@@ -120,7 +120,7 @@ Frontend	HTML, CSS, JavaScript (Vanilla)
 Deployment	Netlify
 Mobile App	PWA (manifest.json, service-worker.js)
 
-✅ Contract Deployment
+## ✅ Contract Deployment
 Contract Address:
 0x824956bbdAa68005C90a0387efeB67C23adf4C26 (Core DAO)
 <img width="1106" alt="image" src="https://github.com/user-attachments/assets/0fd3c6f6-864d-46aa-9e10-0e12a646e071" />
