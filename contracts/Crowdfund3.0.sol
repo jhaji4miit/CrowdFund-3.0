@@ -193,9 +193,14 @@ contract CrowdFund {
         return (contributorIndex, amounts);
     }
 
-    // ✅ NEW FUNCTION: Get the remaining amount to reach the goal
     function getRemainingGoalAmount() public view returns (uint) {
         if (totalRaised >= goalAmount) return 0;
         return goalAmount - totalRaised;
+    }
+
+    // ✅ NEW FUNCTION: Return the last contributor's address
+    function getLastContributor() public view returns (address) {
+        if (contributorIndex.length == 0) return address(0);
+        return contributorIndex[contributorIndex.length - 1];
     }
 }
