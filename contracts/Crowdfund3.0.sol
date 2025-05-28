@@ -100,6 +100,15 @@ contract CrowdFund {
         return contributorIndex;
     }
 
+    function getAllContributionAmounts() public view returns (address[] memory, uint[] memory) {
+        uint len = contributorIndex.length;
+        uint[] memory amounts = new uint[](len);
+        for (uint i = 0; i < len; i++) {
+            amounts[i] = contributions[contributorIndex[i]];
+        }
+        return (contributorIndex, amounts);
+    }
+
     function getCampaignSummary() public view returns (
         uint goal,
         uint raised,
@@ -124,6 +133,7 @@ contract CrowdFund {
 
     function resetCampaign(uint _newGoalAmount, uint _newDurationInDays) public onlyOwner {
         require(block.timestamp >= deadline, "Current campaign active");
+
         goalAmount = _newGoalAmount;
         deadline = block.timestamp + (_newDurationInDays * 1 days);
         totalRaised = 0;
@@ -151,7 +161,6 @@ contract CrowdFund {
     function getTopContributor() public view returns (address topContributor, uint topAmount) {
         uint maxAmount = 0;
         address topAddress;
-
         for (uint i = 0; i < contributorIndex.length; i++) {
             uint amount = contributions[contributorIndex[i]];
             if (amount > maxAmount) {
@@ -159,7 +168,6 @@ contract CrowdFund {
                 topAddress = contributorIndex[i];
             }
         }
-
         return (topAddress, maxAmount);
     }
 
@@ -182,25 +190,22 @@ contract CrowdFund {
         return msg.sender == owner;
     }
 
-    function getAllContributionAmounts() public view returns (address[] memory, uint[] memory) {
-        uint len = contributorIndex.length;
-        uint[] memory amounts = new uint[](len);
-
-        for (uint i = 0; i < len; i++) {
-            amounts[i] = contributions[contributorIndex[i]];
-        }
-
-        return (contributorIndex, amounts);
-    }
-
     function getRemainingGoalAmount() public view returns (uint) {
         if (totalRaised >= goalAmount) return 0;
         return goalAmount - totalRaised;
     }
 
-    // ✅ NEW FUNCTION: Return the last contributor's address
-    function getLastContributor() public view returns (address) {
-        if (contributorIndex.length == 0) return address(0);
-        return contributorIndex[contributorIndex.length - 1];
+    // 🆕 NEW FUNCTION: Get minimum contribution made
+    function getMinimumContribution() public view returns (uint) {
+        if (contributorIndex.length == 0) return 0;
+
+        uint minAmount = type(uint).max;
+        for (uint i = 0; i < contributorIndex.length; i++) {
+            uint amount = contributions[contributorIndex[i]];
+            if (amount > 0 && amount < minAmount) {
+                minAmount = amount;
+            }
+        }
+        return minAmount;
     }
 }
