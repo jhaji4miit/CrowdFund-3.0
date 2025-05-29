@@ -195,7 +195,6 @@ contract CrowdFund {
         return goalAmount - totalRaised;
     }
 
-    // 🆕 NEW FUNCTION: Get minimum contribution made
     function getMinimumContribution() public view returns (uint) {
         if (contributorIndex.length == 0) return 0;
 
@@ -207,5 +206,10 @@ contract CrowdFund {
             }
         }
         return minAmount;
+    }
+
+    // ✅ NEW FUNCTION: Simple getter to check if goal has been reached
+    function hasGoalBeenReached() public view returns (bool) {
+        return goalReached;
     }
 }
