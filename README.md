@@ -66,23 +66,6 @@ The **CrowdFund** contract aims to democratize fundraising by leveraging blockch
 
 ---
 
-## 📂 File Structure
-
-```bash
-CrowdFund/
-├── contracts/
-│   └── CrowdFund.sol
-├── scripts/
-│   └── deploy.js
-├── test/
-│   └── CrowdFund.test.js
-├── hardhat.config.js
-├── README.md
-└── package.json
-📜 License
-MIT © 2025
-
-🙌 Built with ❤️ using React, Solidity & Hardhat
 
 ## ✅ Contract Deployment
 Contract Address:
