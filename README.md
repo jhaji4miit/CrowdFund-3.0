@@ -1,4 +1,4 @@
-# 🎯 CrowdFund Smart Contract
+# 🎯 CrowdFund 3.0
 
 A robust, secure, and transparent crowdfunding smart contract built on Solidity. It enables anyone to launch and manage decentralized fundraising campaigns on the blockchain. Supports contributor tracking, refunds, deadline extensions, and detailed campaign analytics.
 
