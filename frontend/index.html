@@ -3,66 +3,55 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="theme-color" content="#ff6600" />
-  <link rel="manifest" href="manifest.json" />
+  <title>CrowdFund dApp</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="assets/logo.png" />
-  <title>Crowdfund | Empowering Decentralized Dreams</title>
 </head>
 <body>
+  <div class="welcome-screen" id="welcomeScreen">
+    <h1>CrowdFund</h1>
+    <p>Empowering Projects Through Decentralized Crowdfunding</p>
+    <button onclick="enterApp()">Enter</button>
+  </div>
 
-  <section id="welcome-screen" class="centered">
-    <div class="welcome-card animate-pop">
-      <img src="assets/logo.png" alt="Logo" class="logo" />
-      <h1>Crowdfund</h1>
-      <p>Empowering Decentralized Dreams</p>
-      <button onclick="startApp()">Enter Platform 🚀</button>
-    </div>
-  </section>
-
-  <main id="app-container" class="hidden">
+  <div class="app hidden" id="mainApp">
     <header>
-      <img src="assets/logo.png" class="logo-small" />
-      <h1>Crowdfund Platform</h1>
-      <button id="connectWalletBtn">🔗 Connect Wallet</button>
+      <h1>CrowdFund</h1>
+      <button id="connectBtn">Connect Wallet</button>
     </header>
 
-    <section class="campaign-overview">
-      <h2>📊 Campaign Summary</h2>
-      <div id="campaignSummary" class="card loading">Loading...</div>
+    <section id="campaignStats">
+      <h2>Campaign Overview</h2>
+      <div id="statsGrid">
+        <p><strong>Goal:</strong> <span id="goalAmount">--</span> ETH</p>
+        <p><strong>Raised:</strong> <span id="raisedAmount">--</span> ETH</p>
+        <p><strong>Time Left:</strong> <span id="timeLeft">--</span></p>
+        <p><strong>Top Contributor:</strong> <span id="topContributor">--</span></p>
+        <p><strong>Your Contribution:</strong> <span id="userContribution">--</span> ETH</p>
+      </div>
     </section>
 
-    <section class="actions">
-      <h2>🎯 Contribute</h2>
-      <input type="number" id="contributionAmount" placeholder="Amount in CORE" />
+    <section id="contributeSection">
+      <h2>Contribute</h2>
+      <input type="number" id="contributionInput" placeholder="Amount in ETH" />
       <button onclick="contribute()">Contribute</button>
     </section>
 
-    <section class="leaderboard">
-      <h2>🏆 Top Contributors</h2>
-      <ul id="leaderboard" class="card loading">Loading...</ul>
+    <section id="adminSection" class="hidden">
+      <h2>Admin Panel</h2>
+      <button onclick="withdrawFunds()">Withdraw</button>
+      <button onclick="extendDeadline()">Extend Deadline</button>
+      <button onclick="resetCampaign()">Reset Campaign</button>
+      <input type="text" id="newOwner" placeholder="New Owner Address" />
+      <button onclick="transferOwnership()">Transfer Ownership</button>
     </section>
 
-    <footer>
-      <p>Built on Core DAO • Smart Contract: <code>0x55aC56EC0102438c97c5789a5fFDea314342c0e8</code></p>
-    </footer>
-  </main>
+    <section>
+      <h2>All Contributors</h2>
+      <div id="contributorList"></div>
+    </section>
+  </div>
 
-  <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
-  <script src="app.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js')
-        .then(reg => console.log("✅ Service Worker registered:", reg.scope))
-        .catch(err => console.error("❌ Service Worker failed:", err));
-      });
-    }
-
-    function startApp() {
-      document.getElementById('welcome-screen').style.display = 'none';
-      document.getElementById('app-container').classList.remove('hidden');
-    }
-  </script>
+  <script src="abi.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
