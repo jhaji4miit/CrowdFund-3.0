@@ -1,332 +1,101 @@
-/* Reset & base */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+/* =========================================================================
+   CrowdFund dApp – Glass + Neon CSS
+   ========================================================================= */
 
-body {
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  color: #f0f0f0;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 1rem;
-  overflow-x: hidden;
+/* --- Global reset & palette ------------------------------------------ */
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+:root{
+  --bg1:#0f2027;--bg2:#203a43;--bg3:#2c5364;
+  --a1:#4fc3f7;--a2:#34a9df;
+  --txt:#f0f0f0;--sub:#a0d8ffcc;--glass:rgba(255,255,255,.07);
+  --br-lg:24px;--br-md:16px;--br-sm:10px;--pad:1.1rem;
 }
+body{
+  background:linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+  color:var(--txt);min-height:100vh;padding:1rem;
+  display:flex;flex-direction:column;align-items:center;overflow-x:hidden;
+}
+a{color:var(--a1);text-decoration:none}
+a:hover{text-shadow:0 0 6px var(--a2)}
 
-/* Scrollbar */
-body::-webkit-scrollbar {
-  width: 8px;
-}
-body::-webkit-scrollbar-track {
-  background: #1f2a38;
-  border-radius: 4px;
-}
-body::-webkit-scrollbar-thumb {
-  background: #4fc3f7;
-  border-radius: 4px;
-}
+/* --- Scrollbar ------------------------------------------------------- */
+body::-webkit-scrollbar{width:8px}
+body::-webkit-scrollbar-track{background:#1f2a38;border-radius:4px}
+body::-webkit-scrollbar-thumb{background:var(--a1);border-radius:4px}
 
-/* Welcome Screen */
-#welcome {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 3rem 4rem;
-  border-radius: 15px;
-  box-shadow: 0 0 30px #4fc3f7aa;
-  text-align: center;
-  width: 100%;
-  max-width: 480px;
-  animation: fadeIn 1.2s ease forwards;
-}
+/* ---------- Corner-Logo (tiny) -------------------------------------- */
+#corner-logo{position:fixed;top:10px;left:10px;z-index:999}
+#corner-logo img{height:30px;width:auto;filter:drop-shadow(0 0 6px var(--a1))}
 
-#welcome h1 {
-  font-size: 3rem;
-  margin-bottom: 0.3rem;
-  color: #4fc3f7;
-  text-shadow: 0 0 10px #4fc3f7;
+/* ---------- Splash Screen ------------------------------------------- */
+.splash{
+  text-align:center;max-width:480px;width:100%;padding:3rem 4rem;border-radius:var(--br-lg);
+  background:var(--glass);backdrop-filter:blur(10px);box-shadow:0 0 40px var(--a1);
+  animation:fadeDown .8s ease-out;
 }
+.brand{font-size:3rem;color:var(--a1);text-shadow:0 0 12px var(--a1)}
+.tagline{font-size:1.2rem;color:var(--sub);margin:1rem 0 2rem;letter-spacing:.1em}
+.btn{border:none;border-radius:40px;padding:.75rem 2rem;cursor:pointer;font-weight:600;
+     color:#0f2027;background:var(--a1);box-shadow:0 4px 15px var(--a1);transition:.25s}
+.btn:hover{background:var(--a2);transform:translateY(-2px)}
+.btn.big{font-size:1.3rem;padding:1rem 3rem}
+.primary{box-shadow:0 6px 22px var(--a1)}
+.hidden{display:none!important}
 
-#welcome p {
-  font-size: 1.25rem;
-  margin-bottom: 2rem;
-  font-weight: 500;
-  color: #a0d8ffcc;
-  letter-spacing: 0.1em;
-}
+/* ---------- Reusable Glass Panels ----------------------------------- */
+.glass-frost{background:var(--glass);backdrop-filter:blur(12px);border-radius:var(--br-lg);
+             box-shadow:0 0 35px var(--a1);animation:fadeUp .9s}
+.glass-glow {background:rgba(20,44,60,.6);backdrop-filter:blur(9px);border-radius:var(--br-lg);
+             box-shadow:0 0 40px var(--a1);animation:fadeUp .9s}
 
-#welcome button {
-  background: #4fc3f7;
-  border: none;
-  padding: 1rem 3rem;
-  border-radius: 50px;
-  color: #0f2027;
-  font-weight: 700;
-  font-size: 1.25rem;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 4px 15px #4fc3f7bb;
-}
+/* ---------- Header & Nav -------------------------------------------- */
+.hdr{display:flex;justify-content:space-between;align-items:center;
+     width:100%;max-width:960px;padding:.8rem 2rem;margin:1.5rem 0}
+.hdr-title{color:var(--a1);font-size:1.9rem;text-shadow:0 0 10px var(--a1)}
+.nav a{margin:0 .7rem;font-weight:600}
 
-#welcome button:hover {
-  background: #3aa3dd;
-  transform: scale(1.1);
-  box-shadow: 0 6px 25px #3aa3ddcc;
-}
+/* ---------- Wallet Bar ---------------------------------------------- */
+.wallet{width:100%;max-width:960px;text-align:center;padding:.4rem .6rem;margin-bottom:1.4rem;
+        border-radius:var(--br-md);font-weight:600;color:var(--sub);box-shadow:0 0 18px var(--a2)}
 
-.hidden {
-  display: none;
-}
+/* ---------- Cards ---------------------------------------------------- */
+.card{width:100%;max-width:960px;padding:2rem;margin:1.5rem 0}
+.card h3{color:var(--a1);margin-bottom:1rem;font-size:1.7rem;text-shadow:0 0 8px var(--a1)}
+.card h4{color:var(--a2);margin:1.2rem 0 .4rem}
 
-/* Main App Container */
-#main {
-  max-width: 960px;
-  width: 100%;
-  margin-top: 1.5rem;
-  background: rgba(255, 255, 255, 0.07);
-  border-radius: 15px;
-  padding: 2rem 3rem;
-  box-shadow: 0 0 40px #4fc3f7aa;
-  animation: slideIn 1s ease forwards;
-}
+/* ---------- Grid & Progress ----------------------------------------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem .8rem}
+.grid span{font-size:.85rem;color:var(--sub)}
+.grid strong{font-size:1.3rem}
+.progress-shell{height:22px;background:#162732;border-radius:40px;overflow:hidden;margin-top:1rem}
+.progress-track{height:100%;width:0;background:linear-gradient(90deg,var(--a1),var(--a2));
+                box-shadow:0 0 12px var(--a2);transition:width 1.3s ease-in-out}
 
-/* Header */
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-}
+/* ---------- Form rows / fields -------------------------------------- */
+.row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin-bottom:1rem}
+input[type="number"],input[type="text"]{
+  background:#14242f;border:none;border-radius:var(--br-sm);padding:.5rem 1rem;width:150px;
+  color:#fff;box-shadow:0 0 12px var(--a2);transition:.3s}
+input:focus{outline:none;box-shadow:0 0 22px var(--a1)}
+.field{margin:1rem 0}
+.field label{display:block;font-size:.85rem;color:var(--sub);margin-bottom:.35rem}
 
-header h1 {
-  font-size: 2.5rem;
-  color: #4fc3f7;
-  text-shadow: 0 0 12px #4fc3f7;
-  user-select: none;
-}
+/* ---------- Stat List ----------------------------------------------- */
+.stats{list-style:none;padding-left:1rem}
+.stats li{margin:.45rem 0;font-size:1.05rem}
+.stats strong{color:#fff}
 
-header button {
-  background: #4fc3f7;
-  border: none;
-  padding: 0.7rem 1.5rem;
-  border-radius: 30px;
-  color: #0f2027;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.25s ease;
-  box-shadow: 0 4px 12px #4fc3f7aa;
-}
+/* ---------- Footer --------------------------------------------------- */
+.foot{width:100%;text-align:center;color:var(--sub);font-size:.85rem;margin:2rem 0}
 
-header button:hover {
-  background: #3aa3dd;
-  box-shadow: 0 6px 18px #3aa3ddcc;
-}
+/* ---------- Animations ---------------------------------------------- */
+@keyframes fadeDown{0%{opacity:0;transform:translateY(-25px)}100%{opacity:1;transform:none}}
+@keyframes fadeUp  {0%{opacity:0;transform:translateY(35px)}100%{opacity:1;transform:none}}
 
-.wallet-info {
-  font-size: 0.9rem;
-  color: #a0d8ffcc;
-  margin-top: 0.5rem;
-  font-family: monospace;
-  user-select: text;
-}
-
-/* Sections styling */
-section {
-  margin-bottom: 2.5rem;
-}
-
-section h2 {
-  font-size: 1.75rem;
-  margin-bottom: 1rem;
-  color: #4fc3f7;
-  text-shadow: 0 0 8px #4fc3f7;
-  border-bottom: 2px solid #3aa3dd;
-  padding-bottom: 0.3rem;
-}
-
-/* Status Section */
-.status-section p {
-  font-size: 1.1rem;
-  margin: 0.3rem 0;
-  color: #e0f7ffdd;
-}
-
-.progress-bar-container {
-  width: 100%;
-  background: #1f2a38;
-  height: 20px;
-  border-radius: 12px;
-  margin-top: 1rem;
-  box-shadow: inset 0 0 8px #0f2027;
-  overflow: hidden;
-}
-
-.progress-bar {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, #4fc3f7, #3aa3dd);
-  border-radius: 12px 0 0 12px;
-  transition: width 1.2s ease;
-  box-shadow: 0 0 15px #4fc3f7aa;
-}
-
-/* Actions Section */
-.actions-section input[type="number"] {
-  padding: 0.6rem 1rem;
-  font-size: 1rem;
-  width: 150px;
-  border: none;
-  border-radius: 8px;
-  margin-right: 1rem;
-  box-shadow: 0 0 6px #4fc3f7aa;
-  background: #0f2027cc;
-  color: #e0f7ff;
-  transition: box-shadow 0.3s ease;
-}
-
-.actions-section input[type="number"]:focus {
-  outline: none;
-  box-shadow: 0 0 12px #4fc3f7ff;
-}
-
-.actions-section button {
-  background: #4fc3f7;
-  border: none;
-  padding: 0.6rem 1.5rem;
-  border-radius: 40px;
-  color: #0f2027;
-  font-weight: 700;
-  font-size: 1rem;
-  cursor: pointer;
-  margin-top: 0.5rem;
-  transition: background 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 4px 15px #4fc3f7aa;
-}
-
-.actions-section button:hover {
-  background: #3aa3dd;
-  transform: scale(1.05);
-  box-shadow: 0 6px 25px #3aa3ddcc;
-}
-
-/* Details Section */
-.details-section p {
-  font-size: 1.05rem;
-  margin: 0.4rem 0;
-  color: #cde7ffdd;
-  user-select: none;
-}
-
-/* Admin Section */
-.admin-section div {
-  margin-bottom: 1.2rem;
-}
-
-.admin-section label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 0.3rem;
-  color: #4fc3f7;
-}
-
-.admin-section input[type="number"],
-.admin-section input[type="text"] {
-  width: 100%;
-  max-width: 320px;
-  padding: 0.5rem 1rem;
-  border-radius: 10px;
-  border: none;
-  background: #0f2027cc;
-  color: #e0f7ff;
-  box-shadow: 0 0 10px #4fc3f7aa;
-  transition: box-shadow 0.3s ease;
-  margin-bottom: 0.5rem;
-}
-
-.admin-section input[type="number"]:focus,
-.admin-section input[type="text"]:focus {
-  outline: none;
-  box-shadow: 0 0 18px #4fc3f7ff;
-}
-
-.admin-section button {
-  background: #4fc3f7;
-  padding: 0.7rem 1.8rem;
-  border-radius: 40px;
-  font-weight: 700;
-  border: none;
-  color: #0f2027;
-  cursor: pointer;
-  box-shadow: 0 4px 15px #4fc3f7aa;
-  transition: background 0.3s ease, transform 0.2s ease;
-}
-
-.admin-section button:hover {
-  background: #3aa3dd;
-  transform: scale(1.05);
-  box-shadow: 0 6px 25px #3aa3ddcc;
-}
-
-/* Extra Info Section */
-.extra-info-section button {
-  margin-right: 1rem;
-  margin-bottom: 1rem;
-  background: #4fc3f7;
-  padding: 0.6rem 1.5rem;
-  border-radius: 40px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  color: #0f2027;
-  box-shadow: 0 4px 15px #4fc3f7aa;
-  transition: background 0.3s ease, transform 0.2s ease;
-}
-
-.extra-info-section button:hover {
-  background: #3aa3dd;
-  transform: scale(1.05);
-  box-shadow: 0 6px 25px #3aa3ddcc;
-}
-
-/* Footer */
-footer {
-  text-align: center;
-  font-size: 0.85rem;
-  color: #739fcfbb;
-  margin-top: 2rem;
-  user-select: none;
-}
-
-/* Responsive Layout */
-@media (max-width: 768px) {
-  #main {
-    padding: 1.5rem 2rem;
-  }
-  header {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  .actions-section input[type="number"] {
-    width: 100%;
-    max-width: none;
-    margin-bottom: 0.7rem;
-  }
-  .admin-section input[type="number"],
-  .admin-section input[type="text"] {
-    max-width: 100%;
-  }
-}
-
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-30px);}
-  to { opacity: 1; transform: translateY(0);}
-}
-
-@keyframes slideIn {
-  from { opacity: 0; transform: translateX(100px);}
-  to { opacity: 1; transform: translateX(0);}
+/* ---------- Responsive ---------------------------------------------- */
+@media(max-width:720px){
+  .hdr{flex-direction:column;gap:.7rem}
+  .nav{display:none}
+  .row{flex-direction:column;align-items:stretch}
+  input{width:100%}
 }
