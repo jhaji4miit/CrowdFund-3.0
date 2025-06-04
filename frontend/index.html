@@ -2,87 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CrowdFund dApp</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
   <script src="https://cdn.jsdelivr.net/npm/ethers@5/dist/ethers.min.js"></script>
+  <script defer src="app.js"></script>
 </head>
 <body>
-  <div id="welcome">
+  <!-- Welcome Page -->
+  <div id="welcome" class="welcome-screen">
+    <img src="assets/logo.png" alt="CrowdFund Logo" class="logo-big" />
     <h1>Welcome to CrowdFund</h1>
-    <p>Secure. Transparent. Decentralized.</p>
+    <p>Secure. Transparent. Decentralized Crowdfunding on Core DAO.</p>
     <button onclick="initApp()">Enter dApp</button>
   </div>
 
-  <div id="main" class="hidden">
+  <!-- Main Dashboard -->
+  <div id="main" class="hidden main-app">
     <header>
-      <h1>🚀 CrowdFund Dashboard</h1>
+      <div class="header-left">
+        <img src="assets/logo.png" alt="logo" class="logo-sm" />
+        <h1>🚀 CrowdFund Dashboard</h1>
+      </div>
       <button id="connectWalletBtn" onclick="connectWallet()">🔗 Connect Wallet</button>
-      <div id="walletAddress" class="wallet-info"></div>
+      <p id="wallet-info" class="wallet-info"></p>
     </header>
 
-    <!-- Status Section -->
-    <section id="status" class="card-section">
-      <h2>Status</h2>
-      <div class="info-grid">
-        <div><strong>Goal:</strong> <span id="goal">-</span> ETH</div>
-        <div><strong>Raised:</strong> <span id="raised">-</span> ETH</div>
-        <div><strong>Time Left:</strong> <span id="timeLeft">-</span> s</div>
-        <div><strong>Campaign Active:</strong> <span id="activeStatus">-</span></div>
-      </div>
-      <div class="progress-bar-container">
-        <div id="progressBar" class="progress-bar"></div>
-      </div>
+    <section id="status" class="card">
+      <h2>📊 Campaign Status</h2>
+      <p><strong>Goal:</strong> <span id="goal"></span> ETH</p>
+      <p><strong>Raised:</strong> <span id="raised"></span> ETH</p>
+      <p><strong>Time Left:</strong> <span id="timeLeft"></span> seconds</p>
+      <p><strong>Campaign Active:</strong> <span id="activeStatus"></span></p>
     </section>
 
-    <!-- Actions Section -->
-    <section id="actions" class="card-section">
-      <h2>Contribute to Campaign</h2>
-      <div class="input-group">
-        <input type="number" id="amount" placeholder="Amount in ETH" min="0.001" step="0.001" />
-        <button id="contributeBtn" onclick="contribute()">Contribute</button>
-      </div>
+    <section id="actions" class="card">
+      <h2>💸 Contribute to Campaign</h2>
+      <input type="number" id="amount" placeholder="ETH amount"/>
+      <button onclick="contribute()">Contribute</button>
+
       <h3>After Deadline Options</h3>
-      <div class="button-group">
-        <button id="refundBtn" onclick="refund()">Request Refund</button>
-        <button id="withdrawBtn" onclick="withdraw()">Withdraw Funds</button>
-      </div>
+      <button onclick="refund()">Request Refund</button>
+      <button onclick="withdraw()">Withdraw Funds</button>
     </section>
 
-    <!-- Details Section -->
-    <section id="details" class="card-section">
-      <h2>Details</h2>
-      <div class="info-grid">
-        <div><strong>Your Contribution:</strong> <span id="yourContribution">0</span> ETH</div>
-        <div><strong>Top Contributor:</strong> <span id="topContributor">-</span></div>
-        <div><strong>Average Contribution:</strong> <span id="average">-</span> ETH</div>
-        <div><strong>Withdrawn:</strong> <span id="withdrawn">-</span> ETH</div>
-      </div>
-    </section>
-
-    <!-- Admin Section -->
-    <section id="admin" class="card-section">
-      <h2>Admin Controls</h2>
-      <div class="input-group">
-        <label for="newGoal">Set New Goal (ETH):</label>
-        <input type="number" id="newGoal" min="0" step="0.01" />
-        <button onclick="setGoal()">Update Goal</button>
-      </div>
-      <div class="input-group">
-        <label for="newDeadline">Set New Deadline (seconds):</label>
-        <input type="number" id="newDeadline" min="0" step="1" />
-        <button onclick="setDeadline()">Update Deadline</button>
-      </div>
-      <div class="input-group">
-        <button onclick="togglePause()">Pause/Unpause Campaign</button>
-      </div>
+    <section id="details" class="card">
+      <h2>📋 Your Contribution Details</h2>
+      <p><strong>Your Contribution:</strong> <span id="yourContribution">0</span> ETH</p>
+      <p><strong>Top Contributor:</strong> <span id="topContributor"></span></p>
+      <p><strong>Average Contribution:</strong> <span id="average"></span> ETH</p>
     </section>
 
     <footer>
       <p>&copy; 2025 CrowdFund dApp - Core DAO | Contract: <code>0x824956bbdAa68005C90a0387efeB67C23adf4C26</code></p>
     </footer>
   </div>
-
-  <script src="app.js"></script>
 </body>
 </html>
