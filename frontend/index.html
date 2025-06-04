@@ -19,32 +19,53 @@
       <button onclick="connectWallet()">🔗 Connect Wallet</button>
     </header>
 
-    <section id="status">
+    <section id="status" class="card">
+      <h2>📊 Campaign Status</h2>
       <p><strong>Goal:</strong> <span id="goal"></span> ETH</p>
       <p><strong>Raised:</strong> <span id="raised"></span> ETH</p>
-      <p><strong>Time Left:</strong> <span id="timeLeft"></span> seconds</p>
-      <p><strong>Campaign Active:</strong> <span id="activeStatus"></span></p>
+      <p><strong>Time Left:</strong> <span id="timeLeft"></span> sec</p>
+      <p><strong>Active:</strong> <span id="activeStatus"></span></p>
     </section>
 
-    <section id="actions">
-      <h2>Contribute to Campaign</h2>
+    <section id="actions" class="card">
+      <h2>💸 Contribute</h2>
       <input type="number" id="amount" placeholder="ETH amount"/>
       <button onclick="contribute()">Contribute</button>
 
-      <h3>After Deadline Options</h3>
+      <h3>📤 After Deadline</h3>
       <button onclick="refund()">Request Refund</button>
       <button onclick="withdraw()">Withdraw Funds</button>
     </section>
 
-    <section id="details">
-      <h3>Details</h3>
+    <section id="insights" class="card">
+      <h2>📌 Insights</h2>
       <p><strong>Your Contribution:</strong> <span id="yourContribution">0</span> ETH</p>
       <p><strong>Top Contributor:</strong> <span id="topContributor"></span></p>
       <p><strong>Average Contribution:</strong> <span id="average"></span> ETH</p>
+      <p><strong>Contribution %:</strong> <span id="percent"></span>%</p>
+      <p><strong>Total Contributors:</strong> <span id="contributorCount"></span></p>
+    </section>
+
+    <section id="owner" class="card">
+      <h2>🛠️ Owner Panel</h2>
+      <input type="number" id="extraDays" placeholder="Extend by days" />
+      <button onclick="extendDeadline()">Extend Deadline</button>
+      <input type="text" id="newOwner" placeholder="New owner address"/>
+      <button onclick="transferOwnership()">Transfer Ownership</button>
+      <input type="number" id="newGoal" placeholder="New Goal"/>
+      <input type="number" id="newDuration" placeholder="New Duration (days)"/>
+      <button onclick="resetCampaign()">Reset Campaign</button>
+    </section>
+
+    <section id="extras" class="card">
+      <h2>🧾 Extras</h2>
+      <button onclick="getAllContributors()">Get All Contributors</button>
+      <button onclick="getContributionData()">Get Contribution Data</button>
+      <button onclick="getRemaining()">Remaining to Goal</button>
     </section>
 
     <footer>
-      <p>&copy; 2025 CrowdFund dApp - Core DAO | Contract: <code>0x8249...4C26</code></p>
+      <p>&copy; 2025 CrowdFund dApp - Core DAO | Contract: <code>0x824956bbdAa68005C90a0387efeB67C23adf4C26</code></p>
     </footer>
   </div>
 
