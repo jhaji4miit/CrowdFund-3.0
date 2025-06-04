@@ -2,73 +2,102 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>CrowdFund dApp</title>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="welcome">
+
+  <!-- Welcome Screen -->
+  <div id="welcome" class="welcome-screen">
     <h1>Welcome to CrowdFund</h1>
-    <p>Secure. Transparent. Decentralized.</p>
+    <p>Secure. Transparent. Decentralized Crowdfunding on Core DAO.</p>
     <button onclick="initApp()">Enter dApp</button>
   </div>
 
-  <div id="main" class="hidden">
+  <!-- Main App -->
+  <div id="main" class="hidden main-app">
+
     <header>
       <h1>🚀 CrowdFund Dashboard</h1>
       <button onclick="connectWallet()">🔗 Connect Wallet</button>
+      <p id="wallet-info" class="wallet-info"></p>
     </header>
 
-    <section id="status" class="card">
-      <h2>📊 Campaign Status</h2>
-      <p><strong>Goal:</strong> <span id="goal"></span> ETH</p>
-      <p><strong>Raised:</strong> <span id="raised"></span> ETH</p>
-      <p><strong>Time Left:</strong> <span id="timeLeft"></span> sec</p>
-      <p><strong>Active:</strong> <span id="activeStatus"></span></p>
+    <section id="status" class="status-section">
+      <h2>Campaign Status</h2>
+      <p><strong>Goal:</strong> <span id="goal">-</span> ETH</p>
+      <p><strong>Raised:</strong> <span id="raised">-</span> ETH</p>
+      <p><strong>Time Left:</strong> <span id="timeLeft">-</span> seconds</p>
+      <p><strong>Campaign Active:</strong> <span id="activeStatus">-</span></p>
+      <p><strong>Withdrawn:</strong> <span id="withdrawn">-</span></p>
+
+      <div class="progress-bar-container">
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
     </section>
 
-    <section id="actions" class="card">
-      <h2>💸 Contribute</h2>
-      <input type="number" id="amount" placeholder="ETH amount"/>
+    <section id="actions" class="actions-section">
+      <h2>Contribute to Campaign</h2>
+      <input type="number" id="amount" placeholder="ETH amount" step="0.01" min="0" />
       <button onclick="contribute()">Contribute</button>
 
-      <h3>📤 After Deadline</h3>
+      <h3>After Deadline Options</h3>
       <button onclick="refund()">Request Refund</button>
       <button onclick="withdraw()">Withdraw Funds</button>
     </section>
 
-    <section id="insights" class="card">
-      <h2>📌 Insights</h2>
-      <p><strong>Your Contribution:</strong> <span id="yourContribution">0</span> ETH</p>
-      <p><strong>Top Contributor:</strong> <span id="topContributor"></span></p>
-      <p><strong>Average Contribution:</strong> <span id="average"></span> ETH</p>
-      <p><strong>Contribution %:</strong> <span id="percent"></span>%</p>
-      <p><strong>Total Contributors:</strong> <span id="contributorCount"></span></p>
+    <section id="details" class="details-section">
+      <h2>Your Contributions & Stats</h2>
+      <p><strong>Your Contribution:</strong> <span id="yourContribution">-</span> ETH</p>
+      <p><strong>Contribution % of Goal:</strong> <span id="percent">-</span>%</p>
+      <p><strong>Top Contributor:</strong> <span id="topContributor">-</span></p>
+      <p><strong>Average Contribution:</strong> <span id="average">-</span> ETH</p>
+      <p><strong>Contributor Count:</strong> <span id="contributorCount">-</span></p>
+      <p><strong>Remaining Goal Amount:</strong> <span id="remainingGoal">-</span> ETH</p>
     </section>
 
-    <section id="owner" class="card">
-      <h2>🛠️ Owner Panel</h2>
-      <input type="number" id="extraDays" placeholder="Extend by days" />
-      <button onclick="extendDeadline()">Extend Deadline</button>
-      <input type="text" id="newOwner" placeholder="New owner address"/>
-      <button onclick="transferOwnership()">Transfer Ownership</button>
-      <input type="number" id="newGoal" placeholder="New Goal"/>
-      <input type="number" id="newDuration" placeholder="New Duration (days)"/>
-      <button onclick="resetCampaign()">Reset Campaign</button>
+    <section id="admin" class="admin-section">
+      <h2>Admin Functions</h2>
+      <div>
+        <label for="extraDays">Extend Deadline (days):</label>
+        <input type="number" id="extraDays" min="0" />
+        <button onclick="extendDeadline()">Extend Deadline</button>
+      </div>
+
+      <div>
+        <label for="newOwner">Transfer Ownership (address):</label>
+        <input type="text" id="newOwner" placeholder="0x..." />
+        <button onclick="transferOwnership()">Transfer Ownership</button>
+      </div>
+
+      <div>
+        <label for="newGoal">Reset Campaign Goal (ETH):</label>
+        <input type="number" id="newGoal" step="0.01" min="0" />
+        <label for="newDuration">Duration (seconds):</label>
+        <input type="number" id="newDuration" min="0" />
+        <button onclick="resetCampaign()">Reset Campaign</button>
+      </div>
     </section>
 
-    <section id="extras" class="card">
-      <h2>🧾 Extras</h2>
-      <button onclick="getAllContributors()">Get All Contributors</button>
-      <button onclick="getContributionData()">Get Contribution Data</button>
-      <button onclick="getRemaining()">Remaining to Goal</button>
+    <section id="extra-info" class="extra-info-section">
+      <h2>Other Functions</h2>
+      <button onclick="getAllContributors()">Show All Contributors</button>
+      <button onclick="getContributionData()">Show Contribution Data</button>
+      <button onclick="getRemaining()">Show Remaining Goal Amount</button>
     </section>
 
     <footer>
-      <p>&copy; 2025 CrowdFund dApp - Core DAO | Contract: <code>0x824956bbdAa68005C90a0387efeB67C23adf4C26</code></p>
+      <p>
+        &copy; 2025 CrowdFund dApp - Core DAO | Contract: <code>0x824956bbdAa68005C90a0387efeB67C23adf4C26</code>
+      </p>
     </footer>
   </div>
 
+  <!-- Ethers.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5/dist/ethers.min.js"></script>
+  <!-- Your app.js script -->
   <script src="app.js"></script>
+
 </body>
 </html>
