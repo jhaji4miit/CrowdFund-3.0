@@ -2,60 +2,130 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>CrowdFund dApp</title>
-  <link rel="stylesheet" href="style.css"/>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Ethers v5 -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@5/dist/ethers.min.js"></script>
+
+  <!-- dApp Logic -->
   <script defer src="app.js"></script>
 </head>
 <body>
-  <!-- Welcome Page -->
-  <div id="welcome" class="welcome-screen">
-    <img src="assets/logo.png" alt="CrowdFund Logo" class="logo-big" />
-    <h1>Welcome to CrowdFund</h1>
-    <p>Secure. Transparent. Decentralized Crowdfunding on Core DAO.</p>
-    <button onclick="initApp()">Enter dApp</button>
-  </div>
+  <!-- 🅰️ WELCOME SCREEN ------------------------------------------------ -->
+  <section id="welcome" class="center">
+    <img src="assets/logo.png" alt="CrowdFund Logo" class="logo-welcome" />
+    <h1>CrowdFund</h1>
+    <p class="subtitle">Transparent • Secure • Decentralized</p>
+    <button class="primary" onclick="initApp()">Enter dApp</button>
+  </section>
 
-  <!-- Main Dashboard -->
-  <div id="main" class="hidden main-app">
-    <header>
-      <div class="header-left">
-        <img src="assets/logo.png" alt="logo" class="logo-sm" />
-        <h1>🚀 CrowdFund Dashboard</h1>
+  <!-- 🅱️ MAIN DASHBOARD ----------------------------------------------- -->
+  <main id="app" class="hidden">
+
+    <!-- Header + quick nav -->
+    <header class="glass">
+      <div class="brand">
+        <img src="assets/logo.png" alt="logo" class="logo-small" />
+        <h2>Dashboard</h2>
       </div>
-      <button id="connectWalletBtn" onclick="connectWallet()">🔗 Connect Wallet</button>
-      <p id="wallet-info" class="wallet-info"></p>
+
+      <nav>
+        <a href="#status">Status</a>
+        <a href="#actions">Contribute</a>
+        <a href="#details">Details</a>
+        <a href="#admin">Admin</a>
+      </nav>
+
+      <button id="connectWalletBtn" class="primary" onclick="connectWallet()">Connect</button>
     </header>
 
-    <section id="status" class="card">
-      <h2>📊 Campaign Status</h2>
-      <p><strong>Goal:</strong> <span id="goal"></span> ETH</p>
-      <p><strong>Raised:</strong> <span id="raised"></span> ETH</p>
-      <p><strong>Time Left:</strong> <span id="timeLeft"></span> seconds</p>
-      <p><strong>Campaign Active:</strong> <span id="activeStatus"></span></p>
+    <!-- 📊 STATUS CARD -->
+    <section id="status" class="card glass">
+      <h3>Campaign Status</h3>
+      <div class="grid">
+        <div><span>Goal</span><strong id="goal">-</strong> ETH</div>
+        <div><span>Raised</span><strong id="raised">-</strong> ETH</div>
+        <div><span>Time Left</span><strong id="timeLeft">-</strong>s</div>
+        <div><span>Active</span><strong id="activeStatus">-</strong></div>
+      </div>
+
+      <div class="progress-wrap">
+        <div id="progressBar" class="progress"></div>
+      </div>
     </section>
 
-    <section id="actions" class="card">
-      <h2>💸 Contribute to Campaign</h2>
-      <input type="number" id="amount" placeholder="ETH amount"/>
-      <button onclick="contribute()">Contribute</button>
+    <!-- 💸 CONTRIBUTION CARD -->
+    <section id="actions" class="card glass">
+      <h3>Contribute</h3>
+      <div class="flex">
+        <input type="number" id="amount" placeholder="ETH amount" min="0.001" step="0.001" />
+        <button class="primary" onclick="contribute()">Contribute</button>
+      </div>
 
-      <h3>After Deadline Options</h3>
-      <button onclick="refund()">Request Refund</button>
-      <button onclick="withdraw()">Withdraw Funds</button>
+      <h4>After Deadline</h4>
+      <div class="flex">
+        <button onclick="refund()">Refund</button>
+        <button onclick="withdraw()">Withdraw (Owner)</button>
+      </div>
     </section>
 
-    <section id="details" class="card">
-      <h2>📋 Your Contribution Details</h2>
-      <p><strong>Your Contribution:</strong> <span id="yourContribution">0</span> ETH</p>
-      <p><strong>Top Contributor:</strong> <span id="topContributor"></span></p>
-      <p><strong>Average Contribution:</strong> <span id="average"></span> ETH</p>
+    <!-- 📋 DETAILS CARD -->
+    <section id="details" class="card glass">
+      <h3>Your Stats</h3>
+      <ul class="stat-list">
+        <li>Your Contribution: <strong id="yourContribution">-</strong> ETH</li>
+        <li>Contribution %: <strong id="percent">-</strong>%</li>
+        <li>Top Contributor: <strong id="topContributor">-</strong></li>
+        <li>Avg Contribution: <strong id="average">-</strong> ETH</li>
+        <li>Total Contributors: <strong id="contributorCount">-</strong></li>
+        <li>Remaining Goal: <strong id="remainingGoal">-</strong> ETH</li>
+      </ul>
     </section>
 
+    <!-- 🛠️ ADMIN CARD (owner only, auto-hidden in JS) -->
+    <section id="admin" class="card glass admin-only hidden">
+      <h3>Admin Controls</h3>
+
+      <div class="field">
+        <label>Extend Deadline (days)</label>
+        <input type="number" id="extraDays" min="1" />
+        <button onclick="extendDeadline()">Extend</button>
+      </div>
+
+      <div class="field">
+        <label>Transfer Ownership (address)</label>
+        <input type="text" id="newOwner" placeholder="0x…" />
+        <button onclick="transferOwnership()">Transfer</button>
+      </div>
+
+      <div class="field">
+        <label>Reset Campaign</label>
+        <input type="number" id="newGoal" placeholder="New Goal ETH" />
+        <input type="number" id="newDuration" placeholder="Duration days" />
+        <button onclick="resetCampaign()">Reset</button>
+      </div>
+    </section>
+
+    <!-- 🔍 EXTRA TOOLS -->
+    <section class="card glass">
+      <h3>Extra Info</h3>
+      <div class="flex">
+        <button onclick="getAllContributors()">List Contributors</button>
+        <button onclick="getContributionData()">Full Contributions</button>
+        <button onclick="getRemaining()">Remaining Goal</button>
+      </div>
+    </section>
+
+    <!-- Footer -->
     <footer>
-      <p>&copy; 2025 CrowdFund dApp - Core DAO | Contract: <code>0x824956bbdAa68005C90a0387efeB67C23adf4C26</code></p>
+      <small>
+        Contract: 0x824956bbdAa68005C90a0387efeB67C23adf4C26 | Core DAO ©2025
+      </small>
     </footer>
-  </div>
+  </main>
 </body>
 </html>
