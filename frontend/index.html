@@ -4,54 +4,50 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CrowdFund dApp</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <div class="welcome-screen" id="welcomeScreen">
-    <h1>CrowdFund</h1>
-    <p>Empowering Projects Through Decentralized Crowdfunding</p>
-    <button onclick="enterApp()">Enter</button>
+  <div id="welcome">
+    <h1>Welcome to CrowdFund</h1>
+    <p>Secure. Transparent. Decentralized.</p>
+    <button onclick="initApp()">Enter dApp</button>
   </div>
 
-  <div class="app hidden" id="mainApp">
+  <div id="main" class="hidden">
     <header>
-      <h1>CrowdFund</h1>
-      <button id="connectBtn">Connect Wallet</button>
+      <h1>🚀 CrowdFund Dashboard</h1>
+      <button onclick="connectWallet()">🔗 Connect Wallet</button>
     </header>
 
-    <section id="campaignStats">
-      <h2>Campaign Overview</h2>
-      <div id="statsGrid">
-        <p><strong>Goal:</strong> <span id="goalAmount">--</span> ETH</p>
-        <p><strong>Raised:</strong> <span id="raisedAmount">--</span> ETH</p>
-        <p><strong>Time Left:</strong> <span id="timeLeft">--</span></p>
-        <p><strong>Top Contributor:</strong> <span id="topContributor">--</span></p>
-        <p><strong>Your Contribution:</strong> <span id="userContribution">--</span> ETH</p>
-      </div>
+    <section id="status">
+      <p><strong>Goal:</strong> <span id="goal"></span> ETH</p>
+      <p><strong>Raised:</strong> <span id="raised"></span> ETH</p>
+      <p><strong>Time Left:</strong> <span id="timeLeft"></span> seconds</p>
+      <p><strong>Campaign Active:</strong> <span id="activeStatus"></span></p>
     </section>
 
-    <section id="contributeSection">
-      <h2>Contribute</h2>
-      <input type="number" id="contributionInput" placeholder="Amount in ETH" />
+    <section id="actions">
+      <h2>Contribute to Campaign</h2>
+      <input type="number" id="amount" placeholder="ETH amount"/>
       <button onclick="contribute()">Contribute</button>
+
+      <h3>After Deadline Options</h3>
+      <button onclick="refund()">Request Refund</button>
+      <button onclick="withdraw()">Withdraw Funds</button>
     </section>
 
-    <section id="adminSection" class="hidden">
-      <h2>Admin Panel</h2>
-      <button onclick="withdrawFunds()">Withdraw</button>
-      <button onclick="extendDeadline()">Extend Deadline</button>
-      <button onclick="resetCampaign()">Reset Campaign</button>
-      <input type="text" id="newOwner" placeholder="New Owner Address" />
-      <button onclick="transferOwnership()">Transfer Ownership</button>
+    <section id="details">
+      <h3>Details</h3>
+      <p><strong>Your Contribution:</strong> <span id="yourContribution">0</span> ETH</p>
+      <p><strong>Top Contributor:</strong> <span id="topContributor"></span></p>
+      <p><strong>Average Contribution:</strong> <span id="average"></span> ETH</p>
     </section>
 
-    <section>
-      <h2>All Contributors</h2>
-      <div id="contributorList"></div>
-    </section>
+    <footer>
+      <p>&copy; 2025 CrowdFund dApp - Core DAO | Contract: <code>0x8249...4C26</code></p>
+    </footer>
   </div>
 
-  <script src="abi.js"></script>
-  <script src="script.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
