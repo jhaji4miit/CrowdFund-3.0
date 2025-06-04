@@ -1,281 +1,332 @@
-/* Reset and base styles */
+/* Reset & base */
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Poppins', sans-serif;
-  color: #e0f7ff;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #f0f0f0;
   min-height: 100vh;
-  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  padding: 1rem;
+  overflow-x: hidden;
 }
 
-/* --- Welcome Screen --- */
+/* Scrollbar */
+body::-webkit-scrollbar {
+  width: 8px;
+}
+body::-webkit-scrollbar-track {
+  background: #1f2a38;
+  border-radius: 4px;
+}
+body::-webkit-scrollbar-thumb {
+  background: #4fc3f7;
+  border-radius: 4px;
+}
+
+/* Welcome Screen */
 #welcome {
-  background: rgba(15, 32, 39, 0.85);
-  padding: 4rem 3rem;
-  border-radius: 25px;
-  box-shadow: 0 0 60px #4fc3f7cc;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 3rem 4rem;
+  border-radius: 15px;
+  box-shadow: 0 0 30px #4fc3f7aa;
   text-align: center;
   width: 100%;
   max-width: 480px;
-  animation: fadeInScale 0.7s ease forwards;
+  animation: fadeIn 1.2s ease forwards;
 }
 
 #welcome h1 {
   font-size: 3rem;
+  margin-bottom: 0.3rem;
   color: #4fc3f7;
-  margin-bottom: 1rem;
-  text-shadow: 0 0 12px #4fc3f7aa;
+  text-shadow: 0 0 10px #4fc3f7;
 }
 
 #welcome p {
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   margin-bottom: 2rem;
-  letter-spacing: 1.2px;
-  color: #aad8ffcc;
   font-weight: 500;
+  color: #a0d8ffcc;
+  letter-spacing: 0.1em;
 }
 
 #welcome button {
   background: #4fc3f7;
+  border: none;
+  padding: 1rem 3rem;
+  border-radius: 50px;
   color: #0f2027;
   font-weight: 700;
-  font-size: 1.3rem;
-  padding: 1rem 3rem;
-  border: none;
-  border-radius: 60px;
+  font-size: 1.25rem;
   cursor: pointer;
-  box-shadow: 0 6px 25px #4fc3f7aa;
   transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 15px #4fc3f7bb;
 }
 
 #welcome button:hover {
   background: #3aa3dd;
-  transform: scale(1.05);
-  box-shadow: 0 8px 35px #3aa3ddcc;
+  transform: scale(1.1);
+  box-shadow: 0 6px 25px #3aa3ddcc;
 }
 
-/* --- Main Container --- */
-#main {
-  width: 100%;
-  max-width: 960px;
-  margin-top: 2rem;
-  animation: fadeInScale 0.7s ease forwards;
-}
-
-/* Hidden by default */
 .hidden {
   display: none;
 }
 
-/* --- Header --- */
+/* Main App Container */
+#main {
+  max-width: 960px;
+  width: 100%;
+  margin-top: 1.5rem;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 15px;
+  padding: 2rem 3rem;
+  box-shadow: 0 0 40px #4fc3f7aa;
+  animation: slideIn 1s ease forwards;
+}
+
+/* Header */
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+header h1 {
+  font-size: 2.5rem;
   color: #4fc3f7;
-  text-shadow: 0 0 15px #4fc3f7aa;
-  font-weight: 700;
-  font-size: 2rem;
+  text-shadow: 0 0 12px #4fc3f7;
   user-select: none;
 }
 
-#connectWalletBtn {
+header button {
   background: #4fc3f7;
   border: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: 30px;
   color: #0f2027;
-  padding: 0.8rem 1.8rem;
-  border-radius: 40px;
-  cursor: pointer;
   font-weight: 600;
-  box-shadow: 0 5px 20px #4fc3f7aa;
-  transition: background 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+  transition: background 0.25s ease;
+  box-shadow: 0 4px 12px #4fc3f7aa;
 }
 
-#connectWalletBtn:hover {
+header button:hover {
   background: #3aa3dd;
-  transform: scale(1.05);
-  box-shadow: 0 8px 30px #3aa3ddcc;
+  box-shadow: 0 6px 18px #3aa3ddcc;
 }
 
 .wallet-info {
-  margin-left: 1rem;
-  font-weight: 600;
-  font-size: 1.1rem;
-  color: #aad8ffcc;
+  font-size: 0.9rem;
+  color: #a0d8ffcc;
+  margin-top: 0.5rem;
+  font-family: monospace;
   user-select: text;
-  max-width: 250px;
-  overflow-wrap: break-word;
 }
 
-/* --- Card Sections --- */
-.card-section {
-  background: rgba(15, 32, 39, 0.6);
-  border-radius: 25px;
-  padding: 2rem 2.5rem;
+/* Sections styling */
+section {
   margin-bottom: 2.5rem;
-  box-shadow: 0 0 40px #4fc3f7cc;
-  backdrop-filter: blur(12px);
-  transition: box-shadow 0.3s ease;
-  user-select: none;
 }
 
-.card-section:hover {
-  box-shadow: 0 0 60px #3aa3ddcc;
-}
-
-.card-section h2 {
-  font-size: 1.9rem;
-  margin-bottom: 1.3rem;
+section h2 {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
   color: #4fc3f7;
-  text-shadow: 0 0 10px #4fc3f7aa;
+  text-shadow: 0 0 8px #4fc3f7;
+  border-bottom: 2px solid #3aa3dd;
+  padding-bottom: 0.3rem;
 }
 
-/* --- Info Grids --- */
-.info-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1.5rem 2.5rem;
-  font-size: 1.15rem;
-  color: #aad8ffcc;
-  font-weight: 600;
-  user-select: text;
+/* Status Section */
+.status-section p {
+  font-size: 1.1rem;
+  margin: 0.3rem 0;
+  color: #e0f7ffdd;
 }
 
-/* Highlighted values */
-.info-grid span {
-  color: #d0e7ff;
-  font-weight: 700;
-  font-size: 1.3rem;
-  letter-spacing: 0.05em;
-}
-
-/* --- Progress Bar --- */
 .progress-bar-container {
-  background: #0f202799;
-  border-radius: 40px;
-  margin-top: 1.8rem;
-  height: 24px;
   width: 100%;
-  box-shadow: inset 0 0 10px #4fc3f7bb;
+  background: #1f2a38;
+  height: 20px;
+  border-radius: 12px;
+  margin-top: 1rem;
+  box-shadow: inset 0 0 8px #0f2027;
   overflow: hidden;
 }
 
 .progress-bar {
-  background: linear-gradient(90deg, #4fc3f7, #3aa3dd);
   height: 100%;
   width: 0%;
-  border-radius: 40px 0 0 40px;
-  transition: width 1.2s ease-in-out;
-  box-shadow: 0 0 15px #3aa3ddcc;
+  background: linear-gradient(90deg, #4fc3f7, #3aa3dd);
+  border-radius: 12px 0 0 12px;
+  transition: width 1.2s ease;
+  box-shadow: 0 0 15px #4fc3f7aa;
 }
 
-/* --- Input Groups --- */
-.input-group {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.8rem;
-}
-
-.input-group label {
-  flex: 1 0 180px;
-  color: #a0d8ffcc;
-  font-weight: 600;
-  user-select: none;
-}
-
-.input-group input[type="number"] {
-  flex: 1 0 200px;
-  padding: 0.7rem 1.2rem;
-  font-size: 1.1rem;
-  border-radius: 18px;
+/* Actions Section */
+.actions-section input[type="number"] {
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  width: 150px;
   border: none;
+  border-radius: 8px;
+  margin-right: 1rem;
+  box-shadow: 0 0 6px #4fc3f7aa;
   background: #0f2027cc;
   color: #e0f7ff;
-  box-shadow: 0 0 12px #4fc3f7aa;
   transition: box-shadow 0.3s ease;
 }
 
-.input-group input[type="number"]:focus {
+.actions-section input[type="number"]:focus {
   outline: none;
-  box-shadow: 0 0 20px #4fc3f7ff;
+  box-shadow: 0 0 12px #4fc3f7ff;
 }
 
-/* --- Buttons Group --- */
-.button-group {
-  display: flex;
-  gap: 1.4rem;
-  flex-wrap: wrap;
-  margin-top: 0.6rem;
-}
-
-.button-group button,
-.input-group button {
+.actions-section button {
   background: #4fc3f7;
   border: none;
-  padding: 0.75rem 2.2rem;
-  border-radius: 50px;
+  padding: 0.6rem 1.5rem;
+  border-radius: 40px;
   color: #0f2027;
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1rem;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.22s ease;
-  box-shadow: 0 6px 25px #4fc3f7aa;
+  margin-top: 0.5rem;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 15px #4fc3f7aa;
+}
+
+.actions-section button:hover {
+  background: #3aa3dd;
+  transform: scale(1.05);
+  box-shadow: 0 6px 25px #3aa3ddcc;
+}
+
+/* Details Section */
+.details-section p {
+  font-size: 1.05rem;
+  margin: 0.4rem 0;
+  color: #cde7ffdd;
   user-select: none;
 }
 
-.button-group button:hover,
-.input-group button:hover {
+/* Admin Section */
+.admin-section div {
+  margin-bottom: 1.2rem;
+}
+
+.admin-section label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: #4fc3f7;
+}
+
+.admin-section input[type="number"],
+.admin-section input[type="text"] {
+  width: 100%;
+  max-width: 320px;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  border: none;
+  background: #0f2027cc;
+  color: #e0f7ff;
+  box-shadow: 0 0 10px #4fc3f7aa;
+  transition: box-shadow 0.3s ease;
+  margin-bottom: 0.5rem;
+}
+
+.admin-section input[type="number"]:focus,
+.admin-section input[type="text"]:focus {
+  outline: none;
+  box-shadow: 0 0 18px #4fc3f7ff;
+}
+
+.admin-section button {
+  background: #4fc3f7;
+  padding: 0.7rem 1.8rem;
+  border-radius: 40px;
+  font-weight: 700;
+  border: none;
+  color: #0f2027;
+  cursor: pointer;
+  box-shadow: 0 4px 15px #4fc3f7aa;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.admin-section button:hover {
   background: #3aa3dd;
-  transform: scale(1.08);
-  box-shadow: 0 8px 30px #3aa3ddcc;
+  transform: scale(1.05);
+  box-shadow: 0 6px 25px #3aa3ddcc;
 }
 
-/* --- Responsive adjustments --- */
-@media (max-width: 650px) {
-  .input-group {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .input-group label, .input-group input, .input-group button {
-    flex: 1 1 100%;
-  }
-
-  .button-group {
-    flex-direction: column;
-  }
+/* Extra Info Section */
+.extra-info-section button {
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+  background: #4fc3f7;
+  padding: 0.6rem 1.5rem;
+  border-radius: 40px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  color: #0f2027;
+  box-shadow: 0 4px 15px #4fc3f7aa;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
-/* --- Footer --- */
+.extra-info-section button:hover {
+  background: #3aa3dd;
+  transform: scale(1.05);
+  box-shadow: 0 6px 25px #3aa3ddcc;
+}
+
+/* Footer */
 footer {
   text-align: center;
-  color: #4fc3f799;
-  font-weight: 500;
-  font-size: 0.9rem;
-  margin-top: 3rem;
+  font-size: 0.85rem;
+  color: #739fcfbb;
+  margin-top: 2rem;
   user-select: none;
 }
 
-/* --- Animations --- */
-@keyframes fadeInScale {
-  0% {
-    opacity: 0;
-    transform: scale(0.8);
+/* Responsive Layout */
+@media (max-width: 768px) {
+  #main {
+    padding: 1.5rem 2rem;
   }
-  100% {
-    opacity: 1;
-    transform: scale(1);
+  header {
+    flex-direction: column;
+    gap: 0.5rem;
   }
+  .actions-section input[type="number"] {
+    width: 100%;
+    max-width: none;
+    margin-bottom: 0.7rem;
+  }
+  .admin-section input[type="number"],
+  .admin-section input[type="text"] {
+    max-width: 100%;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-30px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(100px);}
+  to { opacity: 1; transform: translateX(0);}
 }
