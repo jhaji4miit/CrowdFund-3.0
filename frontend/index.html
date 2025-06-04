@@ -5,99 +5,84 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>CrowdFund dApp</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5/dist/ethers.min.js"></script>
 </head>
 <body>
-
-  <!-- Welcome Screen -->
-  <div id="welcome" class="welcome-screen">
+  <div id="welcome">
     <h1>Welcome to CrowdFund</h1>
-    <p>Secure. Transparent. Decentralized Crowdfunding on Core DAO.</p>
+    <p>Secure. Transparent. Decentralized.</p>
     <button onclick="initApp()">Enter dApp</button>
   </div>
 
-  <!-- Main App -->
-  <div id="main" class="hidden main-app">
-
+  <div id="main" class="hidden">
     <header>
       <h1>🚀 CrowdFund Dashboard</h1>
-      <button onclick="connectWallet()">🔗 Connect Wallet</button>
-      <p id="wallet-info" class="wallet-info"></p>
+      <button id="connectWalletBtn" onclick="connectWallet()">🔗 Connect Wallet</button>
+      <div id="walletAddress" class="wallet-info"></div>
     </header>
 
-    <section id="status" class="status-section">
-      <h2>Campaign Status</h2>
-      <p><strong>Goal:</strong> <span id="goal">-</span> ETH</p>
-      <p><strong>Raised:</strong> <span id="raised">-</span> ETH</p>
-      <p><strong>Time Left:</strong> <span id="timeLeft">-</span> seconds</p>
-      <p><strong>Campaign Active:</strong> <span id="activeStatus">-</span></p>
-      <p><strong>Withdrawn:</strong> <span id="withdrawn">-</span></p>
-
+    <!-- Status Section -->
+    <section id="status" class="card-section">
+      <h2>Status</h2>
+      <div class="info-grid">
+        <div><strong>Goal:</strong> <span id="goal">-</span> ETH</div>
+        <div><strong>Raised:</strong> <span id="raised">-</span> ETH</div>
+        <div><strong>Time Left:</strong> <span id="timeLeft">-</span> s</div>
+        <div><strong>Campaign Active:</strong> <span id="activeStatus">-</span></div>
+      </div>
       <div class="progress-bar-container">
         <div id="progressBar" class="progress-bar"></div>
       </div>
     </section>
 
-    <section id="actions" class="actions-section">
+    <!-- Actions Section -->
+    <section id="actions" class="card-section">
       <h2>Contribute to Campaign</h2>
-      <input type="number" id="amount" placeholder="ETH amount" step="0.01" min="0" />
-      <button onclick="contribute()">Contribute</button>
-
+      <div class="input-group">
+        <input type="number" id="amount" placeholder="Amount in ETH" min="0.001" step="0.001" />
+        <button id="contributeBtn" onclick="contribute()">Contribute</button>
+      </div>
       <h3>After Deadline Options</h3>
-      <button onclick="refund()">Request Refund</button>
-      <button onclick="withdraw()">Withdraw Funds</button>
-    </section>
-
-    <section id="details" class="details-section">
-      <h2>Your Contributions & Stats</h2>
-      <p><strong>Your Contribution:</strong> <span id="yourContribution">-</span> ETH</p>
-      <p><strong>Contribution % of Goal:</strong> <span id="percent">-</span>%</p>
-      <p><strong>Top Contributor:</strong> <span id="topContributor">-</span></p>
-      <p><strong>Average Contribution:</strong> <span id="average">-</span> ETH</p>
-      <p><strong>Contributor Count:</strong> <span id="contributorCount">-</span></p>
-      <p><strong>Remaining Goal Amount:</strong> <span id="remainingGoal">-</span> ETH</p>
-    </section>
-
-    <section id="admin" class="admin-section">
-      <h2>Admin Functions</h2>
-      <div>
-        <label for="extraDays">Extend Deadline (days):</label>
-        <input type="number" id="extraDays" min="0" />
-        <button onclick="extendDeadline()">Extend Deadline</button>
-      </div>
-
-      <div>
-        <label for="newOwner">Transfer Ownership (address):</label>
-        <input type="text" id="newOwner" placeholder="0x..." />
-        <button onclick="transferOwnership()">Transfer Ownership</button>
-      </div>
-
-      <div>
-        <label for="newGoal">Reset Campaign Goal (ETH):</label>
-        <input type="number" id="newGoal" step="0.01" min="0" />
-        <label for="newDuration">Duration (seconds):</label>
-        <input type="number" id="newDuration" min="0" />
-        <button onclick="resetCampaign()">Reset Campaign</button>
+      <div class="button-group">
+        <button id="refundBtn" onclick="refund()">Request Refund</button>
+        <button id="withdrawBtn" onclick="withdraw()">Withdraw Funds</button>
       </div>
     </section>
 
-    <section id="extra-info" class="extra-info-section">
-      <h2>Other Functions</h2>
-      <button onclick="getAllContributors()">Show All Contributors</button>
-      <button onclick="getContributionData()">Show Contribution Data</button>
-      <button onclick="getRemaining()">Show Remaining Goal Amount</button>
+    <!-- Details Section -->
+    <section id="details" class="card-section">
+      <h2>Details</h2>
+      <div class="info-grid">
+        <div><strong>Your Contribution:</strong> <span id="yourContribution">0</span> ETH</div>
+        <div><strong>Top Contributor:</strong> <span id="topContributor">-</span></div>
+        <div><strong>Average Contribution:</strong> <span id="average">-</span> ETH</div>
+        <div><strong>Withdrawn:</strong> <span id="withdrawn">-</span> ETH</div>
+      </div>
+    </section>
+
+    <!-- Admin Section -->
+    <section id="admin" class="card-section">
+      <h2>Admin Controls</h2>
+      <div class="input-group">
+        <label for="newGoal">Set New Goal (ETH):</label>
+        <input type="number" id="newGoal" min="0" step="0.01" />
+        <button onclick="setGoal()">Update Goal</button>
+      </div>
+      <div class="input-group">
+        <label for="newDeadline">Set New Deadline (seconds):</label>
+        <input type="number" id="newDeadline" min="0" step="1" />
+        <button onclick="setDeadline()">Update Deadline</button>
+      </div>
+      <div class="input-group">
+        <button onclick="togglePause()">Pause/Unpause Campaign</button>
+      </div>
     </section>
 
     <footer>
-      <p>
-        &copy; 2025 CrowdFund dApp - Core DAO | Contract: <code>0x824956bbdAa68005C90a0387efeB67C23adf4C26</code>
-      </p>
+      <p>&copy; 2025 CrowdFund dApp - Core DAO | Contract: <code>0x824956bbdAa68005C90a0387efeB67C23adf4C26</code></p>
     </footer>
   </div>
 
-  <!-- Ethers.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/ethers@5/dist/ethers.min.js"></script>
-  <!-- Your app.js script -->
   <script src="app.js"></script>
-
 </body>
 </html>
