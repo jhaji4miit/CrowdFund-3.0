@@ -12,15 +12,15 @@ The **CrowdFund** contract aims to democratize fundraising by leveraging blockch
 
 ## 🔑  Features
 
-🧠 Smart Contract Powered — All logic lives on-chain, including campaign creation, contributions, withdrawals, and state tracking.
-🎨 Animated Welcome UI — A smooth transition from the welcome screen to the dashboard.
-🔐 MetaMask Integration — Users can connect and interact with the Core DAO network easily.
-📊 Live Campaign Stats — Progress bar, goal amount, funds raised, time left, and status updates.
-🧾 Admin Panel — Set goals, durations, campaign titles, and withdraw funds (owner-only).
-🔎 Advanced UI — Fully animated, mobile-friendly, and dark-themed interface.
-⚙️ Upgradeable Frontend — Supports multiple sections like contributors leaderboard, campaign summaries, and more.
+- 🧠 Smart Contract Powered — All logic lives on-chain, including campaign creation, contributions, withdrawals, and state tracking.
+- 🎨 Animated Welcome UI — A smooth transition from the welcome screen to the dashboard.
+- 🔐 MetaMask Integration — Users can connect and interact with the Core DAO network easily.
+- 📊 Live Campaign Stats — Progress bar, goal amount, funds raised, time left, and status updates.
+- 🧾 Admin Panel — Set goals, durations, campaign titles, and withdraw funds (owner-only).
+- 🔎 Advanced UI — Fully animated, mobile-friendly, and dark-themed interface.
+- ⚙️ Upgradeable Frontend — Supports multiple sections like contributors leaderboard, campaign summaries, and more.
 
-📱 PWA Ready (coming soon)
+- 📱 PWA Ready (coming soon)
 
 ---
 
