@@ -10,17 +10,17 @@ The **CrowdFund** contract aims to democratize fundraising by leveraging blockch
 
 ---
 
-## 🔑 Key Features
+## 🔑  Features
 
-- 📌 **Goal-Based Funding:** Set campaign funding targets and deadlines.
-- 👥 **Contributor Tracking:** Records contributions per address and tracks all contributors.
-- 🔐 **Owner Privileges:** Secure withdrawal, deadline extension, and ownership transfer.
-- ⏳ **Deadline Mechanism:** Prevents funding after time expiration.
-- 🔁 **Refund Support:** Allows contributors to reclaim funds if the campaign fails.
-- 📊 **Advanced Insights:** Includes top contributor, average, and minimum contributions.
-- ⚡ **Analytics & Transparency:** Offers comprehensive data for dApp integration.
-- 🔄 **Campaign Reset:** Restart a new campaign once the previous one ends.
-- 🌍 **Public Access:** Most functions are public/view to support external frontend integration.
+🧠 Smart Contract Powered — All logic lives on-chain, including campaign creation, contributions, withdrawals, and state tracking.
+🎨 Animated Welcome UI — A smooth transition from the welcome screen to the dashboard.
+🔐 MetaMask Integration — Users can connect and interact with the Core DAO network easily.
+📊 Live Campaign Stats — Progress bar, goal amount, funds raised, time left, and status updates.
+🧾 Admin Panel — Set goals, durations, campaign titles, and withdraw funds (owner-only).
+🔎 Advanced UI — Fully animated, mobile-friendly, and dark-themed interface.
+⚙️ Upgradeable Frontend — Supports multiple sections like contributors leaderboard, campaign summaries, and more.
+
+📱 PWA Ready (coming soon)
 
 ---
 
