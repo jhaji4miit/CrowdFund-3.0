@@ -31,23 +31,25 @@ body {
 
 #welcome h1 {
   font-size: 3rem;
+  font-weight: 800;
   color: #4fc3f7;
   margin-bottom: 1rem;
-  text-shadow: 0 0 12px #4fc3f7aa;
+  text-shadow: 0 0 14px #4fc3f7aa;
 }
 
 #welcome p {
-  font-size: 1.3rem;
+  font-size: 1.35rem;
   margin-bottom: 2rem;
-  letter-spacing: 1.2px;
-  color: #aad8ffcc;
-  font-weight: 500;
+  letter-spacing: 1.1px;
+  color: #aad8ff;
+  font-weight: 600;
+  line-height: 1.5;
 }
 
 #welcome button {
   background: #4fc3f7;
   color: #0f2027;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 1.3rem;
   padding: 1rem 3rem;
   border: none;
@@ -84,8 +86,8 @@ header {
   margin-bottom: 2.5rem;
   color: #4fc3f7;
   text-shadow: 0 0 15px #4fc3f7aa;
-  font-weight: 700;
-  font-size: 2rem;
+  font-weight: 800;
+  font-size: 2.1rem;
   user-select: none;
 }
 
@@ -96,7 +98,7 @@ header {
   padding: 0.8rem 1.8rem;
   border-radius: 40px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 700;
   box-shadow: 0 5px 20px #4fc3f7aa;
   transition: background 0.3s ease, transform 0.2s ease;
 }
@@ -109,11 +111,11 @@ header {
 
 .wallet-info {
   margin-left: 1rem;
-  font-weight: 600;
-  font-size: 1.1rem;
-  color: #aad8ffcc;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: #aad8ff;
   user-select: text;
-  max-width: 250px;
+  max-width: 260px;
   overflow-wrap: break-word;
 }
 
@@ -134,9 +136,10 @@ header {
 }
 
 .card-section h2 {
-  font-size: 1.9rem;
-  margin-bottom: 1.3rem;
+  font-size: 2rem;
+  margin-bottom: 1.4rem;
   color: #4fc3f7;
+  font-weight: 800;
   text-shadow: 0 0 10px #4fc3f7aa;
 }
 
@@ -145,18 +148,17 @@ header {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1.5rem 2.5rem;
-  font-size: 1.15rem;
-  color: #aad8ffcc;
+  font-size: 1.2rem;
+  color: #aad8ff;
   font-weight: 600;
   user-select: text;
 }
 
-/* Highlighted values */
 .info-grid span {
-  color: #d0e7ff;
-  font-weight: 700;
-  font-size: 1.3rem;
-  letter-spacing: 0.05em;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 1.35rem;
+  letter-spacing: 0.04em;
 }
 
 /* --- Progress Bar --- */
@@ -190,19 +192,21 @@ header {
 
 .input-group label {
   flex: 1 0 180px;
-  color: #a0d8ffcc;
-  font-weight: 600;
+  color: #a0d8ff;
+  font-weight: 700;
+  font-size: 1.1rem;
   user-select: none;
 }
 
 .input-group input[type="number"] {
   flex: 1 0 200px;
-  padding: 0.7rem 1.2rem;
-  font-size: 1.1rem;
+  padding: 0.75rem 1.2rem;
+  font-size: 1.15rem;
+  font-weight: 600;
   border-radius: 18px;
   border: none;
   background: #0f2027cc;
-  color: #e0f7ff;
+  color: #ffffff;
   box-shadow: 0 0 12px #4fc3f7aa;
   transition: box-shadow 0.3s ease;
 }
@@ -227,7 +231,7 @@ header {
   padding: 0.75rem 2.2rem;
   border-radius: 50px;
   color: #0f2027;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 1.1rem;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.22s ease;
@@ -249,7 +253,9 @@ header {
     align-items: stretch;
   }
 
-  .input-group label, .input-group input, .input-group button {
+  .input-group label,
+  .input-group input,
+  .input-group button {
     flex: 1 1 100%;
   }
 
@@ -262,8 +268,8 @@ header {
 footer {
   text-align: center;
   color: #4fc3f799;
-  font-weight: 500;
-  font-size: 0.9rem;
+  font-weight: 600;
+  font-size: 0.95rem;
   margin-top: 3rem;
   user-select: none;
 }
