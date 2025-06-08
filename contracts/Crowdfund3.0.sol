@@ -208,8 +208,13 @@ contract CrowdFund {
         return minAmount;
     }
 
-    // ✅ NEW FUNCTION: Simple getter to check if goal has been reached
     function hasGoalBeenReached() public view returns (bool) {
         return goalReached;
+    }
+
+    // ✅ NEW FUNCTION: Get the address of the latest contributor
+    function getLatestContributor() public view returns (address) {
+        if (contributorIndex.length == 0) return address(0);
+        return contributorIndex[contributorIndex.length - 1];
     }
 }
