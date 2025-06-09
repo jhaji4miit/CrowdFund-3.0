@@ -1,13 +1,19 @@
 const hre = require("hardhat");
 
 async function main() {
+  const goalAmount = hre.ethers.utils.parseEther("10"); // 10 ETH goal
+  const durationInDays = 7; // 7-day campaign
+
   const CrowdFund = await hre.ethers.getContractFactory("CrowdFund");
-  const contract = await CrowdFund.deploy(ethers.utils.parseEther("10"), 30);
-  await contract.deployed();
-  console.log("✅ Deployed to:", contract.address);
+  const crowdFund = await CrowdFund.deploy(goalAmount, durationInDays);
+
+  await crowdFund.deployed();
+  console.log("CrowdFund deployed to:", crowdFund.address);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exitCode = 1;
-});
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error("Error deploying contract:", error);
+    process.exit(1);
+  });
