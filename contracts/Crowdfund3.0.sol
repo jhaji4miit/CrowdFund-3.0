@@ -150,28 +150,9 @@ contract CrowdFund {
         emit CampaignReset(goalAmount, deadline);
     }
 
-    function getContributorsAboveAmount(uint _minAmount) public view returns (address[] memory) {
-        uint len = contributorIndex.length;
-        uint count = 0;
-
-        for (uint i = 0; i < len; i++) {
-            if (contributions[contributorIndex[i]] > _minAmount) {
-                count++;
-            }
-        }
-
-        address[] memory filteredContributors = new address[](count);
-        uint idx = 0;
-        for (uint i = 0; i < len; i++) {
-            if (contributions[contributorIndex[i]] > _minAmount) {
-                filteredContributors[idx] = contributorIndex[i];
-                idx++;
-            }
-        }
-        return filteredContributors;
+    function getTotalContributionFromAddress(address user) public view returns (uint) {
+        return contributions[user];
     }
-
-    // Existing functions remain unchanged below this point...
 
     function getContributorCount() public view returns (uint) {
         return contributorIndex.length;
@@ -186,3 +167,4 @@ contract CrowdFund {
         return contributorIndex[contributorIndex.length - 1];
     }
 }
+
