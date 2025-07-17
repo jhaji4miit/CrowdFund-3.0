@@ -166,5 +166,20 @@ contract CrowdFund {
         if (contributorIndex.length == 0) return address(0);
         return contributorIndex[contributorIndex.length - 1];
     }
-}
 
+    function isDeadlineExtended() public view returns (bool) {
+        return deadlineExtended;
+    }
+
+    function getRemainingGoalAmount() public view returns (uint) {
+        return goalReached ? 0 : goalAmount - totalRaised;
+    }
+
+    function isCampaignActive() public view returns (bool) {
+        return block.timestamp < deadline && !goalReached;
+    }
+
+    function getAverageContribution() public view returns (uint) {
+        return contributorIndex.length == 0 ? 0 : totalRaised / contributorIndex.length;
+    }
+}
