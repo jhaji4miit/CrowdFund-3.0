@@ -166,3 +166,4 @@ if (window.ethereum){
   ethereum.on('accountsChanged',()=>location.reload());
   ethereum.on('chainChanged',  ()=>location.reload());
 }
+
