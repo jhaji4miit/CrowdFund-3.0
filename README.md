@@ -4,17 +4,16 @@ An advanced decentralized crowdfunding smart contract built with Solidity. It al
 
 ## 🚀 Features
 
-- Accepts ETH contributions with goal tracking.
-- Automatically detects goal completion.
-- Owner can withdraw funds if goal is met.
-- Contributors can get refunds if the goal isn’t reached.
-- Owner can extend campaign deadline (once).
-- Tracks each contributor and their amount.
-- Campaign can be reset for a new round.
-- Contributor stats: top, average, count, minimum.
-- Percentage share of each contributor.
-- Public campaign status messages.
-- Ownership transfer support.
+- Secure Contributions: Users can contribute securely using Ethereum (ETH).
+- Real-time Campaign Tracking: Real-time updates on campaign progress.
+- Ownership and Management: Owner can manage the campaign, extend deadlines, withdraw funds, and reset campaigns.
+- Refund Mechanism: Contributors can claim refunds if the funding goal is not achieved.
+
+## Smart Contract Features
+
+- Contribution tracking and event logging.
+- Campaign state tracking (active, reached goal, withdrawn funds).
+- Ownership transfer and campaign management.
 
 ## 🧠 Tech Stack
 
