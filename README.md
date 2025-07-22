@@ -91,6 +91,6 @@ Contract Address:
 <img width="1106" alt="image" src="https://github.com/user-attachments/assets/0fd3c6f6-864d-46aa-9e10-0e12a646e071" />
 
 ## 👤 Author
-- Chintan Vatsa Jha
+- Chintan Vatsa Jha | Experienced Professional
 - Open-source enthusiast & smart contract developer.
 - Built with ❤️ using Hardhat and Solidity.
