@@ -6,7 +6,7 @@ module.exports = {
   defaultNetwork: "coretestnet",
   networks: {
     coretestnet: {
-      url: process.env.RPC_URL,
+      url: "https://rpc.test2.btcs.network",
       accounts: [process.env.PRIVATE_KEY],
     },
   },
