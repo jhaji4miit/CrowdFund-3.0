@@ -100,15 +100,6 @@ contract CrowdFund {
         return contributorIndex;
     }
 
-    function getAllContributionAmounts() public view returns (address[] memory, uint[] memory) {
-        uint len = contributorIndex.length;
-        uint[] memory amounts = new uint[](len);
-        for (uint i = 0; i < len; i++) {
-            amounts[i] = contributions[contributorIndex[i]];
-        }
-        return (contributorIndex, amounts);
-    }
-
     function getCampaignSummary() public view returns (
         uint goal,
         uint raised,
@@ -150,29 +141,18 @@ contract CrowdFund {
         emit CampaignReset(goalAmount, deadline);
     }
 
-    function getTotalContributionFromAddress(address user) public view returns (uint) {
-        return contributions[user];
-    }
-
-    function getContributorCount() public view returns (uint) {
-        return contributorIndex.length;
-    }
-
-    function hasContributed(address user) public view returns (bool) {
-        return contributions[user] > 0;
-    }
-
-    function getLatestContributor() public view returns (address) {
-        if (contributorIndex.length == 0) return address(0);
-        return contributorIndex[contributorIndex.length - 1];
-    }
-
-    function isDeadlineExtended() public view returns (bool) {
-        return deadlineExtended;
-    }
-
-    function getRemainingGoalAmount() public view returns (uint) {
-        return goalReached ? 0 : goalAmount - totalRaised;
+    function getHighestContributor() public view returns (address highestContributor, uint highestAmount) {
+        highestAmount = 0;
+        highestContributor = address(0);
+        for (uint i = 0; i < contributorIndex.length; i++) {
+            address contributor = contributorIndex[i];
+            uint amount = contributions[contributor];
+            if (amount > highestAmount) {
+                highestAmount = amount;
+                highestContributor = contributor;
+            }
+        }
+        return (highestContributor, highestAmount);
     }
 
     function isCampaignActive() public view returns (bool) {
