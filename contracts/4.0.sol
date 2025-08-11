@@ -8,15 +8,24 @@ contract CrowdFund {
     uint public totalRaised;
     bool public goalReached;
     bool public fundsWithdrawn;
+    bool public campaignCanceled;
 
     mapping(address => uint) public contributions;
+    address[] private contributors;
 
     event ContributionReceived(address indexed contributor, uint amount);
     event GoalReached(uint totalAmountRaised);
-    event SplitPayoutExecuted(address[] recipients, uint[] amounts);
+    event SplitPayoutExecuted(address[] recipients, uint[] percentages);
+    event EmergencyRefundExecuted(uint totalRefunded);
+    event CampaignCanceled();
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Not contract owner");
+        _;
+    }
+
+    modifier notCanceled() {
+        require(!campaignCanceled, "Campaign canceled");
         _;
     }
 
@@ -26,19 +35,25 @@ contract CrowdFund {
         deadline = block.timestamp + (_durationInDays * 1 days);
     }
 
-    function contribute() external payable {
+    function contribute() external payable notCanceled {
         require(block.timestamp < deadline, "Deadline passed");
         require(msg.value > 0, "Contribution must be > 0");
+
+        if (contributions[msg.sender] == 0) {
+            contributors.push(msg.sender);
+        }
         contributions[msg.sender] += msg.value;
         totalRaised += msg.value;
+
         emit ContributionReceived(msg.sender, msg.value);
+
         if (totalRaised >= goalAmount) {
             goalReached = true;
             emit GoalReached(totalRaised);
         }
     }
 
-    // ✅ New Advanced Function: Split Payout
+    // ✅ 1. Advanced Function: Multi-Beneficiary Payout
     function splitPayout(address[] calldata recipients, uint[] calldata percentages) external onlyOwner {
         require(goalReached, "Goal not reached yet");
         require(!fundsWithdrawn, "Funds already withdrawn");
@@ -59,5 +74,23 @@ contract CrowdFund {
         fundsWithdrawn = true;
         emit SplitPayoutExecuted(recipients, percentages);
     }
-}
 
+    // ✅ 2. Advanced Function: Emergency Refund
+    function emergencyRefund() external onlyOwner {
+        require(!fundsWithdrawn, "Funds already withdrawn");
+        campaignCanceled = true;
+        emit CampaignCanceled();
+
+        uint totalRefunded;
+        for (uint i = 0; i < contributors.length; i++) {
+            address contributor = contributors[i];
+            uint amount = contributions[contributor];
+            if (amount > 0) {
+                contributions[contributor] = 0;
+                payable(contributor).transfer(amount);
+                totalRefunded += amount;
+            }
+        }
+        emit EmergencyRefundExecuted(totalRefunded);
+    }
+}
