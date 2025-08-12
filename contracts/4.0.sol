@@ -18,6 +18,7 @@ contract CrowdFund {
     event SplitPayoutExecuted(address[] recipients, uint[] percentages);
     event EmergencyRefundExecuted(uint totalRefunded);
     event CampaignCanceled();
+    event PartialWithdrawal(address indexed owner, uint amount);
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Not contract owner");
@@ -92,5 +93,16 @@ contract CrowdFund {
             }
         }
         emit EmergencyRefundExecuted(totalRefunded);
+    }
+
+    // ✅ 3. New Advanced Function: Partial Withdrawal
+    function partialWithdrawal(uint amount) external onlyOwner notCanceled {
+        require(block.timestamp < deadline, "Campaign already ended");
+        require(amount > 0, "Amount must be greater than zero");
+        require(address(this).balance >= amount, "Insufficient balance");
+        require(amount <= (totalRaised / 2), "Cannot withdraw more than 50% of raised funds before end");
+
+        payable(owner).transfer(amount);
+        emit PartialWithdrawal(owner, amount);
     }
 }
