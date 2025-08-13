@@ -19,6 +19,7 @@ contract CrowdFund {
     event EmergencyRefundExecuted(uint totalRefunded);
     event CampaignCanceled();
     event PartialWithdrawal(address indexed owner, uint amount);
+    event RefundClaimed(address indexed contributor, uint amount);
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Not contract owner");
@@ -43,6 +44,7 @@ contract CrowdFund {
         if (contributions[msg.sender] == 0) {
             contributors.push(msg.sender);
         }
+
         contributions[msg.sender] += msg.value;
         totalRaised += msg.value;
 
@@ -92,6 +94,7 @@ contract CrowdFund {
                 totalRefunded += amount;
             }
         }
+
         emit EmergencyRefundExecuted(totalRefunded);
     }
 
@@ -104,5 +107,20 @@ contract CrowdFund {
 
         payable(owner).transfer(amount);
         emit PartialWithdrawal(owner, amount);
+    }
+
+    // ✅ 4. NEW FUNCTION: Self-refund for contributors after failed campaign
+    function claimRefund() external {
+        require(block.timestamp > deadline, "Campaign not ended yet");
+        require(!goalReached, "Goal was reached; no refund available");
+        require(!campaignCanceled, "Campaign canceled, use emergency refund");
+        
+        uint amount = contributions[msg.sender];
+        require(amount > 0, "No contribution to refund");
+
+        contributions[msg.sender] = 0;
+        payable(msg.sender).transfer(amount);
+
+        emit RefundClaimed(msg.sender, amount);
     }
 }
