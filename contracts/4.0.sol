@@ -6,10 +6,11 @@ contract CrowdFund {
     uint public goalAmount;
     uint public deadline;
     uint public totalRaised;
+    uint public extensionCount;
+    uint public maxExtensions = 2; // Prevents abuse
     bool public goalReached;
     bool public fundsWithdrawn;
     bool public campaignCanceled;
-
     mapping(address => uint) public contributions;
     address[] private contributors;
 
@@ -40,50 +41,42 @@ contract CrowdFund {
     function contribute() external payable notCanceled {
         require(block.timestamp < deadline, "Deadline passed");
         require(msg.value > 0, "Contribution must be > 0");
-
         if (contributions[msg.sender] == 0) {
             contributors.push(msg.sender);
         }
-
         contributions[msg.sender] += msg.value;
         totalRaised += msg.value;
-
         emit ContributionReceived(msg.sender, msg.value);
-
         if (totalRaised >= goalAmount) {
             goalReached = true;
             emit GoalReached(totalRaised);
         }
     }
 
-    // ✅ 1. Advanced Function: Multi-Beneficiary Payout
+    // 1. Multi-Beneficiary Payout
     function splitPayout(address[] calldata recipients, uint[] calldata percentages) external onlyOwner {
         require(goalReached, "Goal not reached yet");
         require(!fundsWithdrawn, "Funds already withdrawn");
         require(recipients.length == percentages.length, "Mismatched arrays");
-
         uint totalPercent;
         for (uint i = 0; i < percentages.length; i++) {
             totalPercent += percentages[i];
         }
         require(totalPercent == 100, "Percentages must total 100");
-
         uint balance = address(this).balance;
         for (uint i = 0; i < recipients.length; i++) {
             uint payoutAmount = (balance * percentages[i]) / 100;
             payable(recipients[i]).transfer(payoutAmount);
         }
-
         fundsWithdrawn = true;
         emit SplitPayoutExecuted(recipients, percentages);
     }
 
-    // ✅ 2. Advanced Function: Emergency Refund
+    // 2. Emergency Refund
     function emergencyRefund() external onlyOwner {
         require(!fundsWithdrawn, "Funds already withdrawn");
         campaignCanceled = true;
         emit CampaignCanceled();
-
         uint totalRefunded;
         for (uint i = 0; i < contributors.length; i++) {
             address contributor = contributors[i];
@@ -94,33 +87,39 @@ contract CrowdFund {
                 totalRefunded += amount;
             }
         }
-
         emit EmergencyRefundExecuted(totalRefunded);
     }
 
-    // ✅ 3. New Advanced Function: Partial Withdrawal
+    // 3. Partial Withdrawal before deadline
     function partialWithdrawal(uint amount) external onlyOwner notCanceled {
         require(block.timestamp < deadline, "Campaign already ended");
         require(amount > 0, "Amount must be greater than zero");
         require(address(this).balance >= amount, "Insufficient balance");
         require(amount <= (totalRaised / 2), "Cannot withdraw more than 50% of raised funds before end");
-
         payable(owner).transfer(amount);
         emit PartialWithdrawal(owner, amount);
     }
 
-    // ✅ 4. NEW FUNCTION: Self-refund for contributors after failed campaign
+    // 4. Self-refund for contributors after failed campaign
     function claimRefund() external {
         require(block.timestamp > deadline, "Campaign not ended yet");
         require(!goalReached, "Goal was reached; no refund available");
         require(!campaignCanceled, "Campaign canceled, use emergency refund");
-        
+
         uint amount = contributions[msg.sender];
         require(amount > 0, "No contribution to refund");
-
         contributions[msg.sender] = 0;
         payable(msg.sender).transfer(amount);
-
         emit RefundClaimed(msg.sender, amount);
+    }
+
+    // 5. ✅ NEW FUNCTION: Deadline Extension by Owner
+    function extendDeadline(uint extraDays) external onlyOwner notCanceled {
+        require(block.timestamp < deadline, "Campaign already ended");
+        require(extraDays > 0, "Extension must be positive");
+        require(extensionCount < maxExtensions, "Max extensions reached");
+
+        deadline += extraDays * 1 days;
+        extensionCount++;
     }
 }
