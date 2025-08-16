@@ -105,7 +105,6 @@ contract CrowdFund {
         require(block.timestamp > deadline, "Campaign not ended yet");
         require(!goalReached, "Goal was reached; no refund available");
         require(!campaignCanceled, "Campaign canceled, use emergency refund");
-
         uint amount = contributions[msg.sender];
         require(amount > 0, "No contribution to refund");
         contributions[msg.sender] = 0;
@@ -113,13 +112,21 @@ contract CrowdFund {
         emit RefundClaimed(msg.sender, amount);
     }
 
-    // 5. ✅ NEW FUNCTION: Deadline Extension by Owner
+    // 5. Deadline Extension by Owner
     function extendDeadline(uint extraDays) external onlyOwner notCanceled {
         require(block.timestamp < deadline, "Campaign already ended");
         require(extraDays > 0, "Extension must be positive");
         require(extensionCount < maxExtensions, "Max extensions reached");
-
         deadline += extraDays * 1 days;
         extensionCount++;
+    }
+
+    // 6. ✅ NEW FUNCTION: View all contributors and their contributions
+    function getContributors() external view returns (address[] memory, uint[] memory) {
+        uint[] memory amounts = new uint[](contributors.length);
+        for (uint i = 0; i < contributors.length; i++) {
+            amounts[i] = contributions[contributors[i]];
+        }
+        return (contributors, amounts);
     }
 }
