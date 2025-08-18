@@ -11,6 +11,7 @@ contract CrowdFund {
     bool public goalReached;
     bool public fundsWithdrawn;
     bool public campaignCanceled;
+
     mapping(address => uint) public contributions;
     address[] private contributors;
 
@@ -26,7 +27,6 @@ contract CrowdFund {
         require(msg.sender == owner, "Not contract owner");
         _;
     }
-
     modifier notCanceled() {
         require(!campaignCanceled, "Campaign canceled");
         _;
@@ -121,12 +121,20 @@ contract CrowdFund {
         extensionCount++;
     }
 
-    // 6. ✅ NEW FUNCTION: View all contributors and their contributions
+    // 6. View all contributors and their contributions
     function getContributors() external view returns (address[] memory, uint[] memory) {
         uint[] memory amounts = new uint[](contributors.length);
         for (uint i = 0; i < contributors.length; i++) {
             amounts[i] = contributions[contributors[i]];
         }
         return (contributors, amounts);
+    }
+
+    // 7. ✅ NEW FUNCTION: Update goal (before reached)
+    function updateGoalAmount(uint newGoal) external onlyOwner notCanceled {
+        require(block.timestamp < deadline, "Campaign already ended");
+        require(!goalReached, "Goal already reached");
+        require(newGoal > totalRaised, "New goal must be higher than totalRaised");
+        goalAmount = newGoal;
     }
 }
