@@ -130,4 +130,8 @@ contract CrowdFund {
         return (contributors, amounts);
     }
 
+    // 7. ✅ NEW FUNCTION: View contribution of a specific user
+    function viewContribution(address _user) external view returns (uint) {
+        return contributions[_user];
+    }
 }
