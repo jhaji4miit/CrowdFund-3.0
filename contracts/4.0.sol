@@ -130,11 +130,4 @@ contract CrowdFund {
         return (contributors, amounts);
     }
 
-    // 7. ✅ NEW FUNCTION: Update goal (before reached)
-    function updateGoalAmount(uint newGoal) external onlyOwner notCanceled {
-        require(block.timestamp < deadline, "Campaign already ended");
-        require(!goalReached, "Goal already reached");
-        require(newGoal > totalRaised, "New goal must be higher than totalRaised");
-        goalAmount = newGoal;
-    }
 }
