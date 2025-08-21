@@ -130,8 +130,18 @@ contract CrowdFund {
         return (contributors, amounts);
     }
 
-    // 7. ✅ NEW FUNCTION: View contribution of a specific user
+    // 7. View contribution of a specific user
     function viewContribution(address _user) external view returns (uint) {
         return contributions[_user];
+    }
+
+    // 8. ✅ NEW FUNCTION: Update campaign goal
+    function updateGoal(uint newGoalAmount) external onlyOwner notCanceled {
+        require(block.timestamp < deadline, "Campaign already ended");
+        require(!goalReached, "Goal already reached");
+        require(newGoalAmount > 0, "Goal must be greater than zero");
+        require(newGoalAmount >= totalRaised, "Goal must be >= funds already raised");
+
+        goalAmount = newGoalAmount;
     }
 }
