@@ -22,6 +22,7 @@ contract CrowdFund {
     event CampaignCanceled();
     event PartialWithdrawal(address indexed owner, uint amount);
     event RefundClaimed(address indexed contributor, uint amount);
+    event OwnershipTransferred(address indexed oldOwner, address indexed newOwner); // ✅ new event
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Not contract owner");
@@ -135,13 +136,20 @@ contract CrowdFund {
         return contributions[_user];
     }
 
-    // 8. ✅ NEW FUNCTION: Update campaign goal
+    // 8. Update campaign goal
     function updateGoal(uint newGoalAmount) external onlyOwner notCanceled {
         require(block.timestamp < deadline, "Campaign already ended");
         require(!goalReached, "Goal already reached");
         require(newGoalAmount > 0, "Goal must be greater than zero");
         require(newGoalAmount >= totalRaised, "Goal must be >= funds already raised");
-
         goalAmount = newGoalAmount;
+    }
+
+    // 9. ✅ NEW FUNCTION: Transfer ownership
+    function changeOwner(address newOwner) external onlyOwner {
+        require(newOwner != address(0), "Invalid new owner");
+        address oldOwner = owner;
+        owner = newOwner;
+        emit OwnershipTransferred(oldOwner, newOwner);
     }
 }
