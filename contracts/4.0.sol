@@ -22,7 +22,7 @@ contract CrowdFund {
     event CampaignCanceled();
     event PartialWithdrawal(address indexed owner, uint amount);
     event RefundClaimed(address indexed contributor, uint amount);
-    event OwnershipTransferred(address indexed oldOwner, address indexed newOwner); // ✅ new event
+    event OwnershipTransferred(address indexed oldOwner, address indexed newOwner);
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Not contract owner");
@@ -145,11 +145,18 @@ contract CrowdFund {
         goalAmount = newGoalAmount;
     }
 
-    // 9. ✅ NEW FUNCTION: Transfer ownership
+    // 9. Transfer ownership
     function changeOwner(address newOwner) external onlyOwner {
         require(newOwner != address(0), "Invalid new owner");
         address oldOwner = owner;
         owner = newOwner;
         emit OwnershipTransferred(oldOwner, newOwner);
+    }
+
+    // 10. ✅ NEW FUNCTION: Renounce ownership
+    function renounceOwnership() external onlyOwner {
+        address oldOwner = owner;
+        owner = address(0);
+        emit OwnershipTransferred(oldOwner, address(0));
     }
 }
