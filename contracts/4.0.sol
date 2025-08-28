@@ -11,7 +11,7 @@ contract CrowdFund {
     bool public goalReached;
     bool public fundsWithdrawn;
     bool public campaignCanceled;
-    bool public paused; // ✅ new state variable
+    bool public paused; // ✅ pause state
 
     mapping(address => uint) public contributions;
     address[] private contributors;
@@ -24,8 +24,8 @@ contract CrowdFund {
     event PartialWithdrawal(address indexed owner, uint amount);
     event RefundClaimed(address indexed contributor, uint amount);
     event OwnershipTransferred(address indexed oldOwner, address indexed newOwner);
-    event Paused(address account);     // ✅ new event
-    event Unpaused(address account);   // ✅ new event
+    event Paused(address account);
+    event Unpaused(address account);
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Not contract owner");
@@ -46,7 +46,6 @@ contract CrowdFund {
         deadline = block.timestamp + (_durationInDays * 1 days);
     }
 
-    // ✅ modified contribute to enforce pause check
     function contribute() external payable notCanceled whenNotPaused {
         require(block.timestamp < deadline, "Deadline passed");
         require(msg.value > 0, "Contribution must be > 0");
@@ -61,8 +60,6 @@ contract CrowdFund {
             emit GoalReached(totalRaised);
         }
     }
-
-    // (… other existing functions stay unchanged …)
 
     // 9. Transfer ownership
     function changeOwner(address newOwner) external onlyOwner {
@@ -79,14 +76,18 @@ contract CrowdFund {
         emit OwnershipTransferred(oldOwner, address(0));
     }
 
-    // 11. ✅ NEW FUNCTIONS: Pause / Resume contributions
+    // 11. Pause / Resume contributions
     function pauseContributions() external onlyOwner {
         paused = true;
         emit Paused(msg.sender);
     }
-
     function resumeContributions() external onlyOwner {
         paused = false;
         emit Unpaused(msg.sender);
+    }
+
+    // 12. ✅ NEW FUNCTION: Get number of contributors
+    function getContributorCount() external view returns (uint) {
+        return contributors.length;
     }
 }
