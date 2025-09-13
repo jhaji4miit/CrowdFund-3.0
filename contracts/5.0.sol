@@ -15,11 +15,16 @@ contract SimpleCrowdFund {
         return address(this).balance;
     }
 
-    // NEW FUNCTION: Allow users to withdraw their contribution
+    // Allow users to withdraw their contribution
     function withdrawContribution() external {
         uint amount = contributions[msg.sender];
         require(amount > 0, "No funds to withdraw");
         contributions[msg.sender] = 0;
         payable(msg.sender).transfer(amount);
+    }
+
+    // NEW FUNCTION: View your own contributed amount
+    function viewMyContribution() external view returns (uint) {
+        return contributions[msg.sender];
     }
 }
