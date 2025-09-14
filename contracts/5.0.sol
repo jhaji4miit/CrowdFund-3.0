@@ -23,8 +23,13 @@ contract SimpleCrowdFund {
         payable(msg.sender).transfer(amount);
     }
 
-    // NEW FUNCTION: View your own contributed amount
+    // View your own contributed amount
     function viewMyContribution() external view returns (uint) {
         return contributions[msg.sender];
+    }
+
+    // NEW FUNCTION: View the contributed amount of any address
+    function viewContribution(address user) external view returns (uint) {
+        return contributions[user];
     }
 }
