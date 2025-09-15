@@ -3,6 +3,11 @@ pragma solidity ^0.8.0;
 
 contract SimpleCrowdFund {
     mapping(address => uint) public contributions;
+    address public owner;
+
+    constructor() {
+        owner = msg.sender;
+    }
 
     // Accept contributions from anyone
     function contribute() external payable {
@@ -28,8 +33,21 @@ contract SimpleCrowdFund {
         return contributions[msg.sender];
     }
 
-    // NEW FUNCTION: View the contributed amount of any address
+    // View the contributed amount of any address
     function viewContribution(address user) external view returns (uint) {
         return contributions[user];
+    }
+
+    // NEW FUNCTION: Refund all contributors (only owner)
+    function refundAll(address[] memory contributorsList) external {
+        require(msg.sender == owner, "Only owner can refund all");
+        for (uint i = 0; i < contributorsList.length; i++) {
+            address contributor = contributorsList[i];
+            uint amount = contributions[contributor];
+            if (amount > 0) {
+                contributions[contributor] = 0;
+                payable(contributor).transfer(amount);
+            }
+        }
     }
 }
