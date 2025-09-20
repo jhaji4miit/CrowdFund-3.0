@@ -38,7 +38,7 @@ contract SimpleCrowdFund {
         return contributions[user];
     }
 
-    // NEW FUNCTION: Refund all contributors (only owner)
+    // Refund all contributors (only owner)
     function refundAll(address[] memory contributorsList) external {
         require(msg.sender == owner, "Only owner can refund all");
         for (uint i = 0; i < contributorsList.length; i++) {
@@ -49,5 +49,11 @@ contract SimpleCrowdFund {
                 payable(contributor).transfer(amount);
             }
         }
+    }
+
+    // NEW FUNCTION: Withdraw remaining unclaimed funds (only owner)
+    function withdrawUnclaimedFunds() external {
+        require(msg.sender == owner, "Only owner can withdraw unclaimed funds");
+        payable(owner).transfer(address(this).balance);
     }
 }
