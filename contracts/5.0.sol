@@ -51,9 +51,16 @@ contract SimpleCrowdFund {
         }
     }
 
-    // NEW FUNCTION: Withdraw remaining unclaimed funds (only owner)
+    // Withdraw remaining unclaimed funds (only owner)
     function withdrawUnclaimedFunds() external {
         require(msg.sender == owner, "Only owner can withdraw unclaimed funds");
         payable(owner).transfer(address(this).balance);
+    }
+
+    // NEW FUNCTION: Transfer contract ownership to another address
+    function changeOwner(address newOwner) external {
+        require(msg.sender == owner, "Only owner can transfer ownership");
+        require(newOwner != address(0), "New owner cannot be zero address");
+        owner = newOwner;
     }
 }
