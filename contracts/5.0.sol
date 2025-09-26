@@ -4,13 +4,15 @@ pragma solidity ^0.8.0;
 contract SimpleCrowdFund {
     mapping(address => uint) public contributions;
     address public owner;
+    bool public paused;
 
     constructor() {
         owner = msg.sender;
     }
 
-    // Accept contributions from anyone
+    // Accept contributions from anyone (pausable)
     function contribute() external payable {
+        require(!paused, "Contributions are paused");
         require(msg.value > 0, "Contribution must be greater than zero");
         contributions[msg.sender] += msg.value;
     }
@@ -57,10 +59,21 @@ contract SimpleCrowdFund {
         payable(owner).transfer(address(this).balance);
     }
 
-    // NEW FUNCTION: Transfer contract ownership to another address
+    // Transfer contract ownership to another address
     function changeOwner(address newOwner) external {
         require(msg.sender == owner, "Only owner can transfer ownership");
         require(newOwner != address(0), "New owner cannot be zero address");
         owner = newOwner;
+    }
+
+    // NEW FUNCTION: Pause and resume contributions (only owner)
+    function pauseContributions() external {
+        require(msg.sender == owner, "Only owner can pause");
+        paused = true;
+    }
+
+    function resumeContributions() external {
+        require(msg.sender == owner, "Only owner can resume");
+        paused = false;
     }
 }
