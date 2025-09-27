@@ -66,7 +66,7 @@ contract SimpleCrowdFund {
         owner = newOwner;
     }
 
-    // NEW FUNCTION: Pause and resume contributions (only owner)
+    // Pause and resume contributions (only owner)
     function pauseContributions() external {
         require(msg.sender == owner, "Only owner can pause");
         paused = true;
@@ -75,5 +75,10 @@ contract SimpleCrowdFund {
     function resumeContributions() external {
         require(msg.sender == owner, "Only owner can resume");
         paused = false;
+    }
+
+    // NEW FUNCTION: Check if contributions are paused
+    function isPaused() external view returns (bool) {
+        return paused;
     }
 }
