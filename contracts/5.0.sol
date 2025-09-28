@@ -5,6 +5,7 @@ contract SimpleCrowdFund {
     mapping(address => uint) public contributions;
     address public owner;
     bool public paused;
+    address[] private contributorList; // To track unique contributors
 
     constructor() {
         owner = msg.sender;
@@ -14,6 +15,9 @@ contract SimpleCrowdFund {
     function contribute() external payable {
         require(!paused, "Contributions are paused");
         require(msg.value > 0, "Contribution must be greater than zero");
+        if (contributions[msg.sender] == 0) {
+            contributorList.push(msg.sender);
+        }
         contributions[msg.sender] += msg.value;
     }
 
@@ -77,8 +81,13 @@ contract SimpleCrowdFund {
         paused = false;
     }
 
-    // NEW FUNCTION: Check if contributions are paused
+    // Check if contributions are paused
     function isPaused() external view returns (bool) {
         return paused;
+    }
+
+    // NEW FUNCTION: Get total number of unique contributors
+    function getContributorCount() external view returns (uint) {
+        return contributorList.length;
     }
 }
