@@ -86,8 +86,4 @@ contract SimpleCrowdFund {
         return paused;
     }
 
-    // NEW FUNCTION: Get total number of unique contributors
-    function getContributorCount() external view returns (uint) {
-        return contributorList.length;
-    }
 }
