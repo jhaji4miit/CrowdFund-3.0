@@ -81,9 +81,4 @@ contract SimpleCrowdFund {
         paused = false;
     }
 
-    // Check if contributions are paused
-    function isPaused() external view returns (bool) {
-        return paused;
-    }
-
 }
