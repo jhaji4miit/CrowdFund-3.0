@@ -76,9 +76,4 @@ contract SimpleCrowdFund {
         paused = true;
     }
 
-    function resumeContributions() external {
-        require(msg.sender == owner, "Only owner can resume");
-        paused = false;
-    }
-
 }
