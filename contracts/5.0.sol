@@ -69,11 +69,4 @@ contract SimpleCrowdFund {
         require(newOwner != address(0), "New owner cannot be zero address");
         owner = newOwner;
     }
-
-    // Pause and resume contributions (only owner)
-    function pauseContributions() external {
-        require(msg.sender == owner, "Only owner can pause");
-        paused = true;
-    }
-
 }
