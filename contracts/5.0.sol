@@ -62,11 +62,4 @@ contract SimpleCrowdFund {
         require(msg.sender == owner, "Only owner can withdraw unclaimed funds");
         payable(owner).transfer(address(this).balance);
     }
-
-    // Transfer contract ownership to another address
-    function changeOwner(address newOwner) external {
-        require(msg.sender == owner, "Only owner can transfer ownership");
-        require(newOwner != address(0), "New owner cannot be zero address");
-        owner = newOwner;
-    }
 }
