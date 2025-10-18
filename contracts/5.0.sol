@@ -56,10 +56,4 @@ contract SimpleCrowdFund {
             }
         }
     }
-
-    // Withdraw remaining unclaimed funds (only owner)
-    function withdrawUnclaimedFunds() external {
-        require(msg.sender == owner, "Only owner can withdraw unclaimed funds");
-        payable(owner).transfer(address(this).balance);
-    }
 }
