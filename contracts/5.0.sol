@@ -43,17 +43,6 @@ contract SimpleCrowdFund {
     function viewContribution(address user) external view returns (uint) {
         return contributions[user];
     }
-
-    // Refund all contributors (only owner)
-    function refundAll(address[] memory contributorsList) external {
-        require(msg.sender == owner, "Only owner can refund all");
-        for (uint i = 0; i < contributorsList.length; i++) {
-            address contributor = contributorsList[i];
-            uint amount = contributions[contributor];
-            if (amount > 0) {
-                contributions[contributor] = 0;
-                payable(contributor).transfer(amount);
-            }
         }
     }
 }
