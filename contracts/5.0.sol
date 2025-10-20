@@ -38,11 +38,6 @@ contract SimpleCrowdFund {
     function viewMyContribution() external view returns (uint) {
         return contributions[msg.sender];
     }
-
-    // View the contributed amount of any address
-    function viewContribution(address user) external view returns (uint) {
-        return contributions[user];
-    }
         }
     }
 }
