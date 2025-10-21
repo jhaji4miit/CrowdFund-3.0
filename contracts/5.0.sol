@@ -33,11 +33,6 @@ contract SimpleCrowdFund {
         contributions[msg.sender] = 0;
         payable(msg.sender).transfer(amount);
     }
-
-    // View your own contributed amount
-    function viewMyContribution() external view returns (uint) {
-        return contributions[msg.sender];
-    }
         }
     }
 }
