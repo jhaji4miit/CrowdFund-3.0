@@ -25,14 +25,6 @@ contract SimpleCrowdFund {
     function getTotalFunds() external view returns (uint) {
         return address(this).balance;
     }
-
-    // Allow users to withdraw their contribution
-    function withdrawContribution() external {
-        uint amount = contributions[msg.sender];
-        require(amount > 0, "No funds to withdraw");
-        contributions[msg.sender] = 0;
-        payable(msg.sender).transfer(amount);
-    }
         }
     }
 }
