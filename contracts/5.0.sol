@@ -20,11 +20,6 @@ contract SimpleCrowdFund {
         }
         contributions[msg.sender] += msg.value;
     }
-
-    // View total funds collected in the contract
-    function getTotalFunds() external view returns (uint) {
-        return address(this).balance;
-    }
         }
     }
 }
