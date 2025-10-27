@@ -10,16 +10,4 @@ contract SimpleCrowdFund {
     constructor() {
         owner = msg.sender;
     }
-
-    // Accept contributions from anyone (pausable)
-    function contribute() external payable {
-        require(!paused, "Contributions are paused");
-        require(msg.value > 0, "Contribution must be greater than zero");
-        if (contributions[msg.sender] == 0) {
-            contributorList.push(msg.sender);
-        }
-        contributions[msg.sender] += msg.value;
-    }
-        }
-    }
 }
