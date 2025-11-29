@@ -11,7 +11,7 @@ contract CrowdFund {
     bool public goalReached;
     bool public fundsWithdrawn;
     bool public campaignCanceled;
-    bool public paused; // ✅ pause state
+    bool public paused; // pause state
 
     mapping(address => uint) public contributions;
     address[] private contributors;
@@ -31,10 +31,12 @@ contract CrowdFund {
         require(msg.sender == owner, "Not contract owner");
         _;
     }
+
     modifier notCanceled() {
         require(!campaignCanceled, "Campaign canceled");
         _;
     }
+
     modifier whenNotPaused() {
         require(!paused, "Contributions are paused");
         _;
@@ -46,22 +48,27 @@ contract CrowdFund {
         deadline = block.timestamp + (_durationInDays * 1 days);
     }
 
+    // Contribute to the campaign
     function contribute() external payable notCanceled whenNotPaused {
         require(block.timestamp < deadline, "Deadline passed");
         require(msg.value > 0, "Contribution must be > 0");
+
         if (contributions[msg.sender] == 0) {
             contributors.push(msg.sender);
         }
+
         contributions[msg.sender] += msg.value;
         totalRaised += msg.value;
+
         emit ContributionReceived(msg.sender, msg.value);
+
         if (totalRaised >= goalAmount) {
             goalReached = true;
             emit GoalReached(totalRaised);
         }
     }
 
-    // 9. Transfer ownership
+    // Transfer ownership
     function changeOwner(address newOwner) external onlyOwner {
         require(newOwner != address(0), "Invalid new owner");
         address oldOwner = owner;
@@ -69,25 +76,32 @@ contract CrowdFund {
         emit OwnershipTransferred(oldOwner, newOwner);
     }
 
-    // 10. Renounce ownership
+    // Renounce ownership
     function renounceOwnership() external onlyOwner {
         address oldOwner = owner;
         owner = address(0);
         emit OwnershipTransferred(oldOwner, address(0));
     }
 
-    // 11. Pause / Resume contributions
+    // Pause contributions
     function pauseContributions() external onlyOwner {
         paused = true;
         emit Paused(msg.sender);
     }
+
+    // Resume contributions
     function resumeContributions() external onlyOwner {
         paused = false;
         emit Unpaused(msg.sender);
     }
 
-    // 12. ✅ NEW FUNCTION: Get number of contributors
+    // Get contributor count
     function getContributorCount() external view returns (uint) {
         return contributors.length;
+    }
+
+    // Get all contributors
+    function getAllContributors() external view returns (address[] memory) {
+        return contributors;
     }
 }
